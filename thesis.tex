@@ -1,0 +1,95 @@
+\documentclass[11pt,a4paper,twoside,notitlepage]{book}
+\usepackage[english]{babel}
+
+% margins
+\setlength{\hoffset}{-1in}
+\setlength{\voffset}{-1in}
+\setlength{\topmargin}{2cm}
+\setlength{\headheight}{0.5cm}
+\setlength{\headsep}{1cm}
+\setlength{\oddsidemargin}{3.5cm}
+\setlength{\evensidemargin}{3.5cm}
+\setlength{\textwidth}{16cm}
+\setlength{\textheight}{23.3cm}
+\setlength{\footskip}{1.5cm}
+
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+% \usepackage[colorlinks]{hyperref}
+
+\pagestyle{fancy}
+
+\renewcommand{\chaptermark}[1]{\markright{\MakeUppercase{#1}}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection~#1}}
+
+\newcommand{\headerfmt}[1]{\textsl{\textsf{#1}}}
+\newcommand{\headerfmtpage}[1]{\textsf{#1}}
+
+\fancyhf{}
+\fancyhead[LE,RO]{\headerfmtpage{\thepage}}
+\fancyhead[LO]{\headerfmt{\rightmark}}
+\fancyhead[RE]{\headerfmt{\leftmark}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyhead[LE,RO]{\headerfmtpage{\thepage}}
+  \fancyhead[LO]{\headerfmt{\rightmark}}
+  \fancyhead[RE]{\headerfmt{\leftmark}}
+  \renewcommand{\headrulewidth}{0.5pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+\renewcommand{\baselinestretch}{1.5}
+
+% add new if necessary
+\hyphenation{mayneverbesplit may-be-split-here}
+
+\begin{document}
+\frontmatter
+
+% frontpage
+\include{frontpage}
+
+
+% no page numbering till toc
+\pagestyle{empty}
+
+% Preface and permission of use on load
+\include{preface}
+
+% abstract
+\addcontentsline{toc}{chapter}{Abstract}
+\include{abstract}
+
+\pagestyle{fancy}
+
+% toc
+\tableofcontents
+
+% optinal makeup
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{0.5\baselineskip plus 0.5ex minus 0.2ex}
+%\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+% chapters
+\mainmatter
+\setcounter{page}{1}
+% add chapters
+\include{chapter/chapter01}
+
+% appendix
+\appendix
+
+% add appendix
+
+\include{references}
+
+\backmatter
+
+% optional: list figures/tables
+%\listoffigures
+%\listoftables
+
+\end{document}
