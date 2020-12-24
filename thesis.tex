@@ -15,7 +15,6 @@
 
 \usepackage{graphicx}
 \usepackage{fancyhdr}
-% \usepackage[colorlinks]{hyperref}
 
 \pagestyle{fancy}
 
@@ -46,6 +45,13 @@
 % add new if necessary
 \hyphenation{mayneverbesplit may-be-split-here}
 
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true, %set true if you want colored links
+  linktoc=all,     %set to all if you want both sections and subsections linked
+  linkcolor=black,  %choose some color if you want links to stand out
+}
+
 \begin{document}
 \frontmatter
 
@@ -56,10 +62,12 @@
 % no page numbering till toc
 \pagestyle{empty}
 
+
 % Preface and permission of use on load
 \include{preface}
 
 % abstract
+\phantomsection
 \addcontentsline{toc}{chapter}{Abstract}
 \include{abstract}
 
@@ -77,7 +85,7 @@
 \mainmatter
 \setcounter{page}{1}
 % add chapters
-\include{chapter/chapter01}
+\include{chapter/Introduction}
 
 % appendix
 \appendix
