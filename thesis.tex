@@ -45,10 +45,15 @@
 % add new if necessary
 \hyphenation{mayneverbesplit may-be-split-here}
 
+%add needed packages here 
+\usepackage{csquotes}
+\usepackage[style=ieee, citestyle=ieee]{biblatex}
+\addbibresource{reference.bib}
 \usepackage{hyperref}
 \hypersetup{
   colorlinks=true, %set true if you want colored links
-  linktoc=all,     %set to all if you want both sections and subsections linked
+linktoc=all,
+citecolor=blue,   %set to all if you want both sections and subsections linked
   linkcolor=black,  %choose some color if you want links to stand out
 }
 
@@ -92,7 +97,7 @@
 
 % add appendix
 
-\include{references}
+\printbibliography[heading=bibintoc]
 
 \backmatter
 
