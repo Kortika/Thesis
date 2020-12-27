@@ -1,5 +1,7 @@
 \documentclass[11pt,a4paper,twoside,notitlepage]{book}
-\usepackage[english]{babel}
+\usepackage[british]{babel}
+\usepackage{lmodern}
+\usepackage{tgpagella}
 
 % margins
 \setlength{\hoffset}{-1in}
@@ -46,11 +48,26 @@
 \hyphenation{mayneverbesplit may-be-split-here}
 
 %add needed packages here 
+\usepackage{listings}
+\lstset
+{ %Formatting for code in appendix
+  basicstyle=\footnotesize,
+  numbers=left,
+  stepnumber=1,
+  showstringspaces=false,
+  tabsize=1,
+  breaklines=true,
+  breakatwhitespace=false,
+}
+
 \usepackage{tikz}
 \usetikzlibrary{shapes}
+
 \usepackage{csquotes}
 \usepackage[style=ieee, citestyle=ieee]{biblatex}
 \addbibresource{reference.bib}
+
+
 \usepackage{hyperref}
 \hypersetup{
   colorlinks=true, %set true if you want colored links
