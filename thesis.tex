@@ -60,6 +60,7 @@
   breakatwhitespace=false,
 }
 
+\usepackage[nottoc,numbib]{tocbibind}
 \usepackage{tikz}
 \usetikzlibrary{shapes}
 
@@ -97,8 +98,14 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 
 \pagestyle{fancy}
 
+
 % toc
 \tableofcontents
+
+\addcontentsline{toc}{chapter}{List of Listings}
+\lstlistoflistings
+\listoffigures*
+\listoftables*
 
 % optinal makeup
 %\setlength{\parindent}{0pt}
@@ -111,6 +118,7 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 % add chapters
 \include{chapter/Introduction}
 \include{chapter/SemanticWeb}
+\include{chapter/RDFGeneration}
 
 % appendix
 \appendix

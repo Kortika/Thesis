@@ -1,10 +1,29 @@
-
-
 \chapter{Semantic Web Technologies}
-Multiple framework exists to deal with c
-This section will define and describe the different notations and terms used throughput
-the rest of this work. We will elaborate more on RDF, RML and stream windowing for more
-intuition behind the approach of this work.
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{fig/Semantic_web_stack.svg.png}
+    \caption{An overview of semantic web stack with core technologies\cite{sem_web_stack}.}
+    \label{fig:sem_web_stack}
+\end{figure}
+
+Semantic web extends the existing \emph{web of documents} with the ability 
+to \emph{link} different documents and \emph{embed knowledge} in the document
+to transform it into a \emph{web of data}. It is perceived by Tim Beners-Lee in 
+2001\cite{bernerslee2001semantic} to be integrated into the existing architecture 
+of World Wide Web. Embedding \emph{knowledge} into documents enables machines to
+interpret the \emph{meaning} of the document and interoperate with each other on 
+a more complex level.
+
+Semantic web stack enables one to start building a \emph{web of data} using 
+the core technologies shown in Figure~\ref{fig:sem_web_stack}. 
+However, this is provided that the data already exists in RDF compliant format.
+Existing data on the web in non-RDF format must, therefore, be transformed 
+into RDF data enable transition to a \emph{web of data}. This work 
+focuses on transforming non-RDF to RDF data, thus the RDF format will be elaborated 
+in detail. 
+
 
 
 \section{RDF}
@@ -130,30 +149,3 @@ a string. One could also \textit{cast} the literal value to a specific datatype
 by appending '\textasciicircum{} \textasciicircum{} $[$IRI of the datatype$]$'. For example, 
 "12" is cast to an integer in \lstinline{"12"^^xsd:integer}. Language of the literal value 
 could also be specified using \textit{@} similarly to datatype casting. 
-
-
-\section{RML}
-RDF Mapping Language\cite{rml} is a superset of the W3C's R2RML\cite{r2rml} which maps relational databases to
-RDF datasets. RML improves upon R2RML by expressing mapping rules from heterogeneous
-data sources and transforming them to RDF datasets whereas R2RML could only consume
-data from relational databases. RML mapping file is composed of one or more \emph{triples maps}, 
-which in turn consist of \emph{subject, predicate} and \emph{object} term maps. As the names imply, 
-the term maps are used to map elements of the data sources to their respective terms 
-in an RDF triple. The definitions of these maps are similar to the 
-specifications in R2RML\cite{rml_tech}. 
-
-Logical sources could be defined by specifying the \emph{source, logical iterator} 
-and zero or one \emph{reference formulation} property. The logical sources in the default 
-RML mapping file are bounded data, where the data already exists and has a predetermined
-size. RMLStreamer extends the vocabulary of RML to also handle unbounded data in 
-a streaming context. 
-
-RML supports defining relationships amongst the different 
-logical sources through the use of \textit{rr:parentTriplesMap, rr:joinCondition, rr:child and rr:parent}
-properties. The relationship definitions are
-
-
-\begin{lstlisting}[caption=An example of a RML mapping file.]
-    
-    
-\end{lstlisting}

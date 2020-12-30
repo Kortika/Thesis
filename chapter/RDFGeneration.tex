@@ -1,0 +1,39 @@
+\chapter{RDF data generation}
+Several state-of-the art implementations exist to generate RDF data from 
+non-RDF data. These engines could be categorized into two groups; \emph{query-based} and 
+\emph{rule-based} engines. These can be further categorized into two more subgroups 
+based on the data that they consume; \emph{bounded} and \emph{unbounded} data processing 
+engines. As mentioned in Chapter~\ref{chap:intro}, this work will focus on 
+engines working with unbounded data in a streaming environment. 
+
+\section{SPARQL Query Language}
+
+
+\section{RDF Mapping Language}
+RDF Mapping Language\cite{rml} is a superset of the W3C's R2RML\cite{r2rml} which maps relational databases to
+RDF datasets. RML improves upon R2RML by expressing mapping rules from heterogeneous
+data sources and transforming them to RDF datasets whereas R2RML could only consume
+data from relational databases. RML mapping file is composed of one or more \emph{triples maps}, 
+which in turn consist of \emph{subject, predicate} and \emph{object} term maps. As the names imply, 
+the term maps are used to map elements of the data sources to their respective terms 
+in an RDF triple. The definitions of these maps are similar to the 
+specifications in R2RML\cite{rml_tech}. 
+
+Logical sources could be defined by specifying the \emph{source, logical iterator} 
+and zero or one \emph{reference formulation} property. The logical sources in the default 
+RML mapping file are bounded data, where the data already exists and has a predetermined
+size. RMLStreamer extends the vocabulary of RML to also handle unbounded data in 
+a streaming context. 
+
+RML supports defining relationships amongst the different 
+logical sources through the use of \textit{rr:parentTriplesMap, rr:joinCondition, rr:child and rr:parent}
+properties. The relationship definitions are
+
+
+\begin{lstlisting}[caption=An example of a RML mapping file.]
+    
+    
+\end{lstlisting}
+
+\section{Mapping based Engine}
+\subsection{RMLStreamer}

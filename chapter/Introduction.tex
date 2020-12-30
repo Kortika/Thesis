@@ -1,4 +1,5 @@
 \chapter{Introduction}
+\label{chap:intro}
 
 A large volume of data is generated daily on the Web in a variety of domains. These
 data are often structured according to an organization's specific needs or formats: Leading to
@@ -12,9 +13,11 @@ this particular problem by enriching the data with knowledge and association acr
 different domains, through the use of common ontologies. RDF triples also form the basic building blocks of knowledge graphs.
 Knowledge graphs are extensively used in social networks like Facebook\cite{facebook_linked_data}, IoT devices\cite{graph_of_things} and especially with Google's search
 engine\cite{google_kg}, it enables machines to understand the data and perform complex automated processing
-on the data. Considering the aforementioned scenarios, there is a need to transform these non-RDF data to RDF compliant formats on the fly while
-new data are being generated. Furthermore, we would also like to apply stream operators on the input
-before transforming, to enhance the enrichment of the data by applying operators on the incoming tuples.
+using the knowledge graphs. 
+
+Considering the aforementioned scenarios, there is a need to transform these non-RDF data to RDF compliant formats on the fly while
+new data are being generated. Furthermore, we would also like to apply stream operators on the input tuples
+before transforming, to enhance the enrichment of the data.
 
 There exists state-of-the-art techniques to solve the task of consolidating heterogeneous data
 and transforming them to an RDF compliant format. In this thesis, we will focus on one such format called TURTLE~\cite{turtle_syntax}.
@@ -28,4 +31,4 @@ input streams. This leads to a decline in the quality of the generated RDF tripl
 due to the nature of the infinite, continuous and real-time changing data of the streaming environment,
 these operators have to be applied in the context of windows over a subset of the incoming data.
 Clearly, with these restrictions and characteristics of the streaming sources, we need an adaptive approach
-to applying these operators in windows.
+to applying these operators in windows for the data transformation engines.
