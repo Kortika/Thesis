@@ -59,6 +59,10 @@
   breaklines=true,
   breakatwhitespace=false,
 }
+\renewcommand{\lstlistlistingname}{List of Listings}
+
+\usepackage[toc, page]{appendix}
+
 
 \usepackage[nottoc,numbib]{tocbibind}
 \usepackage{tikz}
@@ -76,6 +80,8 @@ linktoc=all,
 citecolor=blue,   %set to all if you want both sections and subsections linked
   linkcolor=black,  %choose some color if you want links to stand out
 }
+
+
 
 \begin{document}
 \frontmatter
@@ -104,8 +110,8 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 
 \addcontentsline{toc}{chapter}{List of Listings}
 \lstlistoflistings
-\listoffigures*
-\listoftables*
+\listoffigures
+\listoftables
 
 % optinal makeup
 %\setlength{\parindent}{0pt}
@@ -119,13 +125,14 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 \include{chapter/Introduction}
 \include{chapter/SemanticWeb}
 \include{chapter/RDFGeneration}
+\printbibliography[heading=bibintoc]
 
 % appendix
-\appendix
+\begin{appendices}
 
+\end{appendices}
 % add appendix
 
-\printbibliography[heading=bibintoc]
 
 \backmatter
 

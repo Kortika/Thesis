@@ -105,6 +105,7 @@ and the \textit{object} components of an RDF triple.
 
 
 \subsection{TURTLE syntax}
+\label{sec:turtle_syntax}
 The aforementioned term types are defined for abstract RDF syntax. For a concrete syntax to write
 RDF triples, we would focus on the TURTLE (Terse RDF Triple Language)~\cite{turtle_syntax}
 syntax in this work. A simple triple statement is a sequence of
@@ -149,3 +150,4 @@ a string. One could also \textit{cast} the literal value to a specific datatype
 by appending '\textasciicircum{} \textasciicircum{} $[$IRI of the datatype$]$'. For example, 
 "12" is cast to an integer in \lstinline{"12"^^xsd:integer}. Language of the literal value 
 could also be specified using \textit{@} similarly to datatype casting. 
+

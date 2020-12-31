@@ -4,9 +4,55 @@ non-RDF data. These engines could be categorized into two groups; \emph{query-ba
 \emph{rule-based} engines. These can be further categorized into two more subgroups 
 based on the data that they consume; \emph{bounded} and \emph{unbounded} data processing 
 engines. As mentioned in Chapter~\ref{chap:intro}, this work will focus on 
-engines working with unbounded data in a streaming environment. 
+engines working with unbounded data in a streaming environment. Before we dive into 
+the engines, we need to elaborate more on the \emph{languages} these engines used 
+to generate RDF data from non-RDF data. 
+
 
 \section{SPARQL Query Language}
+Query languages already exist in established relational database systems such as 
+MySQL or PostgreSQL. It allows users to manipulate and retrieve data 
+from relational databases using concise statements. Due to its widespread 
+usage in the industry for querying databases, it is important that a similar 
+query language is used for RDF datasets to ease the transition for the users. 
+
+SPARQL\cite{sparql} achieves this goal by emulating as many SQL syntaxes as possible to allow 
+a seamless transition to RDF datasets usage. Similar to relational databases, RDF 
+datasets can be considered as a table consisting of three columns --- the subject column, 
+the predicate column, and the object column. Unlike relational databases, 
+RDF datasets, in a table representation, allows the object column to be of heterogeneous datatype. 
+Recall from Chapter~\ref{sec:turtle_syntax}, one could explicitly specify the 
+datatype of the object term which allows the heterogeneity in the object column.  
+Also, different from SQL, SPARQL allows matching based on \emph{basic graph patterns} composed 
+from a set of \emph{triple patterns}. Triple patterns are similar to the triple statements 
+as clarified in Chapter~\ref{sec:turtle_syntax} extended with declared variables (i.e. \emph{?variable\_name}). 
+The result of a SPARQL query is returned as an RDF sub-graph of the queried RDF dataset. 
+
+
+\begin{lstlisting}[language=SPARQL,
+    caption={Example of a SPARQL query of a medication.}, 
+    label={lst:sparql_example}]
+    SELECT ?medication
+    WHERE {
+        ?diagnosis example:name "Cancer" .
+        ?medication example:canTreat ?diagnosis .
+    }
+\end{lstlisting}
+
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|c|}
+    \hline
+    medication        \\ \hline
+    Radiation therapy \\ \hline
+    \end{tabular}
+    \caption{Result of executing the SPARQL query in Listing~\ref{lst:sparql_example}}
+    \label{tab:sparql_result}
+\end{table}
+
+
+
 
 
 \section{RDF Mapping Language}
