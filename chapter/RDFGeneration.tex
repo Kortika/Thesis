@@ -25,9 +25,13 @@ Recall from Chapter~\ref{sec:turtle_syntax}, one could explicitly specify the
 datatype of the object term which allows the heterogeneity in the object column.  
 Also, different from SQL, SPARQL allows matching based on \emph{basic graph patterns} composed 
 from a set of \emph{triple patterns}. Triple patterns are similar to the triple statements 
-as clarified in Chapter~\ref{sec:turtle_syntax} extended with declared variables (i.e. \emph{?variable\_name}). 
+as clarified in Chapter~\ref{sec:turtle_syntax} but extended with declared variables (i.e. \emph{?variable\_name}). 
 The result of a SPARQL query is returned as an RDF sub-graph of the queried RDF dataset. 
 
+Now a question definitely gets raised in our mind, how does this relate to transforming an 
+unbounded dataset to RDF format in a streaming environment? There exists state-of-the-art 
+engines for generating RDF data from heterogeneous streaming data sources, which will be 
+elaborated in Chapter~\ref{sec:query_based_engine}. 
 
 \begin{lstlisting}[language=SPARQL,
     caption={Example of a SPARQL query of a medication.}, 
@@ -81,5 +85,10 @@ properties. The relationship definitions are
     
 \end{lstlisting}
 
-\section{Mapping based Engine}
+\section{Query based Engines}
+\label{sec:query_based_engine}
+
+\subsection{SPARQL-Generate}
+
+\section{Mapping based Engines}
 \subsection{RMLStreamer}
