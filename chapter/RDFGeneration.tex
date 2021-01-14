@@ -112,13 +112,23 @@ logical sources.
 \section{Query based Engines}
 \label{sec:query_based_engine}
 When we think of interacting with a data source, querying the data source with a 
-query language seems natural since that is the widely adopted method to interact 
+query language seems natural since that is the common method to interact 
 with a traditional database. Allowing users to query the sources without explicitly 
-defining the mapping 
+defining the mapping semantics hides the mapping or data transformation details from the user. 
+Moreover, it eases the transition to developing applications using RDF data since the syntaxes are 
+similar to existing query languages. 
 
+From what we know, there exists two state-of-the-art queries based engines for transforming 
+unbounded non-RDF data to RDF data; SPARQL-Generate and RDF-Gen. 
+These engines will be elaborated more in the following sections. 
 
 
 \subsection{SPARQL-Generate}
 
+
+\subsection{RDF-Gen}
+
+
 \section{Mapping based Engines}
+
 \subsection{RMLStreamer}
