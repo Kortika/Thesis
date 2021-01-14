@@ -29,7 +29,7 @@
 \fancyhf{}
 \fancyhead[LE,RO]{\headerfmtpage{\thepage}}
 \fancyhead[LO]{\headerfmt{\rightmark}}
-\fancyhead[RE]{\headerfmt{\leftmark}}
+\fancyhead[RE]{\headerfmt{\rightmark}}
 \renewcommand{\headrulewidth}{0.5pt}
 \renewcommand{\footrulewidth}{0pt}
 
@@ -37,7 +37,7 @@
   \fancyhf{}
   \fancyhead[LE,RO]{\headerfmtpage{\thepage}}
   \fancyhead[LO]{\headerfmt{\rightmark}}
-  \fancyhead[RE]{\headerfmt{\leftmark}}
+  \fancyhead[RE]{\headerfmt{\rightmark}}
   \renewcommand{\headrulewidth}{0.5pt}
   \renewcommand{\footrulewidth}{0pt}
 }
@@ -108,10 +108,7 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 % toc
 \tableofcontents
 
-\addcontentsline{toc}{chapter}{List of Listings}
-\lstlistoflistings
-\listoffigures
-\listoftables
+
 
 % optinal makeup
 %\setlength{\parindent}{0pt}
@@ -139,5 +136,10 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 % optional: list figures/tables
 %\listoffigures
 %\listoftables
+
+\addcontentsline{toc}{chapter}{List of Listings}
+\lstlistoflistings
+\listoffigures
+\listoftables
 
 \end{document}
