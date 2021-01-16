@@ -130,7 +130,7 @@ transforming non-RDF data. The engine is based on an extension of SPARQL 1.1 que
 its expressiveness and extensibility. Furthermore, this allows SPARQL-Generate to be implemented on top 
 of any existing SPARQL query engines. The reference implementation in the paper was based on Apache Jena 
 SPARQL 1.1 engine. Due to the use of existing SPARQL 1.1 query language, experienced knowledge engineer could use 
-SPARQL-Generate to improve the generation of RDF data in the existing infrastructures. 
+SPARQL-Generate to improve the generation of RDF data in their existing infrastructures. 
 
 SPARQL-Generate supports the consumption of heterogeneous data sources by exposing the 
 \emph{binding} and \emph{iterator functions API}. Therefore, covering a new data format or sources could be accomplished 
@@ -138,15 +138,16 @@ by implementing the corresponding \emph{binding} and \emph{iterator functions}. 
 the reference implementation supports the consumption of data sources which are unbounded and in a streaming environment. 
 For example, WebSocket and MQQT are currently supported in the latest version of SPARQL-Generate. 
 
-Although there is a support for data stream processing, the paper did not go into details 
+Although there is currently a support for data stream processing, the paper did not go into details 
 about the application of multi-stream operators like joins when involving multiple streaming 
 data sources. Hence, we could assume that SPARQL-Generate either process the whole dataset in memory or 
 keeps a fixed window of data on which multi-stream operators are applied. Therefore, there is a lack of  
-dynamic windowing schemes to efficiently exploit the characteristics of the data sources.  
+dynamic windowing schemes to efficiently exploit the characteristics of the streaming data sources.  
 
 
 
 \subsection{RDF-Gen}
+Despite supporting the streaming data sources, SPARQL-Generate 
 
 
 \section{Mapping based Engines}
