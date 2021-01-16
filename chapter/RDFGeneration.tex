@@ -24,7 +24,7 @@ RDF datasets, in a table representation, allows the object column to be of heter
 Recall from Chapter~\ref{sec:turtle_syntax}, one could explicitly specify the 
 datatype of the object term which allows the heterogeneity in the object column.  
 Also, different from SQL, SPARQL allows matching based on \emph{basic graph patterns} composed 
-from a set of \emph{triple patterns}. Triple patterns are similar to the triple statements 
+of a set of \emph{triple patterns}. Triple patterns are similar to the triple statements 
 as clarified in Chapter~\ref{sec:turtle_syntax} but extended with declared variables (i.e. \emph{?variable\_name}). 
 The result of a SPARQL query is returned as an RDF sub-graph of the queried RDF dataset. 
 
@@ -48,7 +48,7 @@ elaborated in Chapter~\ref{sec:query_based_engine}.
     \centering
     \begin{tabular}{|c|}
     \hline
-    medication        \\ \hline
+    \textbf{medication}        \\ \hline
     Radiation therapy \\ \hline
     \end{tabular}
     \caption{Result of executing the SPARQL query in Listing~\ref{lst:sparql_example}}
@@ -119,11 +119,31 @@ Moreover, it eases the transition to developing applications using RDF data sinc
 similar to existing query languages. 
 
 From what we know, there exists two state-of-the-art queries based engines for transforming 
-unbounded non-RDF data to RDF data; SPARQL-Generate and RDF-Gen. 
+unbounded non-RDF data to RDF data; SPARQL-Generate and RDF-Gen, the latter diverging a lot from
+the underlying SPARQL syntaxes.  
 These engines will be elaborated more in the following sections. 
 
 
 \subsection{SPARQL-Generate}
+SPARQL-Generate~\cite{sparql_generate} was proposed as an alternative to then existing methods of 
+transforming non-RDF data. The engine is based on an extension of SPARQL 1.1 query language, to leverage 
+its expressiveness and extensibility. Furthermore, this allows SPARQL-Generate to be implemented on top 
+of any existing SPARQL query engines. The reference implementation in the paper was based on Apache Jena 
+SPARQL 1.1 engine. Due to the use of existing SPARQL 1.1 query language, experienced knowledge engineer could use 
+SPARQL-Generate to improve the generation of RDF data in the existing infrastructures. 
+
+SPARQL-Generate supports the consumption of heterogeneous data sources by exposing the 
+\emph{binding} and \emph{iterator functions API}. Therefore, covering a new data format or sources could be accomplished 
+by implementing the corresponding \emph{binding} and \emph{iterator functions}. Currently, as of writing this paper, 
+the reference implementation supports the consumption of data sources which are unbounded and in a streaming environment. 
+For example, WebSocket and MQQT are currently supported in the latest version of SPARQL-Generate. 
+
+Although there is a support for data stream processing, the paper did not go into details 
+about the application of multi-stream operators like joins when involving multiple streaming 
+data sources. Hence, we could assume that SPARQL-Generate either process the whole dataset in memory or 
+keeps a fixed window of data on which multi-stream operators are applied. Therefore, there is a lack of  
+dynamic windowing schemes to efficiently exploit the characteristics of the data sources.  
+
 
 
 \subsection{RDF-Gen}
