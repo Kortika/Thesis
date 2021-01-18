@@ -138,16 +138,76 @@ by implementing the corresponding \emph{binding} and \emph{iterator functions}. 
 the reference implementation supports the consumption of data sources which are unbounded and in a streaming environment. 
 For example, WebSocket and MQQT are currently supported in the latest version of SPARQL-Generate. 
 
-Although there is currently a support for data stream processing, the paper did not go into details 
+
+
+Although there is a support for data stream processing, the paper did not go into details 
 about the application of multi-stream operators like joins when involving multiple streaming 
 data sources. Hence, we could assume that SPARQL-Generate either process the whole dataset in memory or 
-keeps a fixed window of data on which multi-stream operators are applied. Therefore, there is a lack of  
+keeps a fixed window of data on which multi-stream operators are applied. Furthermore, the 
+authors mentioned that SPARQL-Generate could use the SPARQL 1.1 operators such as \emph{join operators}. 
+From this, we could derive that SPARQL-Generate will apply \emph{join} on the 
+records by delegating it to the underlying SPARQL engine. 
+Therefore, there is a lack of  
 dynamic windowing schemes to efficiently exploit the characteristics of the streaming data sources.  
 
-
-
 \subsection{RDF-Gen}
-Despite supporting the streaming data sources, SPARQL-Generate 
+RDF-Gen\cite{rdf_gen} is also based on SPARQL-like syntaxes. However, instead of extending SPARQL engines, 
+it provides its own architecture as laid out in Figure~\ref{fig:rdf-gen-arch} to meet the demand
+of real-time processing. Instead of adopting most of the syntaxes from SPARQL, RDF-Gen only 
+kept the BGP section of SPARQL query to reduce the size of the transformation specification. 
+Thus, it has the most compact mapping template/query compared to the other methods mentioned in this paper. 
+
+RDF-Gen consists of three main components: 
+\begin{enumerate*}[label=(\alph*)]
+  \item Data Connector,
+  \item Triple Generator, and
+  \item Link Discovery.
+\end{enumerate*}
+Data Connector allows close-to-source processing, which is not the case for SPARQL-Generate. 
+Triple Generator handles the rapid generation of RDF triples by making use of 
+template graphs and variable vectors. The Link Discovery component solves the 
+problem of link discovery problem which is defined as follows:
+Given two data sources $S$ and $T$, the problem is to find the pairs of elements in 
+$S \times T$ that are related to each other (e.g. following the predicate of 
+\emph{owl:sameAs} property). Since we are concerned with 
+multi-stream operators during RDF generation in this paper, link discovery component could be ignored. 
+
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{fig/rdf-gen-arch.png}
+  \caption{Architecture of RDF-Gen\cite{rdf_gen}}
+  \label{fig:rdf-gen-arch}
+\end{figure}
+
+\subsubsection{Data Connector}
+Data Connector has a similar functionality as the \emph{iterator functions} from SPARQL-Generate.
+It consumes the data sources given a configuration setting. Configuration setting is used to specify 
+the type of data sources, the \emph{window} for processing the incoming data records and 
+also apply functions on the incoming data elements. Data Connector can thus be defined as a 
+mapping function as in Definition~\ref{defn:data_connector}. 
+
+
+\begin{defn}[Data Connector record \cite{rdf_gen}]
+  \label{defn:data_connector}
+  Given a set of data sources $D = \{d_1, d_2, \dots, d_n\}$ and  a 
+  mapping function $F = \mu_{f}(d_i, e)\; |\; \forall d_i \in D$ with $e$, a data element 
+  of a data source $d_i$, and $f$, a filter function. Data Connector 
+  generates a record $R = \mu_{f}(d_i, e)$ $\iff$ all the attributes of 
+  $e$ satisfy the filter function $f$. By default, the filter function $f$ just returns true. 
+\end{defn}
+
+Using the Definition~\ref{defn:data_connector}, we could now also apply an equi-join operator 
+on the data sources. Formally, we could generate a new triple 
+$R =  \mu_{f_i}(d_i, e_i) \bowtie  \mu_{f_j}(d_j, e_j) $ where $e_i$ and $e_j$ have 
+common attributes under the filter functions $f_i$ and $f_j$. 
+
+The processing is done on individual records, leading to 
+RDF-Gen treating streaming and archival data sources the same way --- as "streams" 
+of records. Due to the record-by-record processing, the framework also has a very low 
+memory usage. 
+
+\subsubsection{Triple Generator}
 
 
 \section{Mapping based Engines}

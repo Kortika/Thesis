@@ -2,6 +2,17 @@
 \usepackage[british]{babel}
 \usepackage{lmodern}
 \usepackage{tgpagella}
+\usepackage[inline]{enumitem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[chapter] % reset theorem numbering for each chapter
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition} % definition numbers are dependent on theorem numbers
+\newtheorem{exmp}[thm]{Example} % same for example numbers
 
 % margins
 \setlength{\hoffset}{-1in}
