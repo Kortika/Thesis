@@ -17,15 +17,20 @@ usage in the industry for querying databases, it is important that a similar
 query language is used for RDF datasets to ease the transition for the users. 
 
 SPARQL\cite{sparql} achieves this goal by emulating as many SQL syntaxes as possible to allow 
-a seamless transition to RDF datasets usage. Similar to relational databases, RDF 
+a seamless transition to RDF datasets usage by existing data engineers. 
+Similar to the relational databases, RDF 
 datasets can be considered as a table consisting of three columns --- the subject column, 
 the predicate column, and the object column. Unlike relational databases, 
 RDF datasets, in a table representation, allows the object column to be of heterogeneous datatype. 
 Recall from Chapter~\ref{sec:turtle_syntax}, one could explicitly specify the 
-datatype of the object term which allows the heterogeneity in the object column.  
+datatype of the object term which allows the heterogeneity in the object column.
+
+
 Also, different from SQL, SPARQL allows matching based on \emph{basic graph patterns} composed 
 of a set of \emph{triple patterns}. Triple patterns are similar to the triple statements 
 as clarified in Chapter~\ref{sec:turtle_syntax} but extended with declared variables (i.e. \emph{?variable\_name}). 
+The declared variables are then bound to the concrete value in the corresponding \emph{triple statements},
+matching the given \emph{triple pattern}, from the RDF dataset. 
 The result of a SPARQL query is returned as an RDF sub-graph of the queried RDF dataset. 
 
 Now a question definitely gets raised in our mind, how does this relate to transforming an 
@@ -38,6 +43,7 @@ elaborated in Chapter~\ref{sec:query_based_engine}.
     label={lst:sparql_example}]
     SELECT ?medication
     WHERE {
+      #Basic graph pattern consisting of 2 triple patterns. 
         ?diagnosis example:name "Cancer" .
         ?medication example:canTreat ?diagnosis .
     }
@@ -203,11 +209,35 @@ $R =  \mu_{f_i}(d_i, e_i) \bowtie  \mu_{f_j}(d_j, e_j) $ where $e_i$ and $e_j$ h
 common attributes under the filter functions $f_i$ and $f_j$. 
 
 The processing is done on individual records, leading to 
-RDF-Gen treating streaming and archival data sources the same way --- as "streams" 
+RDF-Gen treating streaming and archival data sources the same way --- as “streams” 
 of records. Due to the record-by-record processing, the framework also has a very low 
 memory usage. 
 
 \subsubsection{Triple Generator}
+As indicated in Figure~\ref{fig:rdf-gen-arch}, Triple Generator consumes the output records 
+of the Data Connectors to convert them into RDF triples. A vector of variables $V$, an RDF 
+graph template $G$, akin to the basic graph pattern from SPARQL 1.1, and a 
+set of functions can be used to configure the Triple Generators. 
+
+$V$ consists of variables which corresponds to the attributes of the
+generated records from the Data Connector. These variables are referenced 
+in the graph template $G$, and then used to 
+bind to the attribute value of the record provided by the Data Connector. Therefore, 
+this simple binding of values in a template graph enables Triple Generator to 
+generate RDF triples efficiently and have a high scalability.
+
+Listing~\ref{lst:rdf_gen_example} shows an example graph template $G$ provided to 
+the Triple Generator to generate RDF triples. In this example, the provided vector 
+of variable is $V = [\textrm{?diagnosis\_id}, \textrm{?name} ]$.
+\begin{lstlisting}[language={SPARQL},
+   caption={A simple graph template $G$ with the functions \emph{asString} and \emph{makeUri}.}, 
+   label={lst:rdf_gen_example}
+  ]
+  #BGP for the diagnosis data source
+  makeUri(?diagnosis_id) a example:Diagnosis;
+  example:name asString(?name).
+\end{lstlisting}
+
 
 
 \section{Mapping based Engines}
