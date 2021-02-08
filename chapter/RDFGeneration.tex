@@ -266,6 +266,14 @@ The final generated set of RDF triples is (e.g. in turtle syntax):
                           example:name asString(?name).
 \end{lstlisting}
 
+Consumption of input on a record-by-record basis results in RDF-Gen having to 
+handle multi-stream operators with the use of windows. However, the paper did not 
+mention in detail about its implementation of windows to handle 
+multi-stream operators since it was out of scope. Therefore, we still have no 
+notion of how to handle data streams with dynamic characteristics where fixed windows 
+size have negative consequences on the quality of the generated RDF data. 
+
+
 \section{Mapping based Engines}
 \label{sec:mapping_based_engine}
 Other than approaching the transformation of non-RDF to RDF from the viewpoint of 
