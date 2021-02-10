@@ -343,11 +343,12 @@ of non-RDF to RDF data, it also guarantees fault-tolerance through the usage of
 
 \section{Summary}
 While SPARQL-Generate\cite{sparql_generate}, RDF-Gen\cite{rdf_gen}, and TripleWave\cite{triple_wave} 
-supports join operator for executing a binary join, they are not scalable to handle multiple streaming 
-sources of data with high velocity and volume. 
-
-
-
+supports join operator for executing a binary join, scalability is not built in the engines to handle multiple streaming 
+sources of data with high velocity and volume. There needs to be separate instances started on different 
+machines and the coordination mechanism implemented for these engines to scale. An engine
+with built in capabilities to handle high velocity and volume of data is of interest
+to implement the dynamic windowing scheme. 
+Hence, RMLStreamer is the best candidate for this work on dynamic window join in RDF generation. 
 
 
 
