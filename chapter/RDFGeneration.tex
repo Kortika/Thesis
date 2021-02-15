@@ -1,4 +1,10 @@
 \chapter{RDF data generation from non-RDF data}
+\gh{I would avoid the word "engine" in this chapter: an engine is typically a specific part/component of a solution or implementation. So maybe go for "implementation".}
+
+
+\gh{In this paragraph, I would first say that there are specifications and languages that say how to generate RDF.
+Then say that there are implementations of these specs, etc.}
+
 Several state-of-the art implementations exist to generate RDF data from 
 non-RDF data. These engines could be categorized into two groups; \emph{query-based} and 
 \emph{rule-based} engines. These can be further categorized into two more subgroups 
@@ -11,19 +17,21 @@ employ to transform non-RDF to RDF data.
 
 
 \section{SPARQL Query Language}
-Query languages already exist in established relational database systems such as 
+\gh{I see why you put a section about SPARQL here, but actually it belongs to the "Semantic Web" chapter. It's even in Figure 2.1 :) 
+Also because RDF-Gen has little to do with SPARQL.}
+Query languages \gh{such as SQL[++]}\footnote{[++] means: add reference} already exist in established relational database systems such as 
 MySQL or PostgreSQL. It allows users to manipulate and retrieve data 
 from relational databases using concise statements. Due to its widespread 
-usage in the industry for querying databases, it is important that a similar 
+use in the industry for querying databases, it is important that a similar 
 query language is used for RDF datasets to ease the transition for the users. 
 
-SPARQL\cite{sparql} achieves this goal by emulating as many SQL syntaxes as possible to allow 
-a seamless transition to RDF datasets usage by existing data engineers. 
-Similar to the relational databases, RDF 
-datasets can be considered as a table consisting of three columns --- the subject column, 
-the predicate column, and the object column. Unlike relational databases, 
-RDF datasets, in a table representation, allows the object column to be of heterogeneous datatype. 
-Recall from Chapter~\ref{sec:turtle_syntax}, one could explicitly specify the 
+SPARQL\cite{sparql} achieves this goal by emulating \sout{as many} SQL \sout{syntaxes as possible} to allow 
+a seamless transition to RDF \sout{datasets usage} by existing data engineers. 
+Similar to relational databases, RDF 
+datasets can be considered as a table consisting of three columns --- the \textit{subject} column, 
+the \textit{predicate} column, and the \textit{object} column. Unlike relational databases, 
+RDF datasets, in a table representation, allow the object column to be of heterogeneous datatype. 
+Recall from \sout{Chapter}\gh{Section}~\ref{sec:turtle_syntax}, one could explicitly specify the 
 datatype of the object term which allows the heterogeneity in the object column.
 
 
@@ -34,6 +42,7 @@ The declared variables are then bound to the concrete value in the corresponding
 matching the given \emph{triple pattern}, from the RDF dataset. 
 The result of a SPARQL query is returned as an RDF sub-graph of the queried RDF dataset. 
 
+\gh{If this section (4.1) moves to chapter 2 "Semantic Web Technologies", this paragraph can be deleted. But keep the example (listing 4.1 table 4.1).}
 Now a question definitely gets raised in our mind, how does this relate to transforming an 
 unbounded dataset to RDF format in a streaming environment? There exists state-of-the-art 
 engines for generating RDF data from heterogeneous streaming data sources, which will be 
@@ -67,16 +76,21 @@ elaborated in Chapter~\ref{sec:query_based_engine}.
 RDF Mapping Language\cite{rml} is a superset of the W3C's R2RML\cite{r2rml} which maps relational databases to
 RDF datasets. RML improves upon R2RML by expressing mapping rules from heterogeneous
 data sources and transforming them to RDF datasets whereas R2RML could only consume
-data from relational databases. RML mapping file is composed of one or more \emph{triples maps}, 
+data from relational databases. An RML mapping \sout{file}\gh{document} is composed of one or more \emph{triples maps}, 
 which in turn consist of \emph{subject, predicate} and \emph{object} term maps. As the names imply, 
 the term maps are used to map elements of the data sources to their respective terms 
 in an RDF triple. The definitions of these maps are similar to the 
 specifications in R2RML\cite{rml_tech}. 
 
 Logical sources could be defined by specifying the \emph{source, logical iterator} 
-and zero or one \emph{reference formulation} property. The logical sources in the default 
+and zero or one \emph{reference formulation} property.
+The logical sources in the default 
 RML mapping file are bounded data, where the data already exists and has a predetermined
-size. 
+size.
+\gh{This is not (entirely) true: RML does not state if a source is bounded or not. At this moment we
+somehow have to derive this from what's in rml:source. However,
+The RMLMapper, the 
+reference implementation, only processes bounded data sources at the moment.}
 
 RML also supports defining relationships amongst the different 
 triple maps through the use of \textit{rr:parentTriplesMap, rr:joinCondition, rr:child and rr:parent}
