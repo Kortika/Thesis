@@ -54,10 +54,10 @@ and the object \textit{apple}.
 By composing these simple triple statements into a set of RDF triples, it yields us an RDF graph.
 In Figure~\ref{fig:rdf_graph_ex}, 4 triple statements are composed together to form a
 simple RDF graph describing \textit{John} and \textit{Mary} having the same \textit{apple}.
-It might not be evident from the simple figures, about the advantages of
+\gh{Something is missing from the next sentence:} It might not be evident from the simple figures, about the advantages of
 RDF graphs. Data representation in a graph model allows machines to follow the
 \textit{links} between the resources, and discover more unknown
-data in the linked knowledge graph. Link following is possible due to the nodes in
+data in the linked knowledge graph. \sout{Link following}\gh{Following links} is possible due to the nodes in
 the triples being classified as one of the 3 different term types.
 
 \begin{figure}[htbp]
@@ -83,35 +83,38 @@ the triples being classified as one of the 3 different term types.
 \end{figure}
 
 \subsection{Term types}
-Resources are classified into 3 different term types; IRI (Internationalized Resource Identifier),
-literals and blank nodes. IRI is a string identifier unique in the global scope to
+Resources are classified into 3 different term types: IRI (Internationalized Resource Identifier),
+literals and blank nodes. \gh{An} \textit{IRI} is a \gh{unique} string identifier \sout{unique} in the global scope to
 represent a resource. It is usually in the form of a web address, however, it can
-also be in other forms so long as it conforms to the syntax defined in
+also be in other forms \sout{so}\gh{as} long as it conforms to the syntax defined in
 RFC 3987~\footnote{RFC 3987: \url{https://www.ietf.org/rfc/rfc3987.txt}}.
-IRI can represent a relationship, a concept or an object. Therefore, it could be
+\gh{An} IRI can represent a relationship, a concept or an object. Therefore, it could be
 used in the \textit{subject}, the \textit{predicate} and the \textit{object} components of
 an RDF triple.
 
-Literals term type is used to represent a value such as strings, numbers, boolean and dates.
+\gh{The} \textit{literal} term type is used to represent a value such as strings, numbers, boolean and dates.
 To ensure that the machines know the type of the data being read, we could
 explicitly specify the type of the data with a datatype IRI. Moreover, the
 language in which the data is written, could also be explicitly stated with
 a language tag.
 
-Lastly, we have the term type blank nodes. Blank nodes identify resources
+Lastly, we have the term type \textit{blank node}. Blank nodes identify resources
 in the local scope (i.e. to a local file or an RDF store). Since it is used to
 identify resources in nodes, blank nodes are only applicable as the \textit{subject}
 and the \textit{object} components of an RDF triple.
 
 
-\subsection{TURTLE syntax}
+\subsection{Turtle syntax}
 \label{sec:turtle_syntax}
-The aforementioned term types are defined for abstract RDF syntax. For a concrete syntax to write
-RDF triples, we would focus on the TURTLE (Terse RDF Triple Language)~\cite{turtle_syntax}
+
+\gh{Perhaps briefly explain that there are a number of syntaxes and why you pick Turtle to describe more in detail here}
+
+The aforementioned term types are defined \sout{for}\gh{in the} abstract RDF syntax. For a concrete syntax to write
+RDF triples, we would focus on the \sout{TURTLE}\gh{Turtle} (Terse RDF Triple Language)~\cite{turtle_syntax}
 syntax in this work. A simple triple statement is a sequence of
 \textit{subject, predicate, object} terms, ending in a '.'.
 To reduce the repetition of writing the same subject and predicate combination with
-different objects, TURTLE allows the use of ',' to separate the different objects.
+different objects, Turtle allows the use of ',' to separate the different objects.
 Additionally, one could also use ';' to separate the different predicates and objects sharing the
 same subject. 
 
@@ -129,25 +132,31 @@ same subject.
 \end{lstlisting}
 
 
-IRIs are written between the angle brackets like \lstinline{<http://example.org/#John>}.
+IRIs are written between \sout{the} angle brackets like \lstinline{<http://example.org/#John>}.
 Since blank nodes are locally scoped version of IRIs, the same syntax to write IRIs is also used.
-TURTLE syntax allows us to define \textit{prefixes} at the head of the TURTLE file.
+\sout{TURTLE syntax}\gh{Turtle} allows us to define \textit{prefixes} at the head of the Turtle \sout{file}\gh{document (it can be a file, but also a document on the web for instance)}.
 Users could then use prefixes, to write RDF triples in a more compact form. For example,
 \lstinline{<http://example.org/#John>} could be shortened to
 \lstinline{<#John>} using the relative \textit{@base} path.
 
 \begin{lstlisting}[caption=Prefixes in TURTLE syntax.]
     @base <http://example.org/> . # default base IRI
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
     @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
     @prefix foaf: <http://xmlns.com/foaf/0.1/> .
     @prefix rel: <http://www.perceive.net/schemas/relationship/> . 
     ... 
 \end{lstlisting}
+\gh{I added the xsd prefix to Listing 2.3 because we use it further in the text.}
 
-Literals are written between the double quote '"'. It has a default datatype of 
-a string. One could also \textit{cast} the literal value to a specific datatype 
+\sout{Literals are written between the double quote '"'. It has a default datatype of 
+a string.}
+\gh{A literal is written between double quotes and has by
+default the xsd:string datatype} 
+One could also \textit{cast} the literal value to a specific datatype 
 by appending '\textasciicircum{} \textasciicircum{} $[$IRI of the datatype$]$'. For example, 
-"12" is cast to an integer in \lstinline{"12"^^xsd:integer}. Language of the literal value 
-could also be specified using \textit{@} similarly to datatype casting. 
+"12" is cast to an integer in \lstinline{"12"^^xsd:integer}.
+\gh{The} language of the literal value 
+can also be specified using \lstinline{@} similarly to datatype casting. 
 
