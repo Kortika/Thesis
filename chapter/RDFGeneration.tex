@@ -89,17 +89,17 @@ RML mapping file are bounded data, where the data already exists and has a prede
 size.
 \gh{This is not (entirely) true: RML does not state if a source is bounded or not. At this moment we
 somehow have to derive this from what's in rml:source. However,
-The RMLMapper, the 
+the RMLMapper, the 
 reference implementation, only processes bounded data sources at the moment.}
 
 RML also supports defining relationships amongst the different 
-triple maps through the use of \textit{rr:parentTriplesMap, rr:joinCondition, rr:child and rr:parent}
-properties. Different triple maps might come from separate logical sources, therefore, 
-referencing across these triple maps will require applying the join operator across multiple 
+\sout{triple}\gh{triples} maps through the use of \textit{rr:parentTriplesMap, rr:joinCondition, rr:child and rr:parent}
+properties. Different triples maps might come from separate logical sources, therefore, 
+referencing across \sout{these} triples maps \sout{will}\gh{might} require applying the join operator across multiple 
 logical sources. 
 
 
-\begin{lstlisting}[caption={An example of an RML mapping file\cite{rml_tech}}.]
+\begin{lstlisting}[caption={An example of an RML mapping document\cite{rml_tech}}.]
 @prefix rr: <http://www.w3.org/ns/r2rml#>.
 @prefix rml: <http://semweb.mmlab.be/ns/rml#>.
 @prefix ex: <http://example.com/ns#>.
@@ -132,25 +132,38 @@ logical sources.
 
 \section{Query based Engines}
 \label{sec:query_based_engine}
+\gh{Change title to "Query based implementations"}
+
 When we think of interacting with a data source, querying the data source with a 
 query language seems natural since that is the common method to interact 
-with a traditional database. Allowing users to query the sources without explicitly 
+with a \sout{traditional} database. Allowing users to query the sources without explicitly 
 defining the mapping semantics hides the mapping or data transformation details from the user. 
 Moreover, it eases the transition to developing applications using RDF data since the syntaxes are 
-similar to existing query languages. 
+similar to existing query languages.
+\gh{I don't entirely get the last sentence: why would applications *using* RDF care how the RDF is generated?} 
 
-From what we know, there exists two state-of-the-art query based engines for transforming 
-unbounded non-RDF data to RDF data; SPARQL-Generate and RDF-Gen, the latter diverging a lot from
-the underlying SPARQL syntaxes.  
-These engines will be elaborated more in the following sections. 
+\sout{From what we know}\gh{To the best of our knowledge}, there exist two state-of-the-art query based implementations for transforming 
+unbounded non-RDF data to RDF data: SPARQL-Generate and RDF-Gen\sout{, the latter diverging a lot from
+the underlying SPARQL syntaxes}.
+\gh{I think it doesn't matter how hard they diverge, it's the method that counts.}  
+These engines will be elaborated more in the following sections.
+
+\gh{I think both SPARQL-Generate and RDF-Gen can be called "template based"
+solutions. They both define somehow a template where variables of the
+orininal data source can be bound.
+These are not to be confused with what is (arguably incorrectly) called
+OBDA systems, where they literally take a SPARQL query, translate that to
+a query the underlying stream processing framework understands, and 
+return the results. If it is a CONSTRUCT query then the output are
+triples. Examples: Optique (\url{https://link.springer.com/chapter/10.1007\%2F978-3-642-41242-4_11}) and Morph-streams (\url{http://dx.doi.org/10.4018/jswis.2012010103})}
 
 
 \subsection{SPARQL-Generate}
 SPARQL-Generate~\cite{sparql_generate} was proposed as an alternative to then existing methods of 
 transforming non-RDF data. The language is based on an extension of SPARQL 1.1 query language, to leverage 
 its expressiveness and extensibility. Furthermore, this allows SPARQL-Generate to be implemented on top 
-of any existing SPARQL query engines. The reference implementation in the paper was based on Apache Jena's 
-SPARQL 1.1 engine. Due to the use of existing SPARQL 1.1 query language, experienced knowledge engineers could use 
+of any existing SPARQL query engine. The reference implementation in the paper was based on Apache Jena's 
+SPARQL 1.1 engine. Due to the use of the existing SPARQL 1.1 query language, experienced knowledge engineers could use 
 SPARQL-Generate to improve the generation of RDF data in their existing workflow. 
 
 SPARQL-Generate supports the consumption of heterogeneous data sources by exposing the 
@@ -161,20 +174,25 @@ For example, WebSocket and MQQT are currently supported in the latest version of
 
 Although there is a support for data stream processing, the paper did not go into details 
 about the application of multi-stream operators like joins when involving multiple streaming 
-data sources. Hence, we could assume that SPARQL-Generate either process the whole dataset in memory or 
-keeps a fixed window of data on which multi-stream operators are applied. Furthermore, the 
+data sources. Hence, we could assume that SPARQL-Generate either processes the whole dataset in memory or 
+keeps a fixed window of data on which multi-stream operators are applied.
+\gh{Could you check what exactly it is? \url{https://github.com/sparql-generate/sparql-generate}}
+Furthermore, the 
 authors mentioned that SPARQL-Generate could use the SPARQL 1.1 operators such as \emph{join operators}. 
 From this, we could derive that SPARQL-Generate will apply \emph{join} on the 
-records by delegating it to the underlying SPARQL engine. 
+records by delegating it to the underlying SPARQL engine.
+\gh{Probably, but please check it. If you don't find it,
+we can just ask the authors. But I don't like assuming 
+things if they can be verified.} 
 Therefore, there is a lack of  
 dynamic windowing schemes to efficiently exploit the characteristics of the streaming data sources.  
 
 \subsection{RDF-Gen}
 RDF-Gen\cite{rdf_gen} is also based on SPARQL-like syntaxes. However, instead of extending SPARQL engines, 
-it provides its own architecture as laid out in Figure~\ref{fig:rdf-gen-arch} to meet the demand
-of real-time processing. Instead of adopting most of the syntaxes from SPARQL, RDF-Gen only 
-kept the BGP section of SPARQL query to reduce the size of the transformation specification. 
-Thus, it has the most compact mapping template/query compared to the other methods mentioned in this paper. 
+it provides its own architecture as laid out in Figure~\ref{fig:rdf-gen-arch} to meet the demands
+of real-time processing. Instead of adopting most of the syntax from SPARQL, RDF-Gen only 
+keeps the \sout{BGP} \gh{basic graph pattern} section of SPARQL query to reduce the size of the transformation specification. 
+Thus, it has the most compact mapping template\sout{/query} compared to the other methods mentioned in this paper. 
 
 RDF-Gen consists of three main components: 
 \begin{enumerate*}[label=(\alph*)]
@@ -182,7 +200,7 @@ RDF-Gen consists of three main components:
   \item Triple Generator, and
   \item Link Discovery.
 \end{enumerate*}
-Data Connector allows close-to-source processing, which is not the case for SPARQL-Generate. 
+Data Connector allows close-to-source processing, which is not the case for SPARQL-Generate.\gh{Why not?} 
 Triple Generator handles the rapid generation of RDF triples by making use of 
 template graphs and variable vectors. The Link Discovery component solves the 
 problem of link discovery problem which is defined as follows:
@@ -201,7 +219,7 @@ multi-stream operators during RDF generation in this paper, link discovery compo
 
 \subsubsection{Data Connector}
 Data Connector has a similar functionality as the \emph{iterator functions} from SPARQL-Generate.
-It consumes the data sources given a configuration setting. Configuration setting is used to specify 
+It consumes the data sources given a configuration setting. The configuration setting is used to specify 
 the type of data sources, the \emph{window} for processing the incoming data records and 
 also apply functions on the incoming data elements. Data Connector can thus be defined as a 
 mapping function as in Definition~\ref{defn:data_connector}. 
@@ -295,7 +313,9 @@ size have negative consequences on the quality of the generated RDF data.
 Other than approaching the transformation of non-RDF to RDF from the viewpoint of 
 queries, one could also employ mapping languages such as RML. 
 The following subsections will elaborate more on the related state-of-the-art engines 
-which utilizes mapping languages in a streaming environment. 
+which utilizes mapping languages in a streaming environment.
+
+\gh{Perhaps mention somewhere that mapping languages are declarative, and what their advantages are (if any), like you	did with the query based implementations.}
 
 \subsection{TripleWave}
 Albeit the abundance of solutions to combine semantic technologies with stream and event processing 
@@ -305,8 +325,8 @@ It extends R2RML, which only allows ingestion of inputs from relational database
 to also consume other formats such as JSON or CSV (just like RML, a superset of R2RML). 
 
 TripleWave generates an RDF stream of JSON-LD format which could be consumed by existing RSP engines for further 
-processing. It also supports joining of multiple stream which could be inferred from its usage of R2RML's usage 
-of \emph{rr:parentTriplesMap} predicate \cite{triple_wave}. Since the goal of TripleWave 
+processing.
+It also supports joining of multiple streams which could be inferred from its implementation of R2RML's \emph{rr:parentTriplesMap} predicate \cite{triple_wave}. Since the goal of TripleWave 
 is to publish RDF streams from RDF and non-RDF data sources, it does not support the 
 application of arbitrary functions at its core unlike RDF-Gen and SPARQL-Generate. 
 However, as is the case with the aforementioned frameworks and engines, 
@@ -322,28 +342,30 @@ with dynamic characteristics.
 \end{figure}
 
 \subsection{RMLStreamer}
-The engines elaborated thus far, scale insufficiently in terms of the velocity and 
-volume of the data stream. Multiple instances of the engines will need to 
+The engines elaborated thus far, scale insufficiently in terms of velocity and 
+volume of data streams. Multiple instances of the engines will need to 
 be started in order to scale with the higher volume and velocity of 
 the input data streams. Since they are not built upon a distributed framework, 
 there is also a need for a separate implementation to coordinate the different 
 instances in a distributed environment. 
 
-To tackle the aforementioned shortcoming, RMLStreamer\cite{rml_streamer}
+To tackle the aforementioned shortcomings, RMLStreamer\cite{rml_streamer}
 was developed to parallelize the ingestion and mapping process of RDF data generation pipeline. 
 It is based on the work of RMLMapper\cite{rml}, an RDF mapping engine consuming bounded data and 
-mapping them to RDF data with the use of RML. Hence, RMLStreamer could also 
+mapping them to RDF data with the use of RML. Hence, RMLStreamer can also 
 process heterogeneous data and generate RDF data. 
 
 Parallelization of the subtasks, the ingestion and the mapping process, is achieved by executing 
-these processes over multiple machines. This is visualised in 
+these processes over multiple machines.
+\gh{It's rather "Due to parallelization of the tasks..., these processes can be spread over multiple machines."}
+This is visualised in 
 Figure \ref{fig:rml-parallel-arch}.  However, as with all distributed 
 computing, a mechanism to coordinate the different machines is required. 
 To fulfill this requirement, RMLStreamer is 
 implemented on top of Apache Flink\cite{flink} framework, a generic distributed stream 
 processing framework. Not only does it allow the mapping 
 of non-RDF to RDF data, it also guarantees fault-tolerance through the usage of 
-\emph{Asynchronous Barrier Snapshots}~\cite{flink_fault_tolerance} and \emph{exactly-once} semantic. 
+\emph{Asynchronous Barrier Snapshots}~\cite{flink_fault_tolerance} and \emph{exactly-once} semantic \gh{although these are disabled by default. This reminds me that it would be nice to investigate the influence on the performance, but that's not in the scope of this thesis.}. 
 
 
 \begin{figure}[!htbp]
@@ -357,9 +379,10 @@ of non-RDF to RDF data, it also guarantees fault-tolerance through the usage of
 
 \section{Summary}
 While SPARQL-Generate\cite{sparql_generate}, RDF-Gen\cite{rdf_gen}, and TripleWave\cite{triple_wave} 
-supports join operator for executing a binary join, scalability is not built in the engines to handle multiple streaming 
-sources of data with high velocity and volume. There needs to be separate instances started on different 
-machines and the coordination mechanism implemented for these engines to scale. An engine
+support the join operator for executing a binary join, but scalability is not built in the engines to handle multiple streaming 
+data sources with high velocity and volume. \sout{There needs to be separate instances started on different 
+machines and the coordination mechanism implemented for these engines to scale.}\gh{I would not repeat this.}
+An solution
 with built in capabilities to handle high velocity and volume of data is of interest
 to implement the dynamic windowing scheme. 
 Hence, RMLStreamer is the best candidate for this work on dynamic window join in RDF generation. 
