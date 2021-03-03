@@ -8,7 +8,7 @@
     \label{fig:sem_web_stack}
 \end{figure}
 
-Semantic web extends the existing \emph{web of documents} with the ability 
+The semantic web extends the existing \emph{web of documents} with the ability 
 to \emph{link} different documents and \emph{embed knowledge} in the document
 to transform it into a \emph{web of data}. It is perceived by Tim Beners-Lee in 
 2001\cite{bernerslee2001semantic} to be integrated into the existing architecture 
@@ -16,18 +16,19 @@ of World Wide Web. Embedding \emph{knowledge} into documents enables machines to
 interpret the \emph{meaning} of the document and interoperate with each other on 
 a more complex level.
 
-Semantic web stack enables one to start building a \emph{web of data} using 
+The semantic web stack enables one to start building a \emph{web of data} using 
 the core technologies shown in Figure~\ref{fig:sem_web_stack}. 
 However, this is provided that the data already exists in RDF compliant format.
+\gh{I would rephrase as: "...provided that the data is represented in the Resource Description Framework (RDF)[++]". Because at this point the reader doesn't know RDF yet.}
 Existing data on the web in non-RDF format must, therefore, be transformed 
-into RDF data enable transition to a \emph{web of data}. This work 
-focuses on transforming non-RDF to RDF data, thus the RDF format will be elaborated 
+into RDF to enable transition to a \emph{web of data}. This work 
+focuses on transforming non-RDF to RDF data, thus the RDF data model will be elaborated on
 in detail. 
 
 
 
 \section{RDF}
-Resource Definition Framework \cite{rdf_concepts} is a framework for representing data on the Web.
+Resource Definition Framework (RDF) \cite{rdf_concepts} is a framework for representing data on the Web.
 It portrays the data as a directed graph with the resources as nodes in the graph and the
 edges as the relationship between the different resources.
 Figure~\ref{fig:rdf_triple_ex} shows an example of an RDF triple statement describing
@@ -85,7 +86,7 @@ the triples being classified as one of the 3 different term types.
 
 \subsection{Term types}
 Resources are classified into 3 different term types: IRI (Internationalized Resource Identifier),
-literals and blank nodes. An \textit{IRI} is a unique string identifier \sout{unique} in the global scope to
+literals and blank nodes. An \textit{IRI} is a unique string identifier in the global scope to
 represent a resource. It is usually in the form of a web address, however, it can
 also be in other forms as long as it conforms to the syntax defined in
 RFC 3987~\footnote{RFC 3987: \url{https://www.ietf.org/rfc/rfc3987.txt}}.
@@ -106,26 +107,34 @@ and the \textit{object} components of an RDF triple.
 
 \section{RDF serialization formats}
 
-The aforementioned term types are defined in the abstract RDF syntax and 
-requires a concrete syntax to store and process RDF data. 
-Several syntaxes have been developed alongside RDF specifications to represent RDF
-knowledge graphs in storage formats. These syntaxes usually have trade-offs for simplicity of parsing against 
-human readability. The following sections will describe the widely used formats in detail; 
+The aforementioned term types are defined in the abstract RDF \sout{syntax}\gh{model} and 
+require a concrete \sout{syntax}\gh{serialization} to store and process RDF data. 
+Several \sout{syntaxes}\gh{serialization formats} have been developed alongside RDF specifications to represent RDF
+knowledge graphs.
+These formats usually have trade-offs for simplicity of parsing against 
+human readability. The following sections will describe some widely used formats in detail; 
 RDF/XML, JSON-LD, N-Triples and lastly Turtle. 
 
 
 \subsection{RDF/XML}
-The earliest of these is RDF/XML\footnote{RDF/XML: \url{https://www.w3.org/TR/rdf-syntax-grammar/}}. 
+The earliest of the serialization formants is RDF/XML\footnote{RDF/XML: \url{https://www.w3.org/TR/rdf-syntax-grammar/}}. 
 It was developed during the early days of RDF when parsers, serializers and storage systems 
 for XML were widely used. 
 Due to the mixture of tree-structure document with a triple-based graph;
-RDF/XML is too verbose and difficult for human to read and understand. Moreover, 
+RDF/XML is too verbose and difficult for human to read and understand.
+\gh{Don't underestimate humans; maybe replace with "...RDF/XML can be quite verbose and difficult..."}
+Moreover, 
 it is also not a stream-friendly format for unbounded RDF data generation.
+\gh{Perhaps replace with "Moreover, XML is not suited to represent unbounded data streams."}
 
 
 \subsection{JSON-LD}
 JSON-LD\cite{JSON-LD} was developed as 
-the modern Linked Data format compared to RDF/XML. It provides a way to continue using existing 
+the modern Linked Data format compared to RDF/XML.
+\gh{or to RDF in general (JSON-LD is not an RDF serialisation). See \url{http://manu.sporny.org/2014/json-ld-origins-2/} for a fun read. (don't cite this though :)
+We can move this section below the N-Triples section,
+and clearly mention that it is possible to represent RDF using JSON-LD, but that it is not intended to.}
+It provides a way to continue using existing 
 infrastructures using JSON and upgrade from JSON to JSON-LD to utilize the power of semantic knowledge graphs. 
 Although the flexibility of extending existing infrastructures to support Linked Data usage 
 is favorable, it has one major drawback; a high performance cost for parsing\footnote{Performance of parsing JSON-LD: \url{http://manu.sporny.org/2016/json-ld-context-caching/}}.
