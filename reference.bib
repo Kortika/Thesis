@@ -1,3 +1,20 @@
+@inproceedings{hospital_diagnosis,
+  author    = {Choudhury, Ambika
+and Gupta, Deepak},
+  editor    = {Kalita, Jugal
+and Balas, Valentina Emilia
+and Borah, Samarjeet
+and Pradhan, Ratika},
+  title     = {A Survey on Medical Diagnosis of Diabetes Using Machine Learning Techniques},
+  booktitle = {Recent Developments in Machine Learning and Data Analytics},
+  year      = {2019},
+  publisher = {Springer Singapore},
+  address   = {Singapore},
+  pages     = {67--78},
+  abstract  = {While designing medical diagnosis software, disease prediction is said to be one of the captious tasks. The techniques of machine learning have been successfully employed in assorted applications including medical diagnosis. By developing classifier system, machine learning algorithm may immensely help to solve the health-related issues which can assist the physicians to predict and diagnose diseases at an early stage. We can ameliorate the speed, performance, reliability, and accuracy of diagnosing on the current system for a specific disease by using the machine learning classification algorithms. This paper mainly targets the review of diabetes disease detection using the techniques of machine learning. Further, PIMA Indian Diabetic dataset is employed in machine learning techniques like artificial neural networks, decision tree, random forest, na{\"i}ve Bayes, k-nearest neighbors, support vector machines, and logistic regression and discussed the results with their pros and cons.},
+  isbn      = {978-981-13-1280-9}
+}
+
 @article{bernerslee2001semantic,
   abstract         = {A new form of Web content that is meaningful to computers will unleash a revolution of new possibilities.},
   added-at         = {2016-09-07T01:44:07.000+0200},
@@ -36,6 +53,7 @@
   volume  = {38},
   pages   = {28-38}
 }
+
 @misc{flink_fault_tolerance,
   title         = {Lightweight Asynchronous Snapshots for Distributed Dataflows},
   author        = {Paris Carbone and Gyula Fóra and Stephan Ewen and Seif Haridi and Kostas Tzoumas},
@@ -64,7 +82,6 @@
   journal = {Web Semantics: Science, Services and Agents on the World Wide Web},
   doi     = {10.1016/j.websem.2016.02.003}
 }
-
 @article{intro_rdf,
   author  = {Miller, Eric},
   title   = {An Introduction to the Resource Description Framework},
@@ -77,6 +94,7 @@
   eprint  = {https://asistdl.onlinelibrary.wiley.com/doi/pdf/10.1002/bult.105},
   year    = {1998}
 }
+
 @techreport{JSON-LD,
   author      = {Pierre-Antoine Champin and Dave Longley and Gregg Kellogg},
   title       = {{JSON}-LD {1.1}},
@@ -87,7 +105,30 @@
   type        = {{W3C} Recommendation},
   institution = {W3C}
 }
-
+@techreport{hospital_data_monitoring,
+  author      = {Phillips},
+  title       = {Phillips Patient Monitoring},
+  institution = {Phillips},
+  year        = {n.d.}, 
+  note = {https://www.usa.philips.com/healthcare/solutions/patient-monitoring},
+  bibsource = {https://www.usa.philips.com/healthcare/solutions/patient-monitoring}
+}
+@inproceedings{spark_streaming,
+author = {Zaharia, Matei and Das, Tathagata and Li, Haoyuan and Hunter, Timothy and Shenker, Scott and Stoica, Ion},
+title = {Discretized Streams: Fault-Tolerant Streaming Computation at Scale},
+year = {2013},
+isbn = {9781450323888},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2517349.2522737},
+doi = {10.1145/2517349.2522737},
+abstract = {Many "big data" applications must act on data in real time. Running these applications at ever-larger scales requires parallel platforms that automatically handle faults and stragglers. Unfortunately, current distributed stream processing models provide fault recovery in an expensive manner, requiring hot replication or long recovery times, and do not handle stragglers. We propose a new processing model, discretized streams (D-Streams), that overcomes these challenges. D-Streams enable a parallel recovery mechanism that improves efficiency over traditional replication and backup schemes, and tolerates stragglers. We show that they support a rich set of operators while attaining high per-node throughput similar to single-node systems, linear scaling to 100 nodes, sub-second latency, and sub-second fault recovery. Finally, D-Streams can easily be composed with batch and interactive query models like MapReduce, enabling rich applications that combine these modes. We implement D-Streams in a system called Spark Streaming.},
+booktitle = {Proceedings of the Twenty-Fourth ACM Symposium on Operating Systems Principles},
+pages = {423–438},
+numpages = {16},
+location = {Farminton, Pennsylvania},
+series = {SOSP '13}
+}
 @techreport{N-Triples,
   author      = {Andy Seaborne and Gavin Carothers},
   title       = {{RDF} 1.1 N-Triples},
@@ -98,7 +139,6 @@
   type        = {{W3C} Recommendation},
   institution = {W3C}
 }
-
 @article{operator_aware_window,
   author  = {Phuoc, Danh},
   year    = {2016},
@@ -108,6 +148,7 @@
   journal = {Journal of Web Semantics},
   doi     = {10.1016/j.websem.2016.04.001}
 }
+
 @techreport{r2rml,
   author      = {Richard Cyganiak and Souripriya Das and Seema Sundara},
   title       = {{R2RML}: {RDB} to {RDF} Mapping Language},
@@ -119,6 +160,7 @@
   institution = {W3C}
 }
 
+
 @techreport{rdf_concepts,
   author      = {Markus Lanthaler and David Wood and Richard Cyganiak},
   title       = {{RDF} 1.1 Concepts and Abstract Syntax},
@@ -129,8 +171,6 @@
   type        = {{W3C} Recommendation},
   institution = {W3C}
 }
-
-
 @inproceedings{rdf_gen,
   author  = {Santipantakis, Georgios and Kotis, Konstantinos and Vouros, George and Doulkeridis, Christos},
   year    = {2018},
@@ -141,6 +181,8 @@
   journal = {WIMS '18: Proceedings of the 8th International Conference on Web Intelligence, Mining and Semantics},
   doi     = {10.1145/3227609.3227658}
 }
+
+
 @inproceedings{rml,
   title     = {RML: A Generic Language for Integrated RDF Mappings of Heterogeneous Data},
   author    = {A. Dimou and M. V. Sande and P. Colpaert and R. Verborgh and E. Mannens and R. Walle},
@@ -157,7 +199,6 @@
   title  = {Parallel RDF generation from heterogeneous big data},
   doi    = {10.1145/3323878.3325802}
 }
-
 
 @techreport{rml_tech,
   author      = {   Anastasia Dimou and 
@@ -193,7 +234,6 @@
   type        = {{W3C} Recommendation},
   institution = {W3C}
 }
-
 @inproceedings{sparql_generate,
   author    = {Lefran{\c{c}}ois, Maxime
 and Zimmermann, Antoine
@@ -221,6 +261,7 @@ and Hartig, Olaf},
   month     = oct,
   url       = {https://comunica.github.io/Article-ISWC2018-Resource/}
 }
+
 
 @inproceedings{triple_wave,
   author = {Mauri, Andrea and Calbimonte, Jean-Paul and Dell'Aglio, Daniele and Balduini, Marco and Brambilla, Marco and Della Valle, Emanuele and Aberer, Karl},
