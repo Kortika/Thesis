@@ -15,11 +15,24 @@ patients~\cite{hospital_data_monitoring}. These physiological data are generated
 periodically at regular intervals in a streaming manner. 
 
 As a consequence of the large volume and continuous data generation, there is a need for 
-infrastructure to process these unbounded data streams. 
-Stream processing engines which are equipped to handle these unbounded data exists in 
+the companies to be able to process these unbounded data streams. 
+Stream processing engines are equipped to handle such unbounded data and exists in 
 the industry today (e.g. Apache Flink~\cite{flink} and 
-Apache Spark streaming~\cite{spark_streaming}). 
+Apache Spark streaming~\cite{spark_streaming}). Main features of these stream 
+processing engines are their ability to 
+\renewcommand{\labelenumi}{(\roman{enumi})}
+\begin{enumerate*}
+    \item scale horizontally, 
+    \item process records individually as they arrive, and
+    \item process or analyse the data in real time.
+\end{enumerate*}
 
 In Chapter~\ref{chap:data_stream_processing}, we will dive into details of 
-how data stream processing is done in the industry and also elaborate on the 
+on the characteristics of data streams and also elaborate on the 
 various state-of-the-art frameworks in use by the industries. 
+
+
+\section{Characteristics of Data Streams}
+
+Traditional Big Data processing techniques use large volume datasets, which are bounded,
+stored on storage medium before the processing.
