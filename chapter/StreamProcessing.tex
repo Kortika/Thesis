@@ -33,6 +33,33 @@ various state-of-the-art frameworks in use by the industries.
 
 
 \section{Characteristics of Data Streams}
+What is a data stream? As defined by Golab and Ozsu~\cite{golab_data_stream}:
+“A \emph{data stream} is a \emph{real-time}, continuous, ordered (implicitly by arrival time 
+or explicitly by timestamp) sequence of items. It is impossible to control the order
+in which items arrive, nor is it feasible to \emph{locally store} a stream in its entirety.”
+The difference between traditional Big Data processing and data stream processing, lies in 
+the inability to store data \emph{locally} for data streams management. Furthermore, 
+data streams processing requires real-time response. Therefore, there is a 
+difference in the importance of the characteristics from the ones used to define Big Data. 
 
-Traditional Big Data processing techniques use large volume datasets, which are bounded,
-stored on storage medium before the processing.
+\subsection{Comparison with characteristics of Big Data}
+Big Data is usually characterized with the three “V's: \emph{volume}, \emph{velocity} 
+and \emph{variety}~\cite{big_data_analytics}. 
+In the context of data streams processing, it is expected that the \emph{volume} of 
+the data is unbounded since the devices, sensors and applications are constantly 
+generating data as long as there is an uptime. The \emph{variety} aspect of the 
+data streams is also heterogeneous in nature where different sources used by the same 
+processing engine may emit different types of data; structured and unstructured. 
+Moreover, \emph{variety} in data can also happen over time; a concept drift where 
+the properties of data may change over time unlike Big Data. 
+
+\subsection{Important characteristic: Velocity}
+Out of the three aforementioned characteristics, \emph{velocity} is the most important 
+factor to consider when it comes to data stream processing. Data is fast 
+changing, and they arrive constantly into the stream processing pipeline and needs to 
+be processed in real-time. As a result of the need for real-time response, it is 
+infeasible to have random memory access capability --- only single pass algorithm can
+be applied. This requirement of low latency processing has a consequence 
+that late decisions will result in missed opportunities. Therefore, there is a need 
+for data stream processing techniques to be able to handle the varying \emph{velocity}
+characteristic of data streams efficiently. 
