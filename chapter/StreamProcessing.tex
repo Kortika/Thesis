@@ -15,7 +15,7 @@ patients~\cite{hospital_data_monitoring}. These physiological data are generated
 periodically at regular intervals in a streaming manner. 
 
 As a consequence of the large volume and continuous data generation, there is a need for 
-the companies to be able to process these unbounded data streams. 
+the companies to be able to process these unbounded data streams.
 Stream processing engines are equipped to handle such unbounded data and exists in 
 the industry today (e.g. Apache Flink~\cite{flink} and 
 Apache Spark streaming~\cite{spark_streaming}). Main features of these stream 
@@ -68,9 +68,15 @@ network, the ordering of the data cannot be guaranteed. This is
 likely to happen if the network transmission protocols have no guarantee in the global 
 ordering of data or if there is latency~\cite{requirements_dsp}. 
 
+In certain applications such as fraud detection in bank transactions and monitoring of 
+patient's biometrics, the data streams emitted by the sensors need to be processed in 
+real-time. This is because the data streams in such scenarios will rapidly degrade in 
+value if they are not handled immediately. Thus, real-time processing of data streams 
+is a necessary requirement for data stream processing engines. 
+
 In the context of this work, where the focus is on the application of multi-stream operators, 
 the \emph{velocity} of a data stream will have a huge impact on the quality and efficiency of 
-the generated results. As a consequence of the limitations and challenges, brought forth by the 
+the generated results. As a consequence of the challenges brought forth by the 
 aforementioned characteristics of data streams, a Data Stream Management System (DSMS) needs 
 to be able to deal with them appropriately.  
 
@@ -78,8 +84,38 @@ to be able to deal with them appropriately.
 Data Stream Management Systems are designed to overcome the aforementioned challenges 
 in data stream processing. Different from the common big data processing, DSMS has to be 
 able to respond in real-time and process the incoming data with low latency~\cite{data_stream_management}. 
-For the former case, continuous queries are evaluated repeatedly by the DSMS to react 
+For the former requirement, continuous queries are evaluated repeatedly by the DSMS to react 
 to the incoming data. The latter could be tackled by reducing the inter-operator communications 
 through optimizing operator scheduling and buffers to reduce network traffic~\cite{low_latency_data_stream}. 
 
 
+
+\subsection{Fault tolerance}
+As stated in the beginning of this Chapter, DSMS will also have to be able to scale 
+horizontally --- stream processing must be distributable over multiple computing nodes. 
+This leads to the requirement that there needs to be some form of coordination and fault tolerance 
+for distributed processing. The exact details of guarantee fault tolerance differs from 
+one framework to the other, however there are general strategies to provide some 
+form of fault tolerance according to Gradvohl et al~\cite{fault_tolerance_dsms}.
+
+\subsubsection{Replication of components}
+Just as the name suggests, it involves duplicating the components of the stream processing
+engine to minimize the error in case of node failures. There are two kinds of replication; 
+\emph{active replication} and \emph{passive replication}. In \textbf{active replication,}
+duplicated components are executed just like normal components and receives the same incoming data. 
+Therefore, there are duplicates in the output --- this allows the engine to check the 
+output to identify errors in the normal components. The disadvantage of this method is 
+the increase in the cost due to component duplication. 
+
+\textbf{Passive replication} have inactive duplicated components instead. These backup
+components are then on standby to replace their counterpart if there is a failure. This 
+reduces the performance cost of executing the duplicated components at the same 
+time as their counterpart. However, starting the backup component requires the input 
+to be resubmitted for it to catch up and return to normal state. This results in a significant 
+delay every time there is a failure and not acceptable for the requirement of real-time response. 
+
+
+\subsubsection{Watermarking}
+
+
+\subsubsection{Upstream backup}
