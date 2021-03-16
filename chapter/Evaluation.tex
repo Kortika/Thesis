@@ -29,7 +29,8 @@ the data to have some common attributes to enrich the data. Furthermore, to
 mirror the real-world scenario, we would also employ data gathered from IoT sensors
 because of its common usage in data stream processing. We will use the same data 
 as is the case for the benchmark in the paper by Van Dongen and Van den Poel~\cite{evalution_of_spe}. 
-To recap, the data is provided by NDW (Nationale Databank Wegverkeersgegevens) from the 
+To recap, the data is provided by NDW (Nationale Databank Wegverkeersgegevens)
+\footnote{NDW dataset: \href{http://opendata.ndw.nu}{http://opendata.ndw.nu} } from the 
 Netherlands. It consists of measurements of the number of cars and their average speed. 
 A subset of the complete sensor data will be replayed by a Kafka publisher into the two topics 
 \emph{flow} and \emph{speed}, for the number of cars and the average speed respectively. 
@@ -76,10 +77,21 @@ the next output triple or until the memory allocated to the instances get fully 
 
 
 \subsection{Workload for latency measurement}
+As described in the paper by Van Dongen and Van den Poel~\cite{evalution_of_spe}, 
+\emph{throughput} and \emph{latency} can affect each other if the workload is 
+improperly configured. Therefore, measurement of the \emph{latency} caused only 
+by the window implementations, requires the stream processing framework to not be 
+stressed under significant \emph{throughput}. Thus, the Kafka broker will 
+publish the records at a very low constant rate of around 200 messages per second. 
 
-
+Since \emph{latency} is also measured with a time unit, the timestamp of the 
+records are important for \emph{latency} measurement. Due to the replay of the dataset 
+by the Kafka broker, it is imperative to use the local timestamp of the same Kafka broker
+attached to the input and output records for \emph{latency} 
+measurement\cite{latency_measurement_kafka}.
 
 \subsection{Workload for failure restart}
+Evaluating the performance of 
 
 
 \subsection{Workload for completeness}
