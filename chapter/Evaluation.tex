@@ -43,9 +43,9 @@ to the RML specification. Streaming data is usually
 ordered according to the event time, as defined in Chapter~\ref{chap:data_stream_processing} 
 and the same entity could appear in the 
 stream at a different timestamp. This can lead to duplicates in the generated output by 
-the RMLMapper. Therefore, duplicates in the generated output by the reference optimal
+the RMLMapper. Duplicates, in this context, are triples that semantically describe the 
+same knowledge. Therefore, duplicates in the generated output by the reference optimal
 mapping engine needs to be removed in the final \emph{complete} output dataset.
-\gh{In theory the output is an RDF graph, where duplicates don't count. But what with statements that are not duplicates? e.g. if we first have :It :is "day" and later on :It :is "night"? We can probably avoid this by incorporating the timestamp in the subject iri or generating quads where the graph holds a timestamp.}
 
 \section{Evaluation pipeline}
 
@@ -53,7 +53,7 @@ mapping engine needs to be removed in the final \emph{complete} output dataset.
     \centering
     \includegraphics[width=\textwidth]{fig/evaluation_architecture.png}
     \caption{Evaluation flow based on~\cite{evalution_of_spe} with some changes to only 
-    take metrics at the "Join" and the "Mapping" stage. a) \emph{throughput} of the generated output triple \gh{What do you mean by throughput of a triple? Do you mean nr of triples per second?}. 
+    take metrics at the "Join" and the "Mapping" stage. a) \emph{throughput} of the generated output triple. 
     b) \emph{latency} of evaluating the join operator in windows.}
     \label{fig:evaluation_flow}
     
