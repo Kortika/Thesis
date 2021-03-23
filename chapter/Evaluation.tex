@@ -4,13 +4,11 @@ To measure the effectiveness of dynamic windowing for multi-stream operators dur
 mapping of non-RDF heterogeneous data, we would need to measure the following 
 metrics of our stream processing framework: \emph{latency}, \emph{throughput},
 \emph{memory usage} and \emph{completeness}. \emph{Throughput}, in this 
-paper, refers to the number of output/processed records per time unit.
-\gh{Does the slash mean "divided by", or "or", or something else? Avoid slashes outside formulas... Would it be accurate to say that throughput is the "number of processed input records per time unit"? "Input records" because some mappings produce no output records, and "processed" because they only count after processing them.} 
+paper, refers to the number of processed input records, per time unit.
 \emph{Latency, throughput,} and \emph{memory usage} can be measured following the recent benchmark studies by 
 Van Dongen and Van den Poel(2020)~\cite{evalution_of_spe}.
 However, to evaluate 
-for the \emph{completeness/quality}
-\gh{Same remark. Perhaps choose "completeness" to be consistent with the rest of the text. If you go for "quality", please explain very well what exactly that means.}
+for the \emph{completeness}
 of the generated output, a reference output needs 
 to be generated for comparison. Since a data stream is \sout{in principle} unbounded in nature, 
 and cannot be processed completely to check for \emph{completeness}, a bounded 
