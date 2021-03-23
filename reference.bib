@@ -1,4 +1,4 @@
-@inproceedings{benchmark_dsp,
+@inproceedings{benchmark_sce,
   author    = {S. {Chintapalli} and D. {Dagit} and B. {Evans} and R. {Farivar} and T. {Graves} and M. {Holderbaugh} and Z. {Liu} and K. {Nusbaum} and K. {Patil} and B. J. {Peng} and P. {Poulosky}},
   booktitle = {2016 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW)},
   title     = {Benchmarking Streaming Computation Engines: Storm, Flink and Spark Streaming},
@@ -9,6 +9,23 @@
   doi       = {10.1109/IPDPSW.2016.138}
 }
 
+@article{ntp_latency,
+  author          = {M. {Caporaloni} and R. {Ambrosini}},
+  title           = {How closely can a personal computer clock track the utc timescale via the internet?},
+  
+  journal         = {European journal of physics},
+  volume          = {23},
+  number          = {4},
+  pages           ={L17-L21},
+  year            = {2002}
+}
+@article{benchmark_dsdps,
+  title={Benchmarking Distributed Stream Data Processing Systems},
+  author={Jeyhun Karimov and T. Rabl and Asterios Katsifodimos and R. Samarev and H. Heiskanen and V. Markl},
+  journal={2018 IEEE 34th International Conference on Data Engineering (ICDE)},
+  year={2018},
+  pages={1507-1518}
+}
 @article{bernerslee2001semantic,
   abstract         = {A new form of Web content that is meaningful to computers will unleash a revolution of new possibilities.},
   added-at         = {2016-09-07T01:44:07.000+0200},
@@ -147,9 +164,10 @@
   title       = {Phillips Patient Monitoring},
   institution = {Phillips},
   year        = {n.d.},
-  url        = {https://www.usa.philips.com/healthcare/solutions/patient-monitoring},
+  url         = {https://www.usa.philips.com/healthcare/solutions/patient-monitoring},
   bibsource   = {https://www.usa.philips.com/healthcare/solutions/patient-monitoring}
 }
+
 @inproceedings{hospital_diagnosis,
   author    = {Choudhury, Ambika
 and Gupta, Deepak},
@@ -187,6 +205,20 @@ and Pradhan, Ratika},
   bibsource   = {https://w2.syronex.com/jmr/w3c-biblio},
   type        = {{W3C} Recommendation},
   institution = {W3C}
+}
+@inproceedings{latency_measurement_kafka,
+  author    = {G. {van Dongen} and B. {Steurtewagen} and D. {Van den Poel}},
+  booktitle = {2018 IEEE International Congress on Big Data (BigData Congress)},
+  title     = {Latency Measurement of Fine-Grained Operations in Benchmarking Distributed Stream Processing Frameworks},
+  year      = {2018},
+  volume    = {},
+  number    = {},
+  pages     = {247-250},
+  abstract  = {This paper describes a benchmark for stream processing frameworks allowing accurate latency benchmarking of fine-grained individual stages of a processing pipeline. By determining the latency of distinct common operations in the processing flow instead of the end-to-end latency, we can form guidelines for efficient processing pipeline design. Additionally, we address the issue of defining time in distributed systems by capturing time on one machine and defining the baseline latency. We validate our benchmark for Apache Flink using a processing pipeline comprising common stream processing operations. Our results show that joins are the most time consuming operation in our processing pipeline. The latency incurred by adding a join operation is 4.5 times higher than for a parsing operation, and the latency gradually becomes more dispersed after adding additional stages.},
+  keywords  = {distributed processing;pipeline processing;latency measurement;fine-grained operations;distributed stream processing;stream processing frameworks;processing flow;end-to-end latency;defining time;baseline latency;common stream processing operations;parsing operation;processing pipeline design;Apache Flink;Benchmark testing;Pipelines;Task analysis;Time measurement;Message systems;Storms;big data applications;distributed stream computing;benchmark;Flink;Kafka},
+  doi       = {10.1109/BigDataCongress.2018.00043},
+  issn      = {},
+  month     = {July}
 }
 @inproceedings{low_latency_data_stream,
   author    = {S. {Wu} and M. {Liu} and S. {Ibrahim} and H. {Jin} and L. {Gu} and F. {Chen} and Z. {Liu}},
