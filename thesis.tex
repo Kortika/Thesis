@@ -8,6 +8,7 @@
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{ulem}
+\usepackage{svg}
 
 \theoremstyle{plain}
 \newtheorem{thm}{Theorem}[chapter] % reset theorem numbering for each chapter
@@ -82,7 +83,7 @@
 \usetikzlibrary{shapes}
 
 \usepackage{csquotes}
-\usepackage[sorting=none, style=ieee, citestyle=ieee, backend=bibtex]{biblatex}
+\usepackage[sorting=none, style=ieee, bibstyle=ieee, citestyle=numeric-comp, backend=bibtex]{biblatex}
 \addbibresource{reference.bib}
 
 
@@ -94,7 +95,7 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
   linkcolor=black,  %choose some color if you want links to stand out
 }
 
-
+\newtheorem{hyp}{Hypothesis}
 
 \begin{document}
 \frontmatter
@@ -136,6 +137,10 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 \include{chapter/SemanticWeb}
 \include{chapter/StreamProcessing}
 \include{chapter/RDFGeneration}
+\include{chapter/Windows}
+\include{chapter/Evaluation}
+
+
 \printbibliography[heading=bibintoc]
 
 % appendix

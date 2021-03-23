@@ -31,4 +31,55 @@ input streams. This leads to a decline in the quality of the generated RDF tripl
 due to the nature of the infinite, continuous and real-time changing data of the streaming environment,
 these operators have to be applied in the context of windows over a subset of the incoming data.
 Clearly, with these restrictions and characteristics of the streaming sources, we need an adaptive approach
-to applying these operators in windows for the data transformation engines.
+to applying these operators in windows for the data transformation engines. 
+
+Therefore, we proposed a dynamic approach to windowing for multi stream operators.
+The application of these operators in a dynamic window should maintain high memory efficiency and throughput,
+even when the velocity of the streaming sources varies greatly over time. 
+The dynamic window would make fast and simple statistical calculation to be 
+aware of the velocity of the input streams to react and adapt its size accordingly. 
+For implementing this dynamic window, we 
+\renewcommand{\labelenumi}{(\roman{enumi})}
+\begin{enumerate*}
+    \item investigate the possible implementation sites which are near the \emph{input}
+    or the \emph{output} of the engine, 
+    \item provide a reference implementation utilizing the dynamic window, and 
+    \item evaluating the implementation against widely used windowing schemes for 
+    memory efficiency and throughput. 
+\end{enumerate*}
+
+
+This work aims to improve the performance multi-stream operators, 
+by dynamically adapting the window size, according to the dynamic characteristics
+of the incoming tuples for the multi-stream operators. Evaluation of 
+the implementation is then intended to validate the following hypotheses: 
+
+\begin{hyp}
+    Dynamic windows maintain high memory efficiency than 
+    fixed size windows even under a dramatic increase or 
+    decrease in the velocity of incoming tuples. 
+\end{hyp}
+
+\begin{hyp}
+    Higher throughput is achieved by multi-stream operators 
+    with dynamic windows even with huge delays in the arrival
+    rate of tuples between the different streams.
+\end{hyp}
+
+Naturally, to further build upon this work, a generic dynamic windowing 
+framework could be specified for ease of evaluation and comparison between 
+the different dynamic window schemes. Furthermore, we could also define a distributed 
+statistical model to build up the characteristics of the streaming sources 
+and to automatically apply the appropriate dynamic window. 
+
+
+The rest of this work will be structured as follows. Chapter~\ref{chap:semantic_web} will 
+go over the common terminologies and specifications related to Semantic Web. Readers familiar
+with RDF framework and Semantic Web in general, could skip this chapter. 
+Chapter~\ref{chap:data_stream_processing} will be about general data stream processing 
+and how the state-of-the-art stream processing engines handle multi-stream operators. 
+In Chapter~\ref{chap:rdf_data_generation}, current state-of-the-art in 
+RDF data generation from non-RDF data sources will be discussed in detail. 
+To understand more about windows in stream processing, Chapter~\ref{chap:window_operators}
+will go into detail about the current fixed size windows and the other state-of-the-art 
+dynamic window operators. 
