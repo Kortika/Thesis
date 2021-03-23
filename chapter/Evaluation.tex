@@ -4,18 +4,18 @@ To measure the effectiveness of dynamic windowing for multi-stream operators dur
 mapping of non-RDF heterogeneous data, we would need to measure the following 
 metrics of our stream processing framework: \emph{latency}, \emph{throughput},
 \emph{memory usage} and \emph{completeness}. \emph{Throughput}, in this 
-paper, refers to the number of output/processed records per time unit. 
+paper, refers to the number of processed input records, per time unit.
 \emph{Latency, throughput,} and \emph{memory usage} can be measured following the recent benchmark studies by 
 Van Dongen and Van den Poel(2020)~\cite{evalution_of_spe}.
 However, to evaluate 
-for the \emph{completeness/quality} of the generated output, a reference output needs 
-to be generated for comparison. Since a data stream is in principle unbounded in nature, 
+for the \emph{completeness}
+of the generated output, a reference output needs 
+to be generated for comparison. Since a data stream is unbounded in nature, 
 and cannot be processed completely to check for \emph{completeness}, a bounded 
-dataset of relatively large volume could be used for \emph{completeness} measure.
+dataset of relatively large volume will be used to measure \emph{completeness}.
 To ensure consistency in the complexity of the multi-stream operator being used, 
 we will apply the join operator in the windows --- a common operator used in 
 data enrichment scenarios. 
-
 
 The following sections will describe the methodology and the data used to evaluate the
 different metrics. Setups required to reproduce the evaluation will also be elaborated 
@@ -26,22 +26,25 @@ in their respective sections.
 
 Assessment of our dynamic windowing scheme for multi-stream operator will require 
 the data to have some common attributes to enrich the data. Furthermore, to 
-mirror the real-world scenario, we would also employ data gathered from IoT sensors
-because of its common usage in data stream processing. We will use the same data 
+mirror a real-world scenario, we would also employ data gathered from IoT sensors. 
+We will use the same data 
 as is the case for the benchmark in the paper by Van Dongen and Van den Poel~\cite{evalution_of_spe}. 
-To recap, the data is provided by NDW (Nationale Databank Wegverkeersgegevens)
-\footnote{NDW dataset: \href{http://opendata.ndw.nu}{http://opendata.ndw.nu} } from the 
-Netherlands. It consists of measurements of the number of cars and their average speed. 
+The data is provided by NDW (Nationale Databank Wegverkeersgegevens) from the 
+Netherlands~\footnote{NDW data site: \href{http://opendata.ndw.nu/}{http://opendata.ndw.nu/} }.
+ It consists of measurements of the number of cars and their average speed. 
 A subset of the complete sensor data will be replayed by a Kafka publisher into the two topics 
 \emph{flow} and \emph{speed}, for the number of cars and the average speed respectively. 
 
 \subsection{Data for completeness evaluation}
 Completeness measure requires a dataset which could be mapped completely by a static 
-mapping engine. RMLMapper \todo{maybe RMLStreamer for static set might be enough?} will
-be used to generate our \emph{complete} output triples. Streaming data is usually 
-ordered according to the event time and the same entity could appear in the 
+mapping engine. 
+Our \emph{complete} set of output triples will be generated according 
+to the RML specification. Streaming data is usually 
+ordered according to the event time, as defined in Chapter~\ref{chap:data_stream_processing} 
+and the same entity could appear in the 
 stream at a different timestamp. This can lead to duplicates in the generated output by 
-the RMLMapper. Therefore, duplicates in the generated output by the reference optimal
+the RMLMapper. Duplicates, in this context, are triples that semantically describe the 
+same knowledge. Therefore, duplicates in the generated output by the reference optimal
 mapping engine needs to be removed in the final \emph{complete} output dataset.
 
 \section{Evaluation pipeline}
@@ -66,7 +69,7 @@ workload scenarios and limit the measurement of the metrics just to the windows.
 
 \section{Workload scenarios}
 As stated in Chapter~\ref{chap:data_stream_processing}, data streams have characteristics 
-which determines the performance of stream processing frameworks and its operators. Therefore, 
+which determine the performance of stream processing frameworks and its operators. Therefore, 
 there is a need to evaluate our dynamic window implementation under different workload scenarios. 
 
 \subsection{Workload for maximum throughput measurement}
