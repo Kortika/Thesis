@@ -1,9 +1,5 @@
 \chapter{RDF data generation from non-RDF data}
-\gh{I would avoid the word "engine" in this chapter: an engine is typically a specific part/component of a solution or implementation. So maybe go for "implementation".}
-\TODO{Try to replace "engine" with "implementation" where possible.}
 
-\gh{In this paragraph, I would first say that there are specifications and languages that say how to generate RDF.
-Then say that there are implementations of these specs, etc.}
 How do we generate RDF data from non-RDF data? A variety of specifications and languages exists
 which define the generation of RDF data from non-RDF data. These specifications and languages can be grouped 
 into two major groups; query languages and mapping languages. Several state-of-the art implementations, 
@@ -19,10 +15,6 @@ employ to transform non-RDF to RDF data.
 
 
 \section{SPARQL Query Language}
-\gh{I see why you put a section about SPARQL here, but actually it belongs to the "Semantic Web" chapter. It's even in Figure 2.1 :) 
-Also because RDF-Gen has little to do with SPARQL.}
-\TODO{I still feel that it should be here, but if it's moved to "Semantic Web" chapter, 
-wouldn't it be duplicate if I mention it here again?}
 Query languages such as SQL~\cite{sql} already exist in established relational database systems such as 
 MySQL or PostgreSQL. It allows users to manipulate and retrieve data 
 from relational databases using concise statements. Due to its widespread 
@@ -46,7 +38,6 @@ The declared variables are then bound to the concrete value in the corresponding
 matching the given \emph{triple pattern}, from the RDF dataset. 
 The result of a SPARQL query is returned as an RDF sub-graph of the queried RDF dataset. 
 
-\gh{If this section (4.1) moves to chapter 2 "Semantic Web Technologies", this paragraph can be deleted. But keep the example (listing 4.1 table 4.1).}
 Now a question definitely gets raised in our mind, how does this relate to transforming an 
 unbounded dataset to RDF format in a streaming environment? There exists state-of-the-art 
 engines for generating RDF data from heterogeneous streaming data sources, which will be 
@@ -139,24 +130,11 @@ query language seems natural since that is the common method to interact
 with a database. Allowing users to query the sources without explicitly 
 defining the mapping semantics hides the mapping or data transformation details from the user. 
 Moreover, it eases the transition to developing applications using RDF data since the syntaxes are 
-similar to existing query languages.
-\gh{I don't entirely get the last sentence: why would applications *using* RDF care how the RDF is generated?} 
-\TODO{It was just meant to highlight the ease of transition for existing application to start 
-using RDF data since you can just build upon the existing query language}
-To the best of our knowledge, there exist two state-of-the-art query based implementations for transforming 
+similar to the existing query languages leading to lower learning curve for the developers.
+To the best of our knowledge, there exist two state-of-the-art 
+template based implementations, using SPARQL query-like languages, for transforming 
 unbounded non-RDF data to RDF data: SPARQL-Generate and RDF-Gen.
 These engines will be elaborated more in the following sections.
-
-
-\gh{I think both SPARQL-Generate and RDF-Gen can be called "template based"
-solutions. They both define somehow a template where variables of the
-original data source can be bound.
-These are not to be confused with what is (arguably incorrectly) called
-OBDA systems, where they literally take a SPARQL query, translate that to
-a query the underlying stream processing framework understands, and 
-return the results. If it is a CONSTRUCT query then the output are
-triples. Examples: Optique (\url{https://link.springer.com/chapter/10.1007\%2F978-3-642-41242-4_11}) 
-and Morph-streams (\url{http://dx.doi.org/10.4018/jswis.2012010103})}
 
 
 \subsection{SPARQL-Generate}
@@ -175,18 +153,15 @@ For example, WebSocket and MQQT are currently supported in the latest version of
 
 Although there is a support for data stream processing, the paper did not go into details 
 about the application of multi-stream operators like joins when involving multiple streaming 
-data sources. Hence, we could assume that SPARQL-Generate either processes the whole dataset in memory or 
-keeps a fixed window of data on which multi-stream operators are applied.
-\gh{Could you check what exactly it is? \url{https://github.com/sparql-generate/sparql-generate}}
-\TODO{I've mailed the lead researcher about it, should get an answer back soon. Read through the code, 
-but it seems like they just fed it into the underlying Jena framework for joins....}
+data sources. The author, M. Lefran\c{c}ois, clarified that when joining
+records from two different streams, SPARQL-Generate will fully consume the records 
+from the "parent" stream and index it internally. The "child" stream will then be iteratively consumed and 
+joined with the records from the internal index. Hence, we could assume that SPARQL-Generate processes the "parent" 
+stream in memory when there is a multi-stream operator.
 Furthermore, the 
 authors mentioned that SPARQL-Generate could use the SPARQL 1.1 operators such as \emph{join operators}. 
 From this, we could derive that SPARQL-Generate will apply \emph{join} on the 
 records by delegating it to the underlying SPARQL engine.
-\gh{Probably, but please check it. If you don't find it,
-we can just ask the authors. But I don't like assuming 
-things if they can be verified.} 
 Therefore, there is a lack of  
 dynamic windowing schemes to efficiently exploit the characteristics of the streaming data sources.  
 
@@ -204,7 +179,10 @@ RDF-Gen consists of three main components:
   \item Link Discovery.
 \end{enumerate*}
 
-Data Connector allows close-to-source processing, which is not the case for SPARQL-Generate.\gh{Why not?} 
+Data Connectors allows close-to-source processing, 
+which is not the case for SPARQL-Generate. This is due to the data consumption 
+module being tightly coupled with the mapping process for SPARQL-Generate, unlike 
+RDF-Gen as shown in Figure ~\ref{fig:rdf-gen-arch}. 
 Triple Generator handles the rapid generation of RDF triples by making use of 
 template graphs and variable vectors. The Link Discovery component solves the 
 problem of link discovery problem which is defined as follows:
@@ -323,8 +301,6 @@ verbose than query languages, composing complex mapping documents results in muc
 format due to the direct mapping of the attributes. 
 The following subsections will elaborate more on the related state-of-the-art engines 
 which utilizes mapping languages in a streaming environment.
-
-\gh{Perhaps mention somewhere that mapping languages are declarative, and what their advantages are (if any), like you	did with the query based implementations.}
 
 \subsection{TripleWave}
 Albeit the abundance of solutions to combine semantic technologies with stream and event processing 
