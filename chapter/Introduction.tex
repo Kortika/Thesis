@@ -20,17 +20,15 @@ new data are being generated. Furthermore, we would also like to apply stream op
 before transforming, to enhance the enrichment of the data.
 
 There exists state-of-the-art techniques to solve the task of consolidating heterogeneous data
-and transforming them to an RDF \sout{compliant format} \gh{serialization}. In this thesis, we will focus on one such serialization format called Turtle~\cite{turtle_syntax}.
-\gh{Why Turtle? Do the window implementations not cope with named graphs (as in N-Quads)? I might remove this sentence; you explain it anyway together with other serialisations later on. If it's because RML rules are witten in turtle at the moment, just leave it.}
-These RDF transformation engines can be categorized into two major categories based on the type of input
+and transforming them to an RDF serialization. These RDF transformation engines can be categorized into two major categories based on the type of input
 which they consume; bounded and unbounded data input. Since we are focussing on the generation of RDF data
 in a streaming environment, the class of RDF transformation engines on unbounded data will be of interest to our study.
 
 Some engines support traditional stream operators like joins and aggregations. However, they do not consider
 the characteristics of streaming data sources such as velocity and time-correlations between the different
 input streams. This leads to a decline in the quality of the generated RDF triples. Moreover,
-due to the nature of the infinite, continuous and real-time changing data of the streaming environment,
+due to the nature of the infinite, continuous and real-time changing data of the streaming environment, and 
+the limited memory and computing resources by the systems processing the streams, 
 these operators have to be applied in the context of windows over a subset of the incoming data.
-\gh{I think it's more because of systems processing these streams are limited in memory / processing power than because of the characteristics of the streams themselves...}
 Clearly, with these restrictions and characteristics of the streaming sources, we need an adaptive approach
 to applying these operators in windows for the data transformation engines.
