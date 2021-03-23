@@ -10,13 +10,12 @@ Van Dongen and Van den Poel(2020)~\cite{evalution_of_spe}.
 However, to evaluate 
 for the \emph{completeness}
 of the generated output, a reference output needs 
-to be generated for comparison. Since a data stream is \sout{in principle} unbounded in nature, 
+to be generated for comparison. Since a data stream is unbounded in nature, 
 and cannot be processed completely to check for \emph{completeness}, a bounded 
-dataset of relatively large volume \sout{could} will be used to measure \emph{completeness}.
+dataset of relatively large volume will be used to measure \emph{completeness}.
 To ensure consistency in the complexity of the multi-stream operator being used, 
 we will apply the join operator in the windows --- a common operator used in 
 data enrichment scenarios. 
-
 
 The following sections will describe the methodology and the data used to evaluate the
 different metrics. Setups required to reproduce the evaluation will also be elaborated 
@@ -27,23 +26,22 @@ in their respective sections.
 
 Assessment of our dynamic windowing scheme for multi-stream operator will require 
 the data to have some common attributes to enrich the data. Furthermore, to 
-mirror a real-world scenario, we would also employ data gathered from IoT sensors
-\sout{because of its common usage in data stream processing}.
-\gh{I think mirroring a real-world scenario is more important than whether or not such data are used in stream processing.}
+mirror a real-world scenario, we would also employ data gathered from IoT sensors. 
 We will use the same data 
 as is the case for the benchmark in the paper by Van Dongen and Van den Poel~\cite{evalution_of_spe}. 
-\sout{To recap,} The data is provided by NDW (Nationale Databank Wegverkeersgegevens) from the 
-Netherlands \gh{add url as footnote if publicly available}. It consists of measurements of the number of cars and their average speed. 
+The data is provided by NDW (Nationale Databank Wegverkeersgegevens) from the 
+Netherlands~\footnote{NDW data site: \href{http://opendata.ndw.nu/}{http://opendata.ndw.nu/} }.
+ It consists of measurements of the number of cars and their average speed. 
 A subset of the complete sensor data will be replayed by a Kafka publisher into the two topics 
 \emph{flow} and \emph{speed}, for the number of cars and the average speed respectively. 
 
 \subsection{Data for completeness evaluation}
 Completeness measure requires a dataset which could be mapped completely by a static 
-mapping engine. RMLMapper \todo{maybe RMLStreamer for static set might be enough?}
-\gh{Good question. In theory that would be enough since it should produce the same results as the RMLMapper. You could also say that the complete set of output triples is generated according to the RML spec (then the implementation doesn't really matter)}
-will
-be used to generate our \emph{complete} set of output triples. Streaming data is usually 
-ordered according to the event time \gh{Make sure "event time" is defined somewhere. Maybe even in the chapter on stream processing?} and the same entity could appear in the 
+mapping engine. 
+Our \emph{complete} set of output triples will be generated according 
+to the RML specification. Streaming data is usually 
+ordered according to the event time, as defined in Chapter~\ref{chap:data_stream_processing} 
+and the same entity could appear in the 
 stream at a different timestamp. This can lead to duplicates in the generated output by 
 the RMLMapper. Therefore, duplicates in the generated output by the reference optimal
 mapping engine needs to be removed in the final \emph{complete} output dataset.
