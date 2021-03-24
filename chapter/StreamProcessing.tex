@@ -37,8 +37,8 @@ What is a data stream? As defined by Golab and Ozsu~\cite{golab_data_stream}:
 or explicitly by timestamp) sequence of items. It is impossible to control the order
 in which items arrive, nor is it feasible to \emph{locally store} a stream in its entirety.”
 The difference between traditional Big Data processing and data stream processing, lies in 
-the inability to store data \emph{locally} for data streams management. Furthermore, 
-data streams processing requires real-time response. Therefore, there is a 
+the inability to store the whole dataset \emph{locally} for data streams management. Furthermore, 
+data streams processing requires real-time response in most use cases. Therefore, there is a 
 difference in the importance of the characteristics from the ones used to define Big Data. 
 
 Big Data is usually characterized with the three “V's: \emph{volume}, \emph{velocity} 
@@ -97,6 +97,13 @@ This leads to the requirement that there needs to be some form of coordination a
 for distributed processing. The exact details of guarantee fault tolerance differs from 
 one framework to the other, however there are general strategies to provide some 
 form of fault tolerance according to Gradvohl et al~\cite{fault_tolerance_dsms}.
+In the context of this paper, \textbf{fault tolerance} is a crucial requirement when applying
+non-trivial operators that are stateful. 
+An example for a non-trivial operator would be a recommender algorithm, where 
+a user's parameters would need to be kept in state to update them with each new 
+interaction event. 
+The following sections will describe the commonly used strategies to provide fault tolerance 
+in DSMS. 
 
 \subsubsection{Replication of components}
 Just as the name suggests, it involves duplicating the components of the stream processing
@@ -107,7 +114,7 @@ Therefore, there are duplicates in the output --- this allows the engine to chec
 output to identify errors in the normal components. The disadvantage of this method is 
 the increase in the cost due to component duplication. 
 
-\textbf{Passive replication} have inactive duplicated components instead. These backup
+\textbf{Passive replication} has inactive duplicated components instead. These backup
 components are then on standby to replace their counterpart if there is a failure. This 
 reduces the performance cost of executing the duplicated components at the same 
 time as their counterpart. However, starting the backup component requires the input 
@@ -115,7 +122,75 @@ to be resubmitted for it to catch up and return to normal state. This results in
 delay every time there is a failure and not acceptable for the requirement of real-time response. 
 
 
-\subsubsection{Watermarking}
+\subsubsection{Checkpoint}
 
+Checkpoints represent states the DSMS could be in at a certain point in 
+time in each of the input streams along with the corresponding 
+state for each operator. Snapshots of records for each checkpoint are also kept 
+by DSMS to be replayed in case of failure. 
+In this fault tolerance strategy, a DSMS is modelled by a sequence of 
+checkpoints which are fault free~\cite{fault_tolerance_dsms}. 
+
+In the case of a failure, the operators will be restarted and set back to the state of the 
+last successful checkpoint. The records, which were part of the failure, will be replayed
+at the input using the snapshot of the state. 
+
+There are two approaches to implement checkpoint at the operator-level; 
+\emph{asynchronous} and \emph{synchronous} checkpoints~\cite{fault_tolerance_dsms}.
+
+Uncoordinated checkpoints do not guarantee a global state consistency, since 
+each operator performs a checkpoint on their state independently. This results 
+in less overhead of saving the state of the whole system with the disadvantage of the higher 
+difficulty to recover back to a consistent global state. Figure~\ref{fig:checkpoint_inconsistency}
+shows a scenario where uncoordinated checkpoint strategy results in inconsistency of 
+global state. In this example, message \emph{m} is not part of the checkpoint of operator 
+A even though operator B includes the sending of ~\emph{m} as part of its checkpoint. Therefore, 
+rolling back to this checkpoint will result in an inconsistent global state, causing the 
+DSMS to rollback to an earlier consistent checkpoint. At worst case, this could result 
+in the DSMS trying to repeatedly rollback until a consistent checkpoint is met, 
+resulting in a 'domino effect'.  
+
+On the other hand, in coordinated checkpointing, the operators will take a snapshot 
+of their internal state at the same "time" and save them to provide a consistent 
+global state, avoiding the 'domino effect' of asynchronous checkpointing. To ensure 
+the global consistency, a global synchronization mechanism is required. A simple 
+algorithm to achieve this mechanism, is to have a central coordinator to synchronize 
+the checkpointing process amongst the different operators. This brings with it an overhead 
+of coordinating these operators, increasing the latency of the operators whenever a 
+checkpoint has to be taken. 
+
+
+There exists algorithm which combines the best of both world; asynchronous, non-blocking
+operators for checkpointing with the consistency of global states. 
+Chandy-Lamport algorithm~\cite{chandy_lamport} is one such algorithm to determine the 
+global states of a distributed system which could be used to maintain the checkpoints. 
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics{fig/checkpoint_inconsistency.png}
+    \label{fig:checkpoint_inconsistency}
+    \caption{Operator B sends a message \emph{m} to operator A and both operators 
+    committed a checkpoint of their internal state.}
+\end{figure}
 
 \subsubsection{Upstream backup}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{fig/upstream.png}
+    \label{fig:upstream}
+    \caption{Upstream backup~\cite{upstream_backup}. }
+    
+\end{figure}
+
+In this approach of fault tolerance, up stream nodes will temporarily 
+keep the tuples in their output buffer for the subsequent nodes. The tuples 
+stay in the buffer until they are completely processed by the child node. 
+The buffer will then be cleared when the parent node receives 
+an acknowledgement from its children, as illustrated in Figure~\ref{fig:upstream}. 
+
+The drawback for this approach is that, the buffer might not be large enough to 
+hold the tuples stored between the failure and the recovery event. Moreover, 
+the whole system needs to be halted until the new node catches back up to 
+the state of the failed node from the replayed tuples. 
+
