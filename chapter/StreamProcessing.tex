@@ -378,11 +378,10 @@ waits for \emph{late events}. For example, if a watermark with timestamp
 with timestamp earlier than 20 has already arrived in the system. 
 
 Just having these notions of time and watermarks is not enough to 
-handle out-of-order events, 
-the stream processing engine needs to be able to compare them to a subset of the 
+handle out-of-order events. The stream processing engine needs to be able to compare them to a subset of the 
 incoming data. Windowing provides a grouped view of the infinite unbounded stream, 
 enabling the engine to compare the subset of tuples for timeliness and out-of-order 
-processing. A window can be \emph{time drive}, every $N$ seconds, or \emph{data driven}, 
+processing. A window can be \emph{time driven}, every $N$ seconds, or \emph{data driven}, 
 every $N$ tuples. 
 Suppose in Figure~\ref{fig:watermark}, a time window is applied on the stream that
 stretches from the watermark \emph{W(17)} until \emph{W(11)}. 
@@ -390,7 +389,7 @@ Once the \emph{W(17)} arrives in the window, it knows that it contains or has
 processed all events earlier than timestamp 17 and later than timestamp of 11.  
 
 However, it is possible for an event, later in the future, to arrive in the window 
-with timestamp earlier than 17. That event can be considered late as an outlier and 
+with a timestamp earlier than 17. That event can be considered late as an outlier and 
 be dealt with appropriately as defined by the developer. Different windows 
 behave differently with the watermarking strategy. Chapter~\ref{chap:window_operators}
 will dive deep into the workings of different windows and how windowing works in 
