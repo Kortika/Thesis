@@ -453,27 +453,30 @@ the micro batches structure of the stream in Spark Streaming, Storm's architectu
 consists of \emph{streams of tuples} flowing through
 \emph{topologies}~\cite{storm_twitter}. This is a structure where operators are 
 represented as \emph{nodes} and the data flow between these operators as \emph{edges} of 
-a directed acyclic graph (DAG) as shown in Figure~\ref{fig:dag_topology}. The \emph{nodes} are further distinguished between 
+a directed acyclic graph (DAG) as shown in Figure~\ref{fig:dag_topology}. 
+The \emph{nodes} are further distinguished between 
 two main functions; \emph{spouts} (data sources) and \emph{bolts} (computations).  
 By processing the stream events as individual tuples, the latency is kept 
-to a minimum in the computation nodes. 
+to a minimum in the \emph{bolts}. 
 
 Furthermore, Storm provides at-least once 
 delivery semantics through the use of record-level acknowledgements. A randomly 
 generated "id" is attached to each new tuple and an extra \emph{acker node} is attached 
-to the execution graph. This \emph{acker node} is responsible for tracking the tuples 
-enabling at-least once delivery semantics. It could be upgraded to enable 
+to the execution graph. This \emph{acker node} is responsible for tracking the tuples, 
+enabling at-least once delivery semantics. Storm could be upgraded to enable 
 exactly-once semantics with the utilization of an API called
-Trident~\footnote{Trident API: \url{https://storm.apache.org/releases/2.1.0/Trident-API-Overview.html}}. However, Storm would then structure the stream as mini batches just like 
-Spark Streaming forfeiting the low latency processing. 
+Trident~\footnote{Trident API: \url{https://storm.apache.org/releases/2.1.0/Trident-API-Overview.html}}. 
+However, Storm would then structure the stream events as mini batches just like 
+Spark Streaming, forfeiting the low latency processing. 
 
 Due to its low-level definition of the \emph{bolts}, implementing computation tasks 
-in Storm is non-trivial and requires implementation of one or more readers and 
-collectors. This also makes building up the execution topology non-intuitive 
-and difficult to keep track during development. Furthermore, Storm does not support 
+in Storm is non-trivial, and requires the implementation of one or more readers and 
+collectors. This results in non-intuitive composition of the execution topology. 
+Furthermore, Storm does not support 
 batch processing, offering no options to extend the functionality of the stream 
 processing application if batch processing support is required in the future. 
-\newpage
+
+
 \begin{figure}[!htpb]
     \centering
     \includegraphics[width=0.5\linewidth]{fig/dag.png}
