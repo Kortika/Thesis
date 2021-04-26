@@ -234,7 +234,7 @@ a \textbf{speed} layer and a \textbf{serving} layer.
 To further complement the three layers, 
 the data stream is also split into two different paths: 
 \begin{itemize}
-    \item A \textbf{cold} path --- data flowing in the cold path is not required to fulfill the low
+    \item A \textbf{cold} path --- data flowing in the cold path is not required to fulfil the low
         latency requirement. The \textbf{batch} layer is located along the cold path.   
     \item A \textbf{hot} path --- data along the hot path is constrained by the low latency requirement 
         and needs to be processed at high velocity. Therefore, it flows through the 
@@ -485,7 +485,7 @@ processing application if batch processing support is required in the future.
 \begin{figure}[!htpb]
     \centering
     \includegraphics[width=0.5\linewidth]{fig/dag.png}
-    \caption{A common stream processing topology representation as a directed acyclic graph.} 
+    \caption{A common stream processing topology representation as a DAG.} 
     \label{fig:dag_topology}
 \end{figure}
 
@@ -493,5 +493,27 @@ processing application if batch processing support is required in the future.
 \label{sub:Apache Flink}
 
 Apache Flink~\cite{flink} aims to bridge the batch and stream processing aspect of 
-Big Data and combine them into one unified framework.   
+Big Data and combine them into one unified framework. Similar to Storm, 
+Flink's execution topology is also internally represented as a DAG as shown 
+in Figure~\ref{fig:dag_topology}. It also processes the incoming tuples as 
+individual events to maintain low latency processing. Flink recognizes that
+dedicated batch processing is still needed for applications where no efficient algorithms 
+exist for performing the same analysis on streaming data. Therefore, Flink implements a 
+specialized API for batch processing on top of its streaming processing engine. 
 
+Due to the focus on both batch and stream processing, Flink could fulfil the use cases for which 
+Spark and Storm specializes in; batch processing and stream processing respectively. Furthermore, 
+Flink provides exactly-once delivery semantics, overcoming the need to filter out duplicate 
+results and calculation. This is achieved by implementing a variation of the \emph{Chandy-Lamport} algorithm
+called \emph{Asynchronous Barrier Snapshotting} (ABS)~\cite{asynchronous_barrier}. Due to the usage 
+of in-stream barrier with ABS, it is much more lightweight than Storm's record-level 
+acknowledgements for both fault tolerance and exactly-once delivery semantics.  
+
+Finally, Flink provides high-level APIs that make development easier for developers in 
+the style of functional programming; an intuitive style for the use cases in the data analysis community. 
+Windows are supported in Flink as an integral part of the engine with easy to use high-level APIs for 
+commonly used windows (elaborated more in Chapter~\ref{chap:window_operators}).  
+It also provides access to low-level APIs to implement highly customised windowing logic, without burdening 
+the developers with the complexity of the internals of Flink. 
+With the ease of development, the aforementioned low latency, and exactly-once delivery semantics, 
+Flink is the best candidate to move forward with the implementation of dynamic windows for this thesis. 
