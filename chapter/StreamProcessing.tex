@@ -349,23 +349,28 @@ to be able to deal with out-of-order events.
 
 To understand the strategy involved in the handling out-of-order events, 
 the different notions of time needs to be introduced. There are two such notions 
-of \emph{time}~\cite{watermark_flink}: 
+of \emph{time}~\cite{watermark_flink}:  
 
-\begin{itemize}
-    \item \textbf{Processing time}: This refers to the time of the system on which 
-        the stream processing is being executed. The system clock of the machine is used 
-        as the notion of \emph{time} to mark the incoming events. This makes the event 
-        susceptible to the speed and the order in which they arrive in the system. 
-        In a distributed environment, in which stream processing engines are often 
-        executed, processing time does not provide determinism. 
+\begin{defn}[Processing time]
+    Processing time refers to the time of the system on which the stream processing 
+    engine is being executed. The system clock of the machine is therefore, used 
+    to mark the \emph{processing time}. 
+\end{defn}
+Marking events with processing time makes them 
+susceptible to the speed and the order in which they arrive in the system. 
+In a distributed environment, where stream processing engines are often 
+executed from, processing time does not provide determinism. 
 
-    \item \textbf{Event time}: Event time is the time at which the events are generated 
-        at the source. For example, if user click events are being emitted at the
-        source, the \emph{event time} will be the time the user clicks on an object of 
-        interest. This timestamp is usually included in the tuple as they arrive 
-        in the stream processing engine. The engine could then extract these 
-        timestamp to use as \emph{event time}. 
-\end{itemize}
+
+\begin{defn}[Event time]
+    Event time is the time at which the events are generated at the source.
+\end{defn}
+For example, if user click events are being emitted at the
+source, the \emph{event time} will be the time the user clicks on an object of 
+interest. This timestamp is usually included in the tuple as they arrive 
+in the stream processing engine. The engine could then extract these 
+timestamp to use as \emph{event time}. 
+
 
 \subsubsection{Watermarking}%
 \label{ssub:Watermarking}
