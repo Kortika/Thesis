@@ -16,7 +16,7 @@ engine\cite{google_kg}, it enables machines to understand the data and perform c
 using the knowledge graphs. 
 
 Considering the aforementioned scenarios, there is a need to transform these non-RDF data to RDF compliant formats on the fly while
-new data are being generated. Furthermore, we would also like to apply stream operators on the input tuples
+new data are being generated. Furthermore, we would also like to apply stream operators on the input records
 before transforming, to enhance the enrichment of the data.
 
 There exists state-of-the-art techniques to solve the task of consolidating heterogeneous data
@@ -51,19 +51,19 @@ For implementing this dynamic window, we
 
 This work aims to improve the performance multi-stream operators, 
 by dynamically adapting the window size, according to the dynamic characteristics
-of the incoming tuples for the multi-stream operators. Evaluation of 
+of the incoming records for the multi-stream operators. Evaluation of 
 the implementation is then intended to validate the following hypotheses: 
 
 \begin{hyp}
     Dynamic windows maintain high memory efficiency than 
     fixed size windows even under a dramatic increase or 
-    decrease in the velocity of incoming tuples. 
+    decrease in the velocity of incoming records. 
 \end{hyp}
 
 \begin{hyp}
     Higher throughput is achieved by multi-stream operators 
     with dynamic windows even with huge delays in the arrival
-    rate of tuples between the different streams.
+    rate of records between the different streams.
 \end{hyp}
 
 Naturally, to further build upon this work, a generic dynamic windowing 

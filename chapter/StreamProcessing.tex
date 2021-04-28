@@ -187,15 +187,15 @@ global states of a distributed system which could be used to maintain the checkp
 
 
 In this approach of fault tolerance, up stream nodes will temporarily 
-keep the tuples in their output buffer for the subsequent nodes. The tuples 
+keep the records in their output buffer for the subsequent nodes. The records 
 stay in the buffer until they are completely processed by the child node. 
 The buffer will then be cleared when the parent node receives 
 an acknowledgement from its children, as illustrated in the Figure~\ref{fig:upstream}. 
 
 The drawback for this approach is that, the buffer might not be large enough to 
-hold the tuples stored between the failure and the recovery event. Moreover, 
+hold the records stored between the failure and the recovery event. Moreover, 
 the whole system needs to be halted until the new node catches back up to 
-the state of the failed node from the replayed tuples. 
+the state of the failed node from the replayed records. 
 
 \section{Data Stream processing}
 
@@ -367,7 +367,7 @@ executed from, processing time does not provide determinism.
 \end{defn}
 For example, if user click events are being emitted at the
 source, the \emph{event time} will be the time the user clicks on an object of 
-interest. This timestamp is usually included in the tuple as they arrive 
+interest. This timestamp is usually included in the record as they arrive 
 in the stream processing engine. The engine could then extract these 
 timestamp to use as \emph{event time}. 
 
@@ -385,9 +385,9 @@ with timestamp earlier than 20 has already arrived in the system.
 Just having these notions of time and watermarks is not enough to 
 handle out-of-order events. The stream processing engine needs to be able to compare them to a subset of the 
 incoming data. Windowing provides a grouped view of the infinite unbounded stream, 
-enabling the engine to compare the subset of tuples for timeliness and out-of-order 
+enabling the engine to compare the subset of records for timeliness and out-of-order 
 processing. A window can be \emph{time driven}, every $N$ seconds, or \emph{data driven}, 
-every $N$ tuples. 
+every $N$ records. 
 Suppose in Figure~\ref{fig:watermark}, a time window is applied on the stream that
 stretches from the watermark \emph{W(17)} until \emph{W(11)}. 
 Once the \emph{W(17)} arrives in the window, it knows that it contains or has 
@@ -455,19 +455,19 @@ such as Apache Flink and Apache Storm.
 Apache Storm~\footnote{Apache Storm: \url{https://storm.apache.org/}} is 
 conceived by Nathan Marz, the mind behind the Lambda Architecture. In comparison to 
 the micro batches structure of the stream in Spark Streaming, Storm's architecture 
-consists of \emph{streams of tuples} flowing through
+consists of \emph{streams of records} flowing through
 \emph{topologies}~\cite{storm_twitter}. This is a structure where operators are 
 represented as \emph{nodes} and the data flow between these operators as \emph{edges} of 
 a directed acyclic graph (DAG) as shown in Figure~\ref{fig:dag_topology}. 
 The \emph{nodes} are further distinguished between 
 two main functions; \emph{spouts} (data sources) and \emph{bolts} (computations).  
-By processing the stream events as individual tuples, the latency is kept 
+By processing the stream events as individual records, the latency is kept 
 to a minimum in the \emph{bolts}. 
 
 Furthermore, Storm provides at-least once 
 delivery semantics through the use of record-level acknowledgements. A randomly 
-generated "id" is attached to each new tuple and an extra \emph{acker node} is attached 
-to the execution graph. This \emph{acker node} is responsible for tracking the tuples, 
+generated "id" is attached to each new record and an extra \emph{acker node} is attached 
+to the execution graph. This \emph{acker node} is responsible for tracking the records, 
 enabling at-least once delivery semantics. Storm could be upgraded to enable 
 exactly-once semantics with the utilization of an API called
 Trident~\footnote{Trident API: \url{https://storm.apache.org/releases/2.1.0/Trident-API-Overview.html}}. 
@@ -495,7 +495,7 @@ processing application if batch processing support is required in the future.
 Apache Flink~\cite{flink} aims to bridge the batch and stream processing aspect of 
 Big Data and combine them into one unified framework. Similar to Storm, 
 Flink's execution topology is also internally represented as a DAG as shown 
-in Figure~\ref{fig:dag_topology}. It also processes the incoming tuples as 
+in Figure~\ref{fig:dag_topology}. It also processes the incoming records as 
 individual events to maintain low latency processing. Flink recognizes that
 dedicated batch processing is still needed for applications where no efficient algorithms 
 exist for performing the same analysis on streaming data. Therefore, Flink implements a 
