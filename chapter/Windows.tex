@@ -1,5 +1,5 @@
-\chapter{Window operators}
-\label{chap:window_operators}
+\chapter{Windows}
+\label{chap:windows}
 
 Due to the continuous, and infinite characteristics of streaming data, 
 it is impossible to process the whole data in memory. Therefore, 
@@ -8,31 +8,205 @@ records in memory. This buffer is often called \emph{windows}. Windows make it
 possible to apply streaming version of the traditional data processing operators such
 as joins~\cite{grubjoin}, sorts and aggregations. 
 
-According to Bugra Gedik~\cite{generic_window_sem}, windows could be categorized into 
-three different types; \emph{tumbling} windows, 
-\emph{sliding} windows~\cite{stream_standford,spade_stream}, and \emph{partitioned} windows. 
-\emph{Tumbling} and \emph{sliding} windows are most commonly provided as 
-the default windows by the different stream processing frameworks. 
-They offer the most flexibility in customizing them with \emph{windows parameters} to fit 
-most use cases. Partitioned windows are special variations of the \emph{tumbling} and \emph{sliding}
-windows, where a window consists of differnt sub-windows of same size. This allows 
-\emph{multiplexed processing} where independent computations are done across the 
-different sub-windows at the same time. This allows for a higher throughput because of 
-the parallelization of the processing done in the window~\cite{generic_window_sem}.
-
-The behaviour of these \emph{windows} are configured through the specification of different 
-\emph{policies}; \emph{count}, \emph{attribute-delta}, \emph{time}, and
+The behaviour of the \emph{windows} are configured through the specification of \emph{policies}
+based on different characteristics; \emph{count}, \emph{attribute-delta}, \emph{time}, and
 \emph{punctuation}-based policies~\cite{generic_window_sem}. For this thesis, only 
-\emph{time}-based policy is of interest, since we are dealing with stream data with 
-timeliness. \emph{Time}-based policy can appear as both \emph{eviction} and \emph{trigger} 
-policy. 
+\emph{time}-based policy is of interest, specifically with the notion of \emph{event time},
+since we are dealing with stream data with 
+timeliness. Moreover, the definitions of the policies will be based on the 
+implementations in Apache Flink and will differ from those defined by 
+Bugra Gedit~\cite{generic_window_sem}. 
+
 
 To understand the different \emph{windows} and \emph{policies}, we will elaborate them 
-in the following sections. We will first describe the general mechanism of the 
-different window and then, explain the semantic behaviour of these different 
-windows under the different policies.  
+in the following sections. First, a few basic notations will be defined to 
+help in the description of the semantic behaviour of the different 
+\emph{windows} and \emph{policies}. Second, we will describe the mechanism of the 
+different windows \textbf{with the semantic implication} imposed by the 
+\emph{time}-based \emph{eviction}, and \emph{trigger} policies. 
+Finally, a review of the different state-of-the art custom window operations 
+will be discussed to aid us in the development of our methodology for 
+the dynamic window processing. 
 
 
+\section{Window Preliminaries}%
+\label{sec:window_notations}
+
+Before moving on to the discussion of the different \emph{windows}, we will introduce a 
+few definitions and notations to describe the \emph{windows}. These notations and definitions 
+will be used to aid in explaining the different semantic behaviour of the \emph{windows} under 
+different \emph{policies}. 
+
+\paragraph{Notations}%
+$W = \{r_i | i \in [0\dots|W| - 1] \} $ is a window, whose size is denoted by $|W|$ in terms 
+of the number of records inside the window $W$, and $r_i$ as the $i$th record inside 
+the window. The records $r_i$'s are orderd from the newest to the oldest starting from 
+$0\dots n$ with the oldest record being $r_n$ with $ n = |W| - 1$. The current record to be put 
+into the window is denoted as $r_c$. The event timestamp associated with the
+record $r_i$ is denoted as $\tau(r_i)$.
+
+\section{Window Types}
+
+According to Bugra Gedik~\cite{generic_window_sem}, windows could be categorized into 
+three different types; \emph{tumbling} windows, 
+\emph{sliding} windows~\cite{stream_standford,spade_stream}, and \emph{partitioned} windows.
+
+\emph{Tumbling} and \emph{sliding} windows are also commonly provided as 
+the default windows by the stream processing engines. 
+They offer the most flexibility in customization with \emph{windows parameters} to fit 
+most of the use cases.
+\emph{Partitioned} windows are special variations of the \emph{tumbling} and
+\emph{sliding} windows, where a partitioned window consists of different sub-windows of same size. 
+This enables \emph{multiplexed processing} where independent computations are done across the 
+different sub-windows at the same time, resulting in a higher throughput due to 
+the parallelization of the processing~\cite{generic_window_sem}.
+
+\subsection{Tumbling Window}%
+\label{sec:Tumbling Window}
+Tumbling windows have a \emph{fixed} window size and do not 
+overlap. The size of the window influences 
+the number of elements residing in the window. It stores the elements 
+until the window is \emph{full} and this is determined by the \emph{eviction} policy. 
+In the context of this thesis, the \emph{size} of the window will be defined by 
+a time period bounded by a lower and a higher event timestamp. 
+
+Processing of the elements within the window happens only when a \emph{trigger}
+event is fired. This is determined by the \emph{trigger} policy which fires the 
+\emph{trigger} event. For tumbling windows, the default \emph{trigger} policy is 
+fulfilled when the window is \emph{full}.
 
 
+\paragraph{Eviction}%
+Extending the notations used in Section~\ref{sec:window_notations}, we define 
+the even-time-based tumbling window $W = \{r_t |  t \in \tau(r_0) \dots \tau(r_n) \}$. 
+Then, the size of the window is $|W| = [\tau(r_l), \tau(r_h)[$, where the 
+$\tau(r_l)$ and $\tau(r_h)$ represents the lower and the upper bound of the 
+records timestamp respectively. 
+Current record $r_c$ must therefore, have a timestamp  $\tau(r_l) \le \tau(r_c) \le \tau(r_h)$ 
+to be accepted by the window. If $\tau(r_c) \ge \tau(r_h)$, the record will be 
+considered late as described in watermarking mechanism in Section~\ref{sub:Out of order processing}. 
 
+
+Since tumbling windows are processed only when the window is \emph{full}, \emph{trigger} events 
+are fired at the same time as \emph{eviction} events for tumbling windows.
+
+
+\subsection{Sliding Window}%
+\label{sec:Sliding Window}
+Similar to tumbling windows, sliding windows also have \emph{fixed} window size 
+that is immutable throughout the lifetime of a stream processing engine. 
+In addition to the window size as a parameter, one could also specify the 
+\emph{window slide} for sliding window. This parameter specifies how frequently 
+a sliding window is created. 
+Therefore, if the \emph{window slide} is smaller 
+than the \emph{size} of the window, an overlap will be formed and multiple 
+windows could exists at that point of time. The records in the overlapped region 
+will have to be copied across the multiple overlapping windows. 
+Taking the \emph{slide} and the \emph{size} into account, we could conclude that 
+tumbling window is a special case of sliding window where the \emph{slide} is 
+equal to the \emph{size} of the window.
+
+Due to the overlapping of the windows, extra checks has to be considered 
+when evicting the elements in the sliding windows, to ensure that the elements in 
+overlapping windows are not removed from the multiple windows. To overcome this overhead 
+of checking when evicting the window, 
+stream processing engines copies the records across the overlapping windows. 
+This is a trade-off of processing time to keep the latency low for higher memory consumption. 
+
+The \textbf{two \emph{policies}} for the sliding windows are the same as those for the \emph{tumbling} windows. 
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.8\linewidth]{fig/slide_tumb_windows.pdf}
+    \caption{Sliding and tumbling window applied on a data stream~\cite{jonas_scotty}. }%
+    \label{fig:slide_tumb_window}
+\end{figure}
+
+
+\subsection{Partitioned Window}%
+\label{sec:Partitioned Window}
+
+Unlike the aforementioned types of window, where windowing is applied on the stream 
+without any changes to the stream, partitioned windows split the data stream into 
+different substream based on the \emph{key} of the partition. This enables the 
+techniques of \emph{multiplexed processing} to be applied on the data stream, increasing 
+the parallelization of stream processing engines. 
+
+\paragraph{Multiplexed processing}%
+\label{par:Multiplexed processing}
+Most data stream could be split up into multiple substreams consisting of records 
+of the same \emph{key} attributes. This is akin to 
+the \emph{groupBy} operations present in the traditional batch data processing where 
+data records are grouped according to a specific set of the records' \emph{attributes}.
+For example, consider a stream containing 
+Twitter tweets~\footnote{Twitter API: \href{https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/object-model/tweet}
+{Twitter's tweet object model documentation.}}. These stream \emph{tweets} could be 
+partitioned into substream based on the user's id. 
+Therefore, to support multiplex processing, any operators applied on the substreams 
+must be local to that particular substream. The operators also need to keep the states for each 
+substream independently. 
+
+
+Partitioned windows support \emph{multiplexed processing}, since it consists of  
+multiple subwindows; each corresponding to a particular substream identified 
+by the \emph{key} attribute of the records in the data stream. The subwindows 
+are independent from each other and all computations on the records are in the local scope 
+of the subwindow. The actual subwindow semantics can be of the aforementioned types 
+of windows; \emph{tumbling windows} or \emph{sliding windows}. Therefore, the 
+\emph{eviction} and \emph{trigger} policies of the subwindows 
+are similar to those two types of windows. 
+
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.8\linewidth]{fig/partitioned_window.pdf}
+    \caption{Partitioned window where the records are keyed by an attribute. In this case,
+    records are keyed by their shape. After \emph{keying} the records, circle records are sent 
+    to a subwindow different from the triangle records.}%
+    \label{fig:partitioned_window}
+\end{figure}
+   
+
+\section{Windows processing}
+\label{sec:windows_processing}
+
+Streaming applications requires some form of queries to be executed over 
+the data stream. Joins and aggregations are some of the most common queries 
+in stream processing which we will elaborate in the upcoming sections. 
+
+\subsection{Aggregation}%
+\label{sub:Aggregation}
+Window aggregations are a class of operations where some form of computations 
+is done on a group of records within a window. Operations like 
+finding the \emph{maximum value} or \emph{average value} are some of the 
+aggregations frequently done in data stream processing. However, 
+aggregate operations can be expensive in some situations. 
+For example, aggregations operations are expensive when there is 
+an overlap of windows (sliding windows), since aggregations over the overlapping 
+records will need to be recomputed for each overlapping windows. Given a sliding 
+window of 1 minute \emph{size} and 1 seconds \emph{slide}, 60 windows will exist 
+at any point of time and the 59 seconds worth of records aggregation will need 
+to be recomputed whenever a window receives a \emph{trigger} event for processing. 
+This results in redundant computation. 
+
+Sufficient amount of studies have went into optimizing the aggregation queries 
+on windows. Jonas et al~\cite{scotty, jonas_scotty} have come up with a method to 
+apply generic window \emph{slicing} for optimizing aggregation operators in windows. 
+The data stream is modelled as \emph{slices}, where 
+records are assigned to exactly one \emph{slice} resulting in a 
+$O(1)$ complexity for memory. The \emph{slices} are created every time a 
+window begins or ends. Partial aggregations are then applied on the 
+records within the slices which will eventually be consolidated once 
+a window ends for a final aggregation result eliminating redundant 
+computations. According to the authors~\cite{jonas_scotty}, this maintains 
+the high throughput processing capabilities of Apache Flink even if the 
+number of overlapping concurrent windows increases. 
+
+
+\subsection{Join}%
+\label{sub:Join}
+
+Join operations are different from that of aggregations. We do not need 
+to wait for the window to be full, before processing the records inside the 
+window. A \emph{trigger} event could be fired at the very moment a new 
+record arrives in the window. Several studies have been conducted    
