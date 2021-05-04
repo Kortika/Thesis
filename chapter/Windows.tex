@@ -15,7 +15,7 @@ based on different characteristics; \emph{count}, \emph{attribute-delta}, \emph{
 since we are dealing with stream data with 
 timeliness. Moreover, the definitions of the policies will be based on the 
 implementations in Apache Flink and will differ from those defined by 
-Bugra Gedit~\cite{generic_window_sem}. 
+Bugra Gedik~\cite{generic_window_sem}. 
 
 
 To understand the different \emph{windows} and \emph{policies}, we will elaborate them 
@@ -206,7 +206,66 @@ number of overlapping concurrent windows increases.
 \subsection{Join}%
 \label{sub:Join}
 
-Join operations are different from that of aggregations. We do not need 
+Join operations are different from aggregations. We do not need 
 to wait for the window to be full, before processing the records inside the 
 window. A \emph{trigger} event could be fired at the very moment a new 
-record arrives in the window. Several studies have been conducted    
+record arrives in the window. Furthermore, multiple statistical approaches 
+could be applied for windows optimization without disturbing the results 
+of the join operations significantly. Several studies have been conducted to 
+improve the join algorithms in windows~\cite{vctw_join, join_tracking, grubjoin, approximate_window_sem, approx_window}. 
+The approaches in ~\cite{grubjoin, approximate_window_sem, approx_window} are based 
+on dropping some of the records to be joined through \emph{load shedding}. 
+Load shedding is a technique to drop the record if 
+it fails to meet the conditions specified 
+by a metric specific to the implementations. Approaches in ~\cite{grubjoin, approximate_window_sem, approx_window}
+assumes that the stream is not out-of-order with centralized execution for 
+windows processing. Additionally, histograms of the attributes of the records are used, 
+either per window or per stream, 
+to calculate the threshold for dropping records, inflicting an overhead to memory. 
+This leads to higher latency and computation overhead 
+when joining records from multiple streams. Furthermore, 
+these approaches only deal with \emph{join} operators and could not be applied to other 
+types of stream processing operators such as \emph{aggregations} and \emph{reductions}.
+
+VC-TWJoin~\cite{vctw_join} approaches the problem differently by only considering 
+the behaviour of the data stream. The approach adjusts the size of the window 
+after every \emph{eviction} trigger based on the stream rate. This simple approach 
+of dynamically adjusting windows' sizes, enables load-shedding without the overhead of 
+keeping statistical data. Since the metric used by the approach does not consist 
+of the attributes of the records, it has no impact on the calculation 
+done by other operators such as \emph{aggregation} and \emph{reduction}.
+However, the approach is unstable when the data stream has periodic bursts of data.
+It either increases or decreases the size of the window when the metric triggers 
+the threshold of the algorithm. At worst case, it can lead to cyclic increase and 
+decrease of window sizes, if the metric borders around the threshold with every 
+update of the metric.
+
+
+\section{Summary}%
+\label{sec:Summary}
+
+The aforementioned window types are fixed and inflexible to the changes 
+in the characteristics of the data stream. Once initialized, the windows sizes 
+are fixed throughout the runtime of the application. This results in inefficient 
+window sizes if the data stream rate diverges greatly from the earlier part of the 
+application's runtime; a window size might become too small to process the incoming 
+data. Thus, a dynamic window that adjust its size throughout the runtime of the application 
+will adapat better to the changing characteristics of the data stream. 
+
+
+
+Which type of operation will we implement with our dynamic window? 
+In the context of this work with RMLStreamer, we will have to consider optimizing the 
+\emph{join} operation over \emph{aggregation}. 
+Unlike regular stream processing engines, RDF mapping engines focus 
+on just mapping the input to RDF compliant formats without 
+applying complex stream processing queries like \emph{aggregations} and 
+\emph{reductions}. These stream processing queries, if required, could be 
+delegated to the RDF stream processing frameworks processing RDF data streams.
+
+Therefore, we will focus on a reference implementation of dynamic windows with 
+stream joins as part of the mapping process of non-heterogeneous data streams 
+to RDF data streams. 
+
+
+
