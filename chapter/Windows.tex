@@ -250,11 +250,10 @@ are fixed throughout the runtime of the application. This results in inefficient
 window sizes if the data stream rate diverges greatly from the earlier part of the 
 application's runtime; a window size might become too small to process the incoming 
 data. Thus, a dynamic window that adjust its size throughout the runtime of the application 
-will adapat better to the changing characteristics of the data stream. 
+will adapt better to the changing characteristics of the data stream. 
 
 
-
-Which type of operation will we implement with our dynamic window? 
+Which type of operation is suitable for our dynamic window? 
 In the context of this work with RMLStreamer, we will have to consider optimizing the 
 \emph{join} operation over \emph{aggregation}. 
 Unlike regular stream processing engines, RDF mapping engines focus 
