@@ -91,6 +91,11 @@ properties. Different triples maps might come from separate logical sources, the
 referencing across triples maps might require applying the join operator across multiple 
 logical sources. 
 
+Moreover, an ontology to semantically define functions, FnO~\cite{fno_ben}, has been supported 
+in RML, allowing users to apply user defined functions during the mapping process. This 
+extension provides RML implementations with the capabilities to transform the input data with 
+lightweight computations before mapping them into RDF triples; providing some form of 
+data processing. 
 
 \begin{lstlisting}[caption={An example of an RML mapping document~\cite{rml_tech}}.]
 @prefix rr: <http://www.w3.org/ns/r2rml#>.
@@ -371,4 +376,4 @@ data sources with high velocity and volume.
 Therefore, a solution
 with built-in capabilities to handle high velocity and volume of data, is of interest
 to implement the dynamic windowing scheme. 
-Hence, RMLStreamer is the best candidate for this work on dynamic window join in RDF generation. 
+Hence, RMLStreamer is the best candidate for this work on dynamic window in RDF generation. 
