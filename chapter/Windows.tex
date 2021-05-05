@@ -11,15 +11,16 @@ as joins~\cite{grubjoin}, sorts and aggregations.
 The behaviour of \emph{windows} are configured by specifying \emph{policies}
 based on different characteristics such as \emph{count}, \emph{attribute-delta}, \emph{time}, and
 \emph{punctuation}~\cite{generic_window_sem}. For this thesis, only a
-\emph{time}-based policy is of interest, specifically with the notion of \emph{event time},
+\emph{time}-based policy is of interest to proof and evaluate the 
+concept, specifically with the notion of \emph{event time},
 since we are dealing with streaming data with 
 timeliness.
 \gh{Here we need a good motivation why we limit the scope to the time characteristic.
-	I can imagine a use case where we generate triples only if there are 5 particular
+       I can imagine a use case where we generate triples only if there are 5 particular
 records encountered (so count based, e.g. a thermometer signals a high temperature which might trigger an alert). A reason can be to proof the concept, and then later in the discussions / future work section say that 
 the concept could also be investigated for other characteristics as well.}
 
-Moreover, the definitions \gh{or do you mean the *configurations*} of the policies will be based on the 
+Moreover, the configurations of the policies will be based on the 
 implementations in Apache Flink and will differ from those defined by 
 Bugra Gedik~\cite{generic_window_sem}. 
 
@@ -84,7 +85,7 @@ fulfilled when the window is \emph{full}.
 
 \paragraph{Eviction}%
 Extending the notations used in Section~\ref{sec:window_notations}, we define 
-the even-time-based \gh{do you mean "event time based"?} tumbling window $W = \{r_t |  t \in \tau(r_0) \dots \tau(r_n) \}$. 
+the event time based tumbling window $W = \{r_t |  t \in \tau(r_0) \dots \tau(r_n) \}$. 
 Then, the size of the window is $|W| = [\tau(r_l), \tau(r_h)[$, where  
 $\tau(r_l)$ and $\tau(r_h)$ represents the lower and the upper bound of the 
 records timestamp respectively. 
@@ -100,7 +101,7 @@ are fired at the same time as \emph{eviction} events for tumbling windows.
 \subsection{Sliding Window}%
 \label{sec:Sliding Window}
 Similar to tumbling windows, sliding windows also have a \emph{fixed} window size 
-that is immutable throughout the lifetime of a stream processing engine \gh{Maybe replace "engine" with "job". The engine can live longer than the job where the window is defined.}. 
+that is immutable throughout the lifetime of a stream processing job. 
 In addition to the window size as a parameter, one could also specify the 
 \emph{window slide} for sliding window. This parameter specifies how frequently 
 a sliding window is created. 
