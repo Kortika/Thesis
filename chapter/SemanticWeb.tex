@@ -5,22 +5,22 @@
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{fig/Semantic_web_stack.svg.png}
-    \caption{An overview of semantic web stack with core technologies\cite{sem_web_stack}.}
+    \caption{An overview of Semantic Web stack with core technologies\cite{sem_web_stack}.}
     \label{fig:sem_web_stack}
 \end{figure}
 
-The semantic web extends the existing \emph{web of documents} with the ability 
+The Semantic Web extends the existing \emph{web of documents} with the ability 
 to \emph{link} different documents and \emph{embed knowledge} in the document
 to transform it into a \emph{web of data}. It is perceived by Tim Beners-Lee in 
 2001\cite{bernerslee2001semantic} to be integrated into the existing architecture 
 of World Wide Web. Embedding \emph{knowledge} into documents enables machines to
 interpret the \emph{meaning} of the document and interoperate with each other on 
-a more complex level.
+a more complex level. This results in \emph{knowledge graphs}. 
 
-The semantic web stack enables one to start building a \emph{web of data} using 
+The Semantic Web stack enables the development of a \emph{web of data} using 
 the core technologies shown in Figure~\ref{fig:sem_web_stack}. 
-However, this is provided that the data already exists in RDF compliant format.
-\gh{I would rephrase as: "...provided that the data is represented in the Resource Description Framework (RDF)[++]". Because at this point the reader doesn't know RDF yet.}
+However, this is provided that the data is represented in the 
+Resource Description Framework (RDF) format~\cite{rdf_concepts}. 
 Existing data on the web in non-RDF format must, therefore, be transformed 
 into RDF to enable transition to a \emph{web of data}. This work 
 focuses on transforming non-RDF to RDF data, thus the RDF data model will be elaborated on
@@ -28,7 +28,7 @@ in detail.
 
 
 
-\section{RDF}
+\section{Resource Definition Framework}
 Resource Definition Framework (RDF) \cite{rdf_concepts} is a framework for representing data on the Web.
 It portrays the data as a directed graph with the resources as nodes in the graph and the
 edges as the relationship between the different resources.
@@ -53,19 +53,19 @@ and the object \textit{apple}.
 \end{figure}
 
 
-By composing these simple triple statements into a set of RDF triples, it yields us an RDF graph.
+By composing these simple triple statements into a set of RDF triples, an RDF graph is created.
 In Figure~\ref{fig:rdf_graph_ex}, 4 triple statements are composed together to form a
 simple RDF graph describing \textit{John} and \textit{Mary} having the same \textit{apple}.
 In contrast to the 
 simplicity of figures, there are advantages to
 representing knowledge in RDF graphs. Data representation in a graph model allows machines to follow the
 \textit{links} between the resources, and discover more unknown
-data in the linked knowledge graph. Following links is possible due to the nodes in
+data in linked knowledge graphs. Following links is possible due to the nodes in
 the triples being classified as one of the 3 different term types.
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[node distance={45mm}, main/.style = {draw, circle}]
+\begin{tikzpicture}[node distance={45mm}, main/.style = {draw, circle}, font=\small]
 
 \node[main] (subject) {John};
 \node[main] (subject_2) [below of=subject] {Mary};
@@ -95,51 +95,37 @@ An IRI can represent a relationship, a concept or an object. Therefore, it could
 used in the \textit{subject}, the \textit{predicate} and the \textit{object} components of
 an RDF triple.
 
-The \textit{literal} term type is used to represent a value such as strings, numbers, boolean and dates.
-To ensure that the machines know the type of the data being read, we could
-explicitly specify the type of the data with a datatype IRI. Moreover, the
+The \textit{literal} term type is used to represent a value such as strings, numbers, boolean, and dates.
+Each literal can have a datatype IRI to specify the type of the data it represents. Moreover, the
 language in which the data is written, could also be explicitly stated with
-a language tag.
+a language tag. However, a literal can only have either a datatype or a language tag. 
 
 Lastly, we have the term type \textit{blank node}. Blank nodes identify resources
-in the local scope (i.e. to a local file or an RDF store). Since it is used to
-identify resources in nodes, blank nodes are only applicable as the \textit{subject}
-and the \textit{object} components of an RDF triple.
+in the local scope (i.e. to a local file or an RDF store).
+Blank nodes are only applicable as the \textit{subject}
+and the \textit{object} components of an RDF triple, since they are used to
+identify resources in nodes,
+
 
 \section{RDF serialization formats}
 
-The aforementioned term types are defined in the abstract RDF \sout{syntax}\gh{model} and 
-require a concrete \sout{syntax}\gh{serialization} to store and process RDF data. 
-Several \sout{syntaxes}\gh{serialization formats} have been developed alongside RDF specifications to represent RDF
+The aforementioned term types are defined in the abstract RDF model and 
+require a concrete serialization to store and process RDF data. 
+Several serialization formats have been developed alongside RDF specifications to represent RDF
 knowledge graphs.
 These formats usually have trade-offs for simplicity of parsing against 
 human readability. The following sections will describe some widely used formats in detail; 
-RDF/XML, JSON-LD, N-Triples and lastly Turtle. 
+RDF/XML, JSON-LD, N-Triples and N-Quads, and Turtle. 
 
 
 \subsection{RDF/XML}
-The earliest of the serialization formants is RDF/XML\footnote{RDF/XML: \url{https://www.w3.org/TR/rdf-syntax-grammar/}}. 
+The earliest of the serialization formats is RDF/XML\footnote{RDF/XML: \url{https://www.w3.org/TR/rdf-syntax-grammar/}}. 
 It was developed during the early days of RDF when parsers, serializers and storage systems 
 for XML were widely used. 
-Due to the mixture of tree-structure document with a triple-based graph;
-RDF/XML is too verbose and difficult for human to read and understand.
-\gh{Don't underestimate humans; maybe replace with "...RDF/XML can be quite verbose and difficult..."}
-Moreover, 
-it is also not a stream-friendly format for unbounded RDF data generation.
-\gh{Perhaps replace with "Moreover, XML is not suited to represent unbounded data streams."}
+RDF/XML can be quite verbose and difficult for human to read and understand, 
+due to the mixture of tree-structure document with a triple-based graph. 
+Moreover, XML is not suited to represent unbounded RDF data generation.
 
-
-\subsection{JSON-LD}
-JSON-LD\cite{JSON-LD} was developed as 
-the modern Linked Data format compared to RDF/XML.
-\gh{or to RDF in general (JSON-LD is not an RDF serialisation). See \url{http://manu.sporny.org/2014/json-ld-origins-2/} for a fun read. (don't cite this though :)
-We can move this section below the N-Triples section,
-and clearly mention that it is possible to represent RDF using JSON-LD, but that it is not intended to.}
-It provides a way to continue using existing 
-infrastructures using JSON and upgrade from JSON to JSON-LD to utilize the power of semantic knowledge graphs. 
-Although the flexibility of extending existing infrastructures to support Linked Data usage 
-is favorable, it has one major drawback; a high performance cost for parsing\footnote{Performance of parsing JSON-LD: \url{http://manu.sporny.org/2016/json-ld-context-caching/}}.
-Streaming JSON-LD is also costly due to the verbosity of the format. 
 
 
 \subsection{N-Triples and N-Quads}
@@ -147,16 +133,28 @@ N-Triples\cite{N-Triples} is a subset of Turtle, which we will focus on in this 
 to represent RDF data. In comparison to the aforementioned two formats, N-Triples is trivial to parse. 
 It represents the RDF statements consisting of \emph{subject, predicate} and \emph{object} line by line. 
 Each line consists of a \emph{subject, predicate, object} and a full stop indicating the termination of 
-an RDF statement. N-Quads is a superset  of N-Triples by extending with the fourth column to denote the \emph{graph URI}.
+an RDF statement. N-Quads is a superset  of N-Triples by extending with the fourth column to denote the \emph{graph IRI}.
+\emph{Graph IRIs} are used to group RDF statements into multiple graphs and associate them with an IRI.  
 
-By representing the RDF statements line by line, it allows the streaming of the generated RDF output 
-intuitively. However, without the usage of \emph{prefixes}, it is verbose and takes more 
-bandwidth compared to Turtle syntax; which we will elaborate in detail in the following section.
+N-Triples and N-Quards are great for streaming RDF as they 
+represent RDF statements line by line. However, without the usage of \emph{prefixes}, it is verbose and takes more 
+bandwidth compared to Turtle format; which we will elaborate in detail in the following section.
+
+
+\subsection{JSON-LD}
+JSON-LD\cite{JSON-LD} was developed as 
+the modern Linked Data format to represent RDF data in general. 
+It provides a way to continue using existing 
+infrastructures using JSON and upgrade from JSON to JSON-LD to utilize the power of semantic knowledge graphs. 
+Although the flexibility of extending existing infrastructures to support Linked Data usage 
+is favourable, it has one major drawback; a high performance cost for parsing due to 
+the verbosity of the format\footnote{Performance of parsing JSON-LD: \url{http://manu.sporny.org/2016/json-ld-context-caching/}}.
+
 
 \subsection{Turtle syntax}
 \label{sec:turtle_syntax}
 Turtle (Terse RDF Triple Language)~\cite{turtle_syntax}
-syntax is the focus of representing our RDF data in this work.
+syntax is the focus of representing RDF data in this work.
  A simple triple statement is a sequence of
 \textit{subject, predicate, object} terms, ending in a '.'.
 To reduce the repetition of writing the same subject and predicate combination with
@@ -167,14 +165,14 @@ same subject.
 
 \begin{lstlisting}[label={lst:same_subject}, 
     caption={Usage of ';' where triples share the same subject.}]
-<http://example.org/apple>  <http://example.org/hasColor> "red";
-                            <http://example.org/scientificName> "Malus domestica".
+<http://example.org/apple>  ex:hasColor "red";
+                            ex:scientificName "Malus domestica".
 \end{lstlisting}
 
 \begin{lstlisting}[label={lst:different_object}, 
     caption={Usage of ',' where triples differs only in the objects.}]
-<http://example.org/apple>  <http://example.org/scientificName> "Malus pumila", 
-                                                                "Malus domestica".
+<http://example.org/apple>  ex:scientificName "Malus pumila", 
+                                              "Malus domestica".
 \end{lstlisting}
 
 
@@ -183,9 +181,10 @@ Since blank nodes are locally scoped version of IRIs, the same syntax to write I
 Turtle allows us to define \textit{prefixes} at the head of the Turtle document.
 Users could then use prefixes, to write RDF triples in a more compact form. For example,
 \lstinline{<http://example.org/#John>} could be shortened to
-\lstinline{<#John>} using the relative \textit{@base} path.
+\lstinline{<#John>} using the relative \textit{@base} path or written with the prefix \emph{ex:} as 
+\lstinline{ex:John}.
 
-\begin{lstlisting}[caption={Prefixes in TURTLE syntax.}, float]
+\begin{lstlisting}[caption={Prefixes in Turtle syntax.}, float]
     @base <http://example.org/> . # default base IRI
     @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
     @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -196,7 +195,7 @@ Users could then use prefixes, to write RDF triples in a more compact form. For 
 \end{lstlisting}
 
 A literal is written between double quotes and has by
-default the xsd:string datatype. 
+default the \emph{xsd:string} datatype. 
 One could also \textit{cast} the literal value to a specific datatype 
 by appending '\textasciicircum{} \textasciicircum{} $[$IRI of the datatype$]$'. For example, 
 "12" is cast to an integer in \lstinline{"12"^^xsd:integer}.
