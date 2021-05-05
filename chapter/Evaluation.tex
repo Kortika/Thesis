@@ -96,17 +96,6 @@ attached to the input and output records for \emph{latency}
 measurement\cite{latency_measurement_kafka}.
 \gh{Maybe you can tune Kafka to keep its latency as low as possible, so that the timestamps of the (Kafka) messages don't deviate too much from the event time stamps. If you do, you also have to describe that in the set-up}
 
-\subsection{Workload for failure restart}
-\gh{I'm not sure if we want to evaluate this. Maybe check with AD. What's the expected behaviour? Doesn't that depend on the use case? What delivery guarantee: exactly once, at least once, at most once, ...? This also influences how correctness is measured.}
-Evaluating the performance of dynamic windows to handle a restart in case of failure  
-will stress test the implementation to handle the initial burst of data.
-This is to emulate the scenario where RMLStreamer has to catch up with processing 
-the records after a node failure. The Kafka 
-broker will be started first to buffer the data stream for 5 minutes at a constant rate 
-of around 1000 messages per second. Afterwards, RMLStreamer will be started to begin 
-processing the records to catch up with the data stream. Once the RMLStreamer is started, 
-Kafka broker will slow down the publishing of records to allow the RMLStreamer to catch
-up.
 
 \subsection{Workload for completeness}
 The implementation of the dynamic window should also ensure that the generated 
