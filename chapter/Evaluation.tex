@@ -37,14 +37,14 @@ A subset of the complete sensor data will be replayed by a Kafka publisher into 
 \emph{flow} and \emph{speed}, for the number of cars and the average speed respectively. 
 
 \subsection{Data for completeness evaluation}
-Completeness measure requires a dataset which could be mapped completely by a static 
+Evaluating completeness requires a dataset which could be mapped completely by a static 
 mapping engine. 
 Our \emph{complete} set of output triples will be generated according 
-to the RML specification. Streaming data is usually 
-ordered according to the event time, as defined in Chapter~\ref{chap:data_stream_processing} 
+to the RML mappings. Streaming data is usually 
+ordered according to the event time (Chapter~\ref{chap:data_stream_processing}) 
 and the same entity could appear in the 
 stream at a different timestamp. This can lead to duplicates in the generated output by 
-the RMLMapper. Duplicates, in this context, are triples that semantically describe the 
+the bounded data processing by RMLStreamer. Duplicates, in this context, are triples that semantically describe the 
 same knowledge. Therefore, duplicates in the generated output by the reference optimal
 mapping engine needs to be removed in the final \emph{complete} output dataset.
 
@@ -69,12 +69,13 @@ workload scenarios and limit the measurement of the metrics just to the windows.
 
 
 \section{Workload scenarios}
-As stated in Chapter~\ref{chap:data_stream_processing}, data streams have characteristics 
-which determine the performance of stream processing frameworks and its operators. Therefore, 
+Data streams have characteristics 
+which determine the performance of stream processing frameworks and its 
+operators (Chapter~\ref{chap:data_stream_processing}). Therefore, 
 there is a need to evaluate our dynamic window implementation under different workload scenarios. 
 
 \subsection{Workload for maximum throughput measurement}
-This workload will attempt to measure the maximum throughput RMLStreamer can 
+This workload will measure the maximum throughput RMLStreamer can 
 process with the different windows, before \emph{latency,} and \emph{memory utilization}
 increase significantly~\cite{benchmark_dsdps}. We will increase the velocity of the input data gradually 
 every 10 seconds until there is a significant latency of more than 10 seconds to produce
