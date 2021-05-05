@@ -94,8 +94,8 @@ through optimizing operator scheduling and buffers to reduce network traffic~\ci
 
 
 \subsection{Fault tolerance}
-As stated in the beginning of this chapter, DSMSs will also have to be able to scale 
-horizontally --- stream processing must be distributable over multiple computing nodes. 
+DSMSs should also scale horizontally 
+by distributed stream processing over multiple computing nodes. 
 This leads to the requirement that there needs to be some form of coordination and fault tolerance 
 for distributed stream processing. The exact details of guaranteeing fault tolerance differs between frameworks, however, there are general strategies to provide some 
 form of fault tolerance according to Gradvohl et al~\cite{fault_tolerance_dsms}.
@@ -126,7 +126,7 @@ components are then on standby to replace their counterpart if there is a failur
 reduces the performance cost of executing the duplicated components at the same 
 time as their counterpart. However, starting the backup component requires the input 
 to be resubmitted for it to catch up and return to normal state. This results in a significant 
-delay every time there is a failure and not acceptable for the requirement of real-time response. 
+latency every time there is a failure and not acceptable for the requirement of real-time response. 
 
 
 \subsubsection{Checkpoint}
@@ -168,36 +168,37 @@ while coordinating these operators, increasing the latency of the operators when
 checkpoint has to be taken. 
 
 
-There exist algorithms which combine the best of both worlds; asynchronous, non-blocking
-operators for checkpointing with the consistency of global states. 
+Combined approaches utilizing different operators, such as asynchronous, and non-blocking
+operators, exists for checkpointing with the consistency of global states. 
 The Chandy-Lamport algorithm~\cite{chandy_lamport} determines the 
 global state of a distributed system which could be used to maintain the checkpoints. 
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics{fig/checkpoint_inconsistency.png}
-    \caption{Operator B sends a message \emph{m} to operator A and both operators 
-    committed a checkpoint of their internal state.}
+    \caption{Inconsistent checkpoint scenario where operator A and B have different
+    checkpointed states. The rectangle blocks indicate the moment when the operators 
+    commit a checkpoint of their internal state. }
     \label{fig:checkpoint_inconsistency}
 \end{figure}
 
-\subsubsection{Upstream backup}
 
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{fig/upstream.png}
-    \caption{Upstream backup~\cite{upstream_backup}. }
+    \caption{Upstream backup of the operators for fault tolerance~\cite{upstream_backup}.}
     \label{fig:upstream}
     
 \end{figure}
 
+\subsubsection{Upstream backup}
 
 In this approach of fault tolerance, upstream operators 
 will temporarily 
-keep the tuples in their output buffer for subsequent operators. The tuples 
-stay in the buffer until they are completely processed by the child operator. 
-The buffer will then be cleared when the parent operator receives 
-an acknowledgement from its children, as illustrated in the Figure~\ref{fig:upstream}. 
+keep the records in their output buffer for downstream operators.The records 
+stay in the buffer until they are completely processed by the downstream operator. 
+The buffer will then be cleared when the upstream operator receives 
+an acknowledgement from its direct downstream operators, as illustrated in the Figure~\ref{fig:upstream}. 
 
 The drawback for this approach is that, the buffer might not be large enough to 
 hold the records stored between the failure and the recovery event. Moreover, 
@@ -206,37 +207,39 @@ the state of the failed operator from the replayed records.
 
 \section{Data Stream processing}
 
-Owing to the characteristics described in Section~\ref{sec:characteristics_data_stream}, 
-processing data streams requires a different approach from that of a batch data processing engine.
+Processing data streams requires a different approach from that of a batch data processing engine, due 
+to the characteristics described in Section~\ref{sec:characteristics_data_stream}. 
 Batch processing is defined as processing a small subset of the data simultaneously~\cite{batch_processing}. 
 Originally, it is meant to tackle a particular characteristic of Big Data; the \textbf{volume}. The job 
 could therefore last from several hours to days, depending on the volume of the data and the 
 complexity of the operations~\cite{batch_duration}.
 Consequently, batch processing engines do not need to take the continuous and 
 timely nature of the data into account~\cite{flink}.
-
-On the other hand, stream processing requires the notion of time and continuity of the data as 
-specified earlier in Section~\ref{sec:characteristics_data_stream}. This brings several challenges 
-that stream processing frameworks need to solve, resulting in a specialised architecture employed by the 
+On the other hand, stream processing requires the notion of time and continuity of the data 
+(Section~\ref{sec:characteristics_data_stream}). This brings several challenges 
+that stream processing frameworks need to solve, resulting in a specialised architectures employed by the 
 frameworks. In this section, we will summarise the general architecture and strategies to deal with the 
 uncertainty of the order of items and the continuously processing of items in data streams. Different 
-state of the art frameworks will also be briefly mentioned, to get the reader familiar with the 
+state-of-the-art frameworks will also be briefly mentioned, to get the reader familiar with the 
 frameworks. 
 
 \newpage
 
 \subsection{Lambda architecture}
 
-As stated in the previous section, batch processing introduces long latency --- if a query 
+Batch processing introduces high latency --- if a query 
 is executed against a batch processing engine, it can take hours to return the results, which might be 
-out of date once they are ready. To process the unbounded data stream with low latency and maximal accuracy,
-one could combine the speed of stream processing with the accuracy of batch analysis. 
-
+out of date once they are ready. A combination of the speed of stream processing with the accuracy of batch analysis
+allows one to process the unbounded data stream with low latency and maximal accuracy. 
 
 Lambda architecture~\cite{lambda_arch, lambda_arch_book, lambda_arc_bpost} introduced by Nathan Marz, is a 
 design pattern to combine the high accuracy of batch analysis and the low latency of 
 stream processing engines. It consists of three separate layers; a \textbf{batch} layer, 
 a \textbf{speed} layer and a \textbf{serving} layer. 
+The three layers serve to enhance the result of the users' queries by taking 
+advantage of both the low latency of the \textbf{speed} layer and the accurate analysis of the \textbf{batch}
+layer.
+
 
 To further complement the three layers, 
 the data stream is also split into two different paths: 
@@ -258,36 +261,30 @@ to the batch views in the \textbf{serving} layer by using the results from the \
     \label{fig:lambda_arch}
 \end{figure}
 
-\subsubsection{The three layers}
-The three layers serve to enhance the result of the users' queries by taking 
-advantage of both the low latency of the \textbf{speed} layer and the accurate analysis of the \textbf{batch}
-layer. 
-
-\paragraph{Speed layer}%
-\label{par:Speed layer}
+\subsubsection{Speed layer}%
+\label{sssec:Speed layer}
 The speed layer is responsible for processing the incoming data at high velocity and low latency. 
 This layer focuses at low latency processing at the cost of a lower accuracy. The generated 
-\textbf{realtime views}  could also be used to incrementally update the \textbf{batch views} since they 
+\textbf{real-time views}  could also be used to incrementally update the \textbf{batch views} since they 
 are more recent due to low latency processing. Stream processing engines are employed in this 
-layer. To ensure that the 
-analysis is done on a subset of the whole streaming data, \textbf{windowing operators} are employed 
-to restrict the stream processing to the elements contained within the \textbf{window}. For more information,
-Chapter~\ref{chap:windows} will explore and elaborate the different \textbf{windows} that 
+layer.  \textbf{Windowing operators} are employed 
+to restrict the stream processing to the elements contained within the \textbf{window}. 
+This ensures that the analysis is done on a subset of the whole streaming data. 
+Chapter~\ref{chap:windows} elaborates the different \textbf{windows} that 
 are commonly used in stream processing. 
 
-\paragraph{Batch layer}%
-\label{par:Batch layer}
-The batch layer will store the incoming stream data in a master dataset. This master dataset is an immutable,
+\subsubsection{Batch layer}%
+\label{sssec:Batch layer}
+The batch layer stores the incoming stream data in a \emph{master dataset}. This \emph{master dataset} is an immutable,
 and append only dataset, to ensure that there is some notion of time or history of the data. Changes made to 
 the previously stored data are re-appended to the dataset as a record with a new timestamp.  
 This enables re-computation of the master dataset resulting in a new batch view as the dataset evolves over time. 
-As the name suggests, batch processing engines are commonly deployed in the batch layer. For example, 
-a MapReduce~\cite{mapreduce} framework like Apache Hadoop~\cite{hadoop} is commonly used in this 
-layer for batch analysis. 
+Batch processing engines, such as MapReduce~\cite{mapreduce}-based framework like Apache Hadoop~\cite{hadoop}, 
+are commonly deployed the batch layer for batch analysis. 
 
 
-\paragraph{Serving layer}%
-\label{par:Serving layer}
+\subsubsection{Serving layer}%
+\label{sssec:Serving layer}
 
 The serving layer receives the batch views from the batch layer and updates them as necessary. When a user 
 queries the application, the serving layer will redirect the user to the real-time views if the 
@@ -309,14 +306,14 @@ the system along the two dataflow paths.
 
 \subsection{Kappa architecture}%
 \label{sub:Kappa architecture}
-Proposed by Jay Kreps, Kappa architecture~\cite{kappa_architecture} is designed to replace the 
-two processing systems layout of the Lambda architecture by combining batch and stream processing 
-into one layer. Intuitively, stream processing is 
-only meant to handle a very small subset of the whole data. However, if one were to be able 
-to replay the historical data at high velocity, one could increase the parallelism of the streaming 
-job and reprocess the whole historical data as a \emph{subset}. This results in an output accuracy similar
-to that of the output from batch analysis. The Kappa architecture is based on this intuition.   
-
+Kappa architecture~\cite{kappa_architecture}, as proposed by Jay Kreps, 
+combines batch and stream processing into one layer, to replace the 
+two processing systems layout of the Lambda architecture. Intuitively, stream processing is 
+only meant to handle a very small subset of the whole data. However,
+one could increase the parallelism of the streaming 
+job and reprocess the whole historical data as a \emph{subset}, by replaying 
+the historical data at high velocity. This results in an output accuracy as 
+batch analysis. The Kappa architecture is based on this intuition.   
 Instead of consuming the streaming data sources directly with the stream processing engine, 
 the input data is first stored in a distributed data log system like Apache Kafka~\cite{kafka}. The data 
 logs can be stored indefinitely or temporarily depending on the use case.
@@ -337,13 +334,13 @@ a stream of events in real-time, or as a replay of historical data for batch ana
 Even though the Kappa architecture solves the problem of code redundancy and complexity of 
 system management introduced in the 
 Lambda architecture, it is not meant as a full replacement for the Lambda architecture. 
-The Lambda architecture is useful in cases where a system needs to have two different algorithms for 
-batch analysis and stream processing. For example, the batch layer could be responsible for training 
+The Lambda architecture is useful in cases where two different algorithms for 
+batch analysis and stream processing are needed. For example, the batch layer could be responsible for training 
 a machine learning model on the bounded dataset batches and improving the 
 predictions, while the speed layer could deploy these models to provide real-time predictions. 
 
 
-In this thesis, we are investigating the usage of dynamic windows in the context of stream processing 
+In this thesis, we investigate the usage of dynamic windows in the context of stream processing 
 non-heterogenoeus data to RDF data. 
 Therefore, the Kappa architecture is the best candidate to deploy and test our 
 hypotheses since we have no need for batch analysis in this thesis.  
@@ -352,11 +349,11 @@ hypotheses since we have no need for batch analysis in this thesis.
 \label{sub:Out of order processing}
 Stream events can arrive out of order due to a myriad of reasons; network latencies, 
 bad connections or a delay at one of the multiple sensors generating the events for 
-the stream processing engine. As stated at the beginning of this chapter, stream 
-processing engines should be aware of the timeliness of the data stream --- it needs 
-to be able to deal with out-of-order events. 
+the stream processing engine. Stream 
+processing engines should be aware of the \emph{timeliness} of the data stream --- it needs 
+to be able to deal with out of order events. 
 
-To understand the strategy involved in the handling out-of-order events, 
+To understand the strategy involved in the handling out of order events, 
 two notions of \emph{time}~ need to be introduced~\cite{watermark_flink}:  
 
 \begin{defn}[Processing time]
@@ -376,8 +373,8 @@ different, resulting in different watermarks.
 \begin{defn}[Event time]
     Event time is the time at which the events are generated at the source.
 \end{defn}
-For example, if user click events are being emitted at the
-source, the \emph{event time} will be the time the user clicks on an object of 
+For example, the \emph{event time} of a user's click events,
+will be the exact time the user \textbf{clicks} on an object of 
 interest. This timestamp is usually included in the record as they arrive 
 in the stream processing engine. The engine could then extract these 
 timestamp to use as \emph{event time}. 
@@ -386,47 +383,50 @@ timestamp to use as \emph{event time}.
 \subsubsection{Watermarking}%
 \label{ssub:Watermarking}
 
-The two notions of \emph{time} are used in a strategy called \textbf{watermarking}. 
+The two notions of \emph{time} are used in a strategy called \textbf{watermarking}~\cite{watermark_millwheel}. 
 Watermarks are timestamp threshold used to deal with \emph{very late} events 
 in the data stream. It specifies how long the stream processing engine 
 waits for \emph{late events}. For example, if a watermark with timestamp 
 20 arrives in the dataflow, the system could assume that all events 
 with timestamp earlier than 20 already have arrived in the system. 
 
-Just having these notions of time and watermarks is not enough to 
-handle out-of-order events. The stream processing engine needs to be able to compare them to a subset of the 
+Notions of time and watermarks are insufficient to handle out of order 
+events. The stream processing engine needs to be able to compare them to a subset of the 
 incoming data. Windowing provides a grouped view of the infinite unbounded stream, 
-enabling the engine to compare the subset of records for timeliness and out-of-order 
+enabling the engine to compare the subset of records for \emph{timeliness} and out of order 
 processing. A window can be \emph{time driven}, every $N$ seconds, or \emph{data driven}, 
 every $N$ records. 
-Suppose in Figure~\ref{fig:watermark}, a time window is applied on the stream that
+In Figure~\ref{fig:watermark}, a time window is applied on the stream that
 stretches from watermark \emph{W(17)} until \emph{W(11)}. 
 Once \emph{W(17)} arrives in the window, it knows that it contains or has 
 processed all events earlier than timestamp 17 and later than timestamp of 11.  
 
-However, it is possible for an event, later in the future, to arrive in the window 
-with a timestamp earlier than 17. That event can be considered late as an outlier and 
+However, future events may arrive in the window 
+with a timestamp earlier than 17. That event can be considered \emph{late} as an outlier and 
 be dealt with appropriately as defined by the developer. Different windows 
 behave differently with the watermarking strategy. Chapter~\ref{chap:windows}
-will dive deep into the workings of different windows and how windowing works in 
+will elaborate the workings of different windows and how windowing works in 
 general. 
 
 
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=0.8\linewidth]{fig/stream_watermark_out_of_order.png}
-    \caption{Out of order events in a stream with watermarks~\cite{watermark_flink}.}
+    \caption{Out of order events in a stream with watermarks~\cite{watermark_flink}. In this figure, 
+    all events on the right side of W(11) have a timestamp $\le 11$. If an event with 
+    a timestamp $> 11$ arrives in the future, it is considered \emph{late}.}
     \label{fig:watermark}
 \end{figure}
 
 
 \section{Frameworks}
 \label{sec:frameworks}
-There are state of the art stream processing frameworks widely employed across the 
-different disciplines in the industry. These frameworks address the main challenges of 
-Big Data stream processing, the three V's, differently with their own advantages and 
-disadvantages.
-In this section, we will elaborate 
+There are various state-of-the-art stream processing frameworks widely employed
+in the industry. These frameworks address the main challenges of 
+Big Data stream processing, the three V's (Section ~\ref{sec:characteristics_data_stream}),
+differently with their own advantages and disadvantages.
+
+In this section, we elaborate 
 on a few of these stream processing frameworks to identify the best characteristics of a 
 stream processing engine and the different implementation to tackle the challenges by these 
 frameworks.
@@ -437,9 +437,9 @@ frameworks.
 \label{sub:Apache Spark}
 Apache Spark~\footnote{Apache Spark: \url{https://spark.apache.org/}} is a batch 
 processing framework developed to improve upon the existing implementations of the 
-MapReduce paradigm. Instead working purely with a distributed file based system like 
-Hadoop, Spark processes data in RAM with a read-only data structure called 
-\emph{Resilient Distributed Dataset} also known as RDD. RDD is distributed over 
+MapReduce paradigm. Spark processes data in RAM with a read-only data structure called 
+\emph{Resilient Distributed Dataset} (RDD) instead of working purely with a distributed file based system like 
+Hadoop. RDD is distributed over 
 different machines in the cluster allowing parallel operations. Fault tolerance 
 is also enabled through incremental bookkeeping of how RDD is built over time, allowing 
 it to be rebuilt in case of failure.
@@ -452,23 +452,25 @@ into micro batches frees up the stream processing engine from synchronization pr
 and dependency of the data across time. Since the stream is modelled as \emph{micro} 
 batches, the powerful recovery mechanisms and exactly-once delivery semantics of the traditional batch processing engines could
 be applied. 
-Furthermore, this seamless integration of RDDs, meant for batch analysis in 
-streaming context, meant that Spark Streaming could utilize the Kappa architecture 
-to maintain low latency stream processing. 
+Furthermore, transparent integration of RDDs for both batch and stream processing in Spark,  
+meant that Spark Streaming could utilize the Kappa architecture to maintain low latency stream processing. 
 
-However, because the stream is discretized into micro batches, Apache Spark Streaming still has a 
-higher latency when compared to systems processing individual records in the stream
-such as Apache Flink and Apache Storm. 
+However, Apache Spark Streaming still has a 
+higher latency when compared to systems processing individual records in the stream, 
+such as Apache Flink and Apache Storm, due to the discretization of 
+data stream in \emph{micro} batches. 
 
 
 \subsection{Apache Storm}%
 \label{sub:Apache Storm}
 
 Apache Storm~\footnote{Apache Storm: \url{https://storm.apache.org/}} is 
-conceived by Nathan Marz, the mind behind the Lambda Architecture. In comparison to 
-the micro batches structure of the stream in Spark Streaming, Storm's architecture 
+created by Nathan Marz.
+Storm's architecture 
 consists of \emph{streams of records} flowing through
-\emph{topologies}~\cite{storm_twitter}. This is a structure where operators are 
+\emph{topologies}~\cite{storm_twitter}, in comparison to 
+the micro batches structure of the stream in Spark Streaming. 
+This is a structure where operators are 
 represented as \emph{nodes} and the data flow between these operators as \emph{edges} of 
 a directed acyclic graph (DAG) as shown in Figure~\ref{fig:dag_topology}. 
 The \emph{nodes} are further distinguished between 
@@ -476,7 +478,7 @@ two main functions; \emph{spouts} (data sources) and \emph{bolts} (computations)
 By processing the stream events as individual records, the latency is kept 
 to a minimum in the \emph{bolts}. 
 
-Furthermore, Storm provides at-least-once 
+Storm provides at-least-once 
 delivery semantics through the use of record-level acknowledgements. A randomly 
 generated "id" is attached to each new record and an extra \emph{acker node} is attached 
 to the execution graph. This \emph{acker node} is responsible for tracking the records, 
@@ -486,8 +488,9 @@ Trident~\footnote{Trident API: \url{https://storm.apache.org/releases/2.1.0/Trid
 However, Storm would then structure the stream events as mini batches just like 
 Spark Streaming, forfeiting the low latency processing. 
 
-Due to its low-level definition of the \emph{bolts}, implementing computation tasks 
-in Storm is non-trivial, and requires the implementation of one or more readers and 
+Implementing computation tasks 
+in Storm is non-trivial, due to its low-level definition of the \emph{bolts}, 
+and requires the implementation of one or more readers and 
 collectors. This results in non-intuitive composition of the execution topology. 
 Furthermore, Storm does not support 
 batch processing, offering no options to extend the functionality of the stream 
@@ -497,7 +500,8 @@ processing application if batch processing support is required in the future.
 \begin{figure}[!htpb]
     \centering
     \includegraphics[width=0.5\linewidth]{fig/dag.png}
-    \caption{A common stream processing topology representation as a DAG.} 
+    \caption{A common stream processing topology representation as a DAG where the 
+    dataflow is represented as the directional edges between de operators.} 
     \label{fig:dag_topology}
 \end{figure}
 
@@ -506,14 +510,14 @@ processing application if batch processing support is required in the future.
 
 Apache Flink~\cite{flink} aims to bridge the gap between batch and stream processing aspects of 
 Big Data and combine them into one unified framework. Similar to Storm, 
-Flink's execution topology is also internally represented as a DAG as shown 
-in Figure~\ref{fig:dag_topology}. It also processes the incoming records as 
+Flink's execution topology is also internally represented as a DAG (Figure~\ref{fig:dag_topology}).
+It also processes the incoming records as 
 individual events to maintain low latency processing. Flink recognizes that
 dedicated batch processing is still needed for applications where no efficient algorithms 
 exist for performing the same analysis on streaming data. Therefore, Flink implements a 
 specialized API for batch processing on top of its streaming processing engine.
 
-Due to the focus on both batch and stream processing, Flink could fulfil the use cases for which 
+Due to the focus on both batch and stream processing, Flink fulfil the use cases for which 
 Spark and Storm specializes in; batch processing and stream processing respectively. Furthermore, 
 Flink provides exactly-once delivery semantics, overcoming the need to filter out duplicate 
 results and calculation. This is achieved by implementing a variation of the \emph{Chandy-Lamport} algorithm
