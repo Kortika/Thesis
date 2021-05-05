@@ -1,39 +1,46 @@
 \chapter{Introduction}
 \label{chap:intro}
 
-A large volume of data is generated daily on the Web in a variety of domains. These
-data are often structured according to an organization's specific needs or formats: Leading to
-a difficulty in integrating the data across the different applications.
-These generated data might have to be associated with archival data, also of heterogeneous formats,
-to provide a coherent view required by analysis tasks. Heterogeneous Web data formats, such as CSV or HTML, are not explicitly
-defined to enable linking entities in one document to other related entities in external documents.
+Large data volumes are generated daily on the Web in various domains.
+Data integration is difficult across the different applications since these
+data are often structured according to an organization's specific needs or formats. 
+These generated data might have to be associated with heterogeneous archival data,  
+to provide a coherent view for various applications such as 
+data analysis. Heterogeneous data formats, such as CSV or HTML, are not
+designed to link related entities across various datasets. 
 
-Based on W3C standard, semantic data formats such as RDF triples~\cite{intro_rdf}, are a solution to
+Knowledge graphs are a solution to
 this particular problem by enriching the data with knowledge and association across
-different domains, through the use of common ontologies. RDF triples also form the basic building blocks of knowledge graphs.
-Knowledge graphs are extensively used in social networks like Facebook\cite{facebook_linked_data}, IoT devices\cite{graph_of_things} and especially with Google's search
-engine\cite{google_kg}, it enables machines to understand the data and perform complex automated processing
-using the knowledge graphs. 
+different domains, through the use of common ontologies.
+Knowledge graphs are also extensively used in social networks like 
+Facebook\cite{facebook_linked_data}, IoT devices\cite{graph_of_things} and especially with Google's search
+engine\cite{google_kg}, they enable machines to understand the data and perform complex automated processing
+using knowledge graphs. 
+Based on W3C standard, semantic data format such as Resource Description Framework (RDF)
+triples~\cite{intro_rdf} is a possible serialization of knowledge graphs.  
+RDF triples form the basic building blocks of knowledge graphs.
 
 Considering the aforementioned scenarios, there is a need to transform these non-RDF data to RDF compliant formats on the fly while
 new data are being generated. Furthermore, we would also like to apply stream operators on the input records
 before transforming, to enhance the enrichment of the data.
 
-There exists state-of-the-art techniques to solve the task of consolidating heterogeneous data
-and transforming them to an RDF serialization. These RDF transformation engines can be categorized into two major categories based on the type of input
-which they consume; bounded and unbounded data input. Since we are focussing on the generation of RDF data
-in a streaming environment, the class of RDF transformation engines on unbounded data will be of interest to our study.
+There exists state-of-the-art approaches to consolidate heterogeneous data
+and transform them to an RDF serialization. 
+These RDF transformation engines can be categorized into two major categories based on the type of input
+which they consume; \emph{bounded} and \emph{unbounded} data input. We are focusing on RDF transformation 
+engines on unbounded data, as this thesis is centered around generation of RDF data in a streaming environment.  
 
 Some engines support traditional stream operators like joins and aggregations. However, they do not consider
 the characteristics of streaming data sources such as velocity and time-correlations between the different
-input streams. This leads to a decline in the quality of the generated RDF triples. Moreover,
-due to the nature of the infinite, continuous and real-time changing data of the streaming environment, and 
-the limited memory and computing resources by the systems processing the streams, 
+input streams. This leads to a decline in the quality of the generated RDF triples. Because of the nature of the 
+infinite, continuous and real-time changing data of the streaming environment, and 
+the limited computing resources by the systems processing the streams, 
 these operators have to be applied in the context of windows over a subset of the incoming data.
-Clearly, with these restrictions and characteristics of the streaming sources, we need an adaptive approach
-to applying these operators in windows for the data transformation engines. 
+These operators are usually applied in fixed size windows,
+Clearly, with these restrictions and characteristics of the streaming sources, there is a need 
+for an adaptive approach to apply these operators in windows for the data transformation engines. 
 
-Therefore, we proposed a dynamic approach to windowing for multi stream operators.
+Therefore, we propose a dynamic approach to windowing for multi stream operators.
 The application of these operators in a dynamic window should maintain high memory efficiency and throughput,
 even when the velocity of the streaming sources varies greatly over time. 
 The dynamic window would make fast and simple statistical calculation to be 
@@ -44,29 +51,40 @@ For implementing this dynamic window, we
     \item investigate the possible implementation sites which are near the \emph{input}
     or the \emph{output} of the engine, 
     \item provide a reference implementation utilizing the dynamic window, and 
-    \item evaluating the implementation against widely used windowing schemes for 
+    \item evaluate the implementation against widely used windowing schemes for 
     memory efficiency and throughput. 
 \end{enumerate*}
 
 
-This work aims to improve the performance multi-stream operators, 
+This work improves the performance multi-stream operators, 
 by dynamically adapting the window size, according to the dynamic characteristics
 of the incoming records for the multi-stream operators. Evaluation of 
-the implementation is then intended to validate the following hypotheses: 
+our approach is then intended to validate the following hypotheses: 
 
 \begin{hyp}
-    Dynamic windows maintain high memory efficiency than 
+    Dynamic windows consume lower memory than 
     fixed size windows even under a dramatic increase or 
     decrease in the velocity of incoming records. 
 \end{hyp}
 
+\begin{hyp}
+    Dynamic window on operators enables lower latency 
+    processing than fixed size windows. 
+\end{hyp}
+
+\begin{hyp}
+    Dynamic windows enable the operators applied on
+    unbounded data stream, to generate 
+    results closer to the results of offline stream processing operations, 
+    than fixed size windows. 
+\end{hyp}
 \begin{hyp}
     Higher throughput is achieved by multi-stream operators 
     with dynamic windows even with huge delays in the arrival
     rate of records between the different streams.
 \end{hyp}
 
-Naturally, to further build upon this work, a generic dynamic windowing 
+To further build upon this work, a generic dynamic windowing 
 framework could be specified for ease of evaluation and comparison between 
 the different dynamic window schemes. Furthermore, we could also define a distributed 
 statistical model to build up the characteristics of the streaming sources 
@@ -74,12 +92,17 @@ and to automatically apply the appropriate dynamic window.
 
 
 The rest of this work will be structured as follows. Chapter~\ref{chap:semantic_web} will 
-go over the common terminologies and specifications related to Semantic Web. Readers familiar
+introduce common Semantic Web terminologies and specifications. Readers familiar
 with RDF framework and Semantic Web in general, could skip this chapter. 
-Chapter~\ref{chap:data_stream_processing} will be about general data stream processing 
+Chapter~\ref{chap:data_stream_processing} elaborates on general data stream processing 
 and how the state-of-the-art stream processing engines handle multi-stream operators. 
-In Chapter~\ref{chap:rdf_data_generation}, current state-of-the-art in 
+Chapter~\ref{chap:rdf_data_generation} discusses state-of-the-art in 
 RDF data generation from non-RDF data sources will be discussed in detail. 
-To understand more about windows in stream processing, Chapter~\ref{chap:window_operators}
+To understand more about windows in stream processing, Chapter~\ref{chap:windows}
 will go into detail about the current fixed size windows and the other state-of-the-art 
-dynamic window operators. 
+dynamic window operators. Chapter~\ref{chap:Methodology} describes the concepts and the 
+implementation of our dynamic window followed by an evaluation of our implementation in 
+Chapter~\ref{chap:Evaluation}. Chapter~\ref{chap:Discussion} discusses the results 
+obtained from our evaluation, and the difficulty of evaluating the dynamic window in detail. 
+Finally, Chapter~\ref{chap:Conclusion} concludes our work with possible extensions and 
+improvements in the future. 
