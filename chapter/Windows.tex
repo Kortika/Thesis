@@ -253,18 +253,3 @@ data. Thus, a dynamic window that adjust its size throughout the runtime of the 
 will adapt better to the changing characteristics of the data stream. 
 
 
-Which type of operation is suitable for our dynamic window? 
-In the context of this work with RMLStreamer, we will have to consider optimizing the 
-\emph{join} operation over \emph{aggregation}. 
-Unlike regular stream processing engines, RDF mapping engines focus 
-on just mapping the input to RDF compliant formats without 
-applying complex stream processing queries like \emph{aggregations} and 
-\emph{reductions}. These stream processing queries, if required, could be 
-delegated to the RDF stream processing frameworks processing RDF data streams.
-
-Therefore, we will focus on a reference implementation of dynamic windows with 
-stream joins as part of the mapping process of non-heterogeneous data streams 
-to RDF data streams. 
-
-
-

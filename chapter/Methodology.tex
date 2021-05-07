@@ -1,3 +1,56 @@
 \chapter{Methodology}%
 \label{chap:Methodology}
 
+
+In this chapter, we introduce a dynamic approach to windowing in data stream processing 
+with the following improvements to fixed size window; 
+\begin{enumerate*}[label=(\alph*)]
+    \item stream-characteristic-aware processing 
+    \item adaptive window sizes, and 
+    \item high throughput with low latency processing. 
+\end{enumerate*}
+
+Existing fixed size windows are inflexible when the characteristics of a data stream,  
+such as the stream rate, changes over time. Either the window size is 
+too small to produce any output or too large which leads to high memory usage when 
+the stream rate is high. Furthermore, fixed size windows only process the 
+records inside the window at fixed interval (usually equals to the size of the window). 
+This leads to high latency. Solving these disadvantages leads us to our approach 
+of a dynamic window, which could readjusts its size during runtime,
+for low latency and high throughput solution. 
+
+
+\TODO{Chapter outline}
+
+
+
+\section{Analysis for the implementation site}
+\label{sec:analysis implementation site}
+There are two possible site to implement our dynamic window; 
+near the input data source, and as the final operation right before 
+emitting RDF triples.  
+
+
+\section{Operator inside window}
+\label{sec:Operator inside window}
+Which type of operation is suitable for our dynamic window? 
+In the context of this work with RMLStreamer, we will have to consider optimizing the 
+\emph{join} operation over \emph{aggregation}. 
+
+RDF mapping engines focus 
+on just mapping the input to RDF compliant formats without 
+applying complex stream processing queries like \emph{aggregations} and 
+\emph{reductions}. These stream processing queries, if required, could be 
+delegated to the RDF stream processing frameworks processing RDF data streams.
+
+Therefore, we focus on a reference implementation of dynamic windows with 
+stream joins as part of the mapping process of non-heterogeneous data streams 
+to RDF data streams. 
+\section{Dynamic Window}%
+\label{sec:Dynamic Window}
+
+A dynamic window is a type of partitioned window (Chapter~\ref{sec:Partitioned Window}).
+It first groups the incoming streams into keys 
+
+
+
