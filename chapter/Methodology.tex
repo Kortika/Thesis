@@ -20,7 +20,12 @@ of a dynamic window, which could readjusts its size during runtime,
 for low latency and high throughput solution. 
 
 
-\TODO{Chapter outline}
+The chapter will be outlined as follows. 
+First, we analyse the possible sites across the different stages of 
+RMLStreamer to implement our dynamic window. Next, we define which operator
+(join, aggregation, etc \dots) to implement as the reference processing operator inside 
+our dynamic window. Finally, we elaborate our dynamic window algorithm to allow 
+dynamic adjustment of window sizes depending on the stream rate of the incoming records.  
 
 
 
@@ -96,11 +101,10 @@ to individual subwindows. These subwindows adjust their own size independently f
 at each update cycle. Furthermore, the subwindows will be independent from each other such 
 that the stream rate is local to the attribute value for which each subwindow is responsible. 
 
-The outline for this section will be as follows. 
-First, we shall extend the notations in Chapter~\ref{sec:window_notations} to aid in the 
-elaboration of our dynamic window.
+We shall first extend the notations in Chapter~\ref{sec:window_notations} to aid in the 
+elaboration of our dynamic window. Finally, the full algorithm for dynamic windowing 
+is described in detail with a pseudo code. 
 
-\TODO{Outline section}
 
 \paragraph{Notations}
 $W^{a} = \{ W^{a=v} | v \in \{r.a | r \text{ is a record in } W^a\}\}$ is a dynamic window, 
