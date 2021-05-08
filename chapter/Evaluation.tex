@@ -29,10 +29,10 @@ Assessment of our dynamic windowing scheme for multi-stream operator will requir
 the data to have some common attributes to enrich the data. Furthermore, to 
 mirror a real-world scenario, we would also employ data gathered from IoT sensors. 
 We will use the same data 
-as is the case for the benchmark in the paper by Van Dongen and Van den Poel~\cite{evalution_of_spe}. 
+as the benchmark in the paper by Van Dongen and Van den Poel~\cite{evalution_of_spe}. 
 The data is provided by NDW (Nationale Databank Wegverkeersgegevens) from the 
 Netherlands~\footnote{NDW data site: \href{http://opendata.ndw.nu/}{http://opendata.ndw.nu/} }.
- It consists of measurements of the number of cars and their average speed. 
+It consists of measurements of the number of cars and their average speed across  
 A subset of the complete sensor data will be replayed by a Kafka publisher into the two topics 
 \emph{flow} and \emph{speed}, for the number of cars and the average speed respectively. 
 
@@ -54,8 +54,9 @@ mapping engine needs to be removed in the final \emph{complete} output dataset.
     \centering
     \includegraphics[width=\textwidth]{fig/evaluation_architecture.png}
     \caption{Evaluation flow based on~\cite{evalution_of_spe} with some changes to only 
-    take metrics at the "Join" and the "Mapping" stage. a) \emph{throughput} of the generated output triple. 
-    b) \emph{latency} of evaluating the join operator in windows.}
+    take metrics at the "Join" stage.
+    a) \emph{latency, memory}, and \emph{cpu usage} of evaluating the join operator in windows.
+    b) \emph{throughput} of the generated output triple.}
     \label{fig:evaluation_flow}
     
 \end{figure}
