@@ -5,10 +5,16 @@
 \usepackage{tgpagella}
 \usepackage[inline]{enumitem}
 \usepackage{amsmath}
+\usepackage[ruled, vlined, linesnumbered]{algorithm2e}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{ulem}
 \usepackage{svg}
+
+% color coding comment with blue 
+\newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{blue}{#1}}
+\SetCommentSty{mycommfont}
+
 
 \theoremstyle{plain}
 \newtheorem{thm}{Theorem}[chapter] % reset theorem numbering for each chapter

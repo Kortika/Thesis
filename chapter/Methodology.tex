@@ -27,8 +27,46 @@ for low latency and high throughput solution.
 \section{Analysis for the implementation site}
 \label{sec:analysis implementation site}
 There are two possible site to implement our dynamic window; 
-near the input data source, and as the final operation right before 
-emitting RDF triples.  
+\emph{before} or \emph{after} the mapping of non-RDF to RDF data. There are different trade-offs for choosing one 
+over the other. 
+
+\paragraph{After the mapping process}%
+Implementing the windowing operations after the mapping process allows the 
+possibility of applying graph processing operators in the window; the input data for 
+the windows will be RDF triples from the mapping process. 
+
+However, it comes with a major disadvantage. All the attributes required in the operator 
+will have to be mapped in the mapping stage to their corresponding triple statements. 
+This could lead to an explosion in the number of triple statements being generated, increasing 
+the network cost of sending the data to the windowing stage. High latency processing in 
+the mapping stage will also occur if the amount of attributes required by 
+the operator are sufficiently large enough. 
+
+
+\paragraph{Before the mapping process}%
+\label{par:Before the mapping process}
+To mitigate the explosion of triple statements after the mapping process, we could implement 
+the windowing right before the mapping process. A reduction in the amount of 
+data needed to be processed in the mapping stage could be achieved by operators 
+such as \emph{filter} or \emph{joins} in the windowing stage. Furthermore, a direct 
+access to the raw data, allows more arbitrary transformations to be applied such as 
+those specified in FnO~\cite{fno_ben}, without the loss of 
+information due to mapping process. 
+
+If graph processing operations are required, we could delegate the processing computations to 
+existing state-of-the-art RDF stream processing engines by attaching them at the output of 
+RMLStreamer. In conclusion, it is ideal to implement the windowing before the mapping process. 
+
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.7\linewidth]{fig/window_site.pdf}
+    \caption{Implementation of windowing stage \textbf{before} the mapping stage. The blue blocks 
+    are chunks of processed records of an \emph{operator} (join, aggregation, etc\dots) in the windows. 
+    The green blocks are raw data chunks from the 
+    ingestion stage (Figure~\ref{fig:rml-parallel-arch}). }%
+    \label{fig:fig/s}
+\end{figure}
 
 
 \section{Operator inside window}
@@ -46,11 +84,128 @@ delegated to the RDF stream processing frameworks processing RDF data streams.
 Therefore, we focus on a reference implementation of dynamic windows with 
 stream joins as part of the mapping process of non-heterogeneous data streams 
 to RDF data streams. 
+
+
 \section{Dynamic Window}%
 \label{sec:Dynamic Window}
-
 A dynamic window is a type of partitioned window (Chapter~\ref{sec:Partitioned Window}).
-It first groups the incoming streams into keys 
+We define it as a group of subwindows, which update their sizes dynamically according to the characteristics 
+of the data stream. It groups the incoming streams into different partitions first, according to 
+the \emph{key} attribute value of the records. Subsequently, these grouped records are assigned 
+to individual subwindows. These subwindows adjust their own size independently from each other 
+at each update cycle. Furthermore, the subwindows will be independent from each other such 
+that the stream rate is local to the attribute value for which each subwindow is responsible. 
+
+The outline for this section will be as follows. 
+First, we shall extend the notations in Chapter~\ref{sec:window_notations} to aid in the 
+elaboration of our dynamic window.
+
+\TODO{Outline section}
+
+\paragraph{Notations}
+$W^{a} = \{ W^{a=v} | v \in \{r.a | r \text{ is a record in } W^a\}\}$ is a dynamic window, 
+where $a$ represents a \emph{key} attribute. $|W^a|$ is the number of subwindows 
+in $W^a$, and $W^{a=v}$ represents a subwindow associated with a \emph{key} attribute value 
+$v$. Each subwindow is defined as $W^{a=v} = \{r_{i}^{a=v} | i \in [0\dots|W^{a=v}|-1]\}$, 
+where $r_{i}^{a=v}$ are ordered from the newest to the oldest starting from 
+$0\dots n$ with the oldest record being $r_{n}^{a=v}$ with $n = |W^{a=v}|-1$. 
+The current record to be put into the subwindow $W^{a=v}$ is denoted as $r_{c}^{a=v}$. 
+The \textbf{event} timestamp associated with the record $r_{i}^{a=v}$ is denoted as 
+$\tau(r_{i}^{a=v})$. 
+
+The two streams to be joined are denoted as $S_P$ and $S_C$, for 
+streams representing the parent triple map and child triple map respectively~\cite{rml}. 
+The number of records in the subwindow $W^{a=v}$ from $S_P$, and $S_C$ are respectively 
+denoted as $|S_{P}^{a=v}|$, and $|S_{C}^{a=v}|$. We also denote the 
+pseudo maximum size of the list state, a data structure to hold the records 
+from $S_P^{a=v}$ and $S_C^{a=v}$ respectively, as 
+$Size(List_P)$ and $Size(List_C)$. A record from $S_P^{a=v}$ or $S_C^{a=v}$  
+is denoted as $r_i^{a=v,P}$ or $r_i^{a=v, C}$ respectively.
+
+
+\subsection{Dynamic window sizing}%
+\label{sub:Dynamic window sizing}
+For each subwindow $W^{a=v}$, the following configuration parameters 
+are provided: 
+
+\begin{itemize}
+    \item $\Delta n$: the \textbf{initial} interval of time before the next eviction trigger (Chapter \ref{chap:windows}). 
+    \item $\epsilon_u$: the upper limit for threshold $\epsilon$. 
+    \item $\epsilon_l$: the lower limit for threshold $\epsilon$. 
+    \item $U$: the upper limit for the window size. 
+    \item $L$: the lower limit for the window size. 
+\end{itemize}
+
+
+
+For ease of writing, we will omit $a=v$ to specify the \emph{key} attribute associated 
+with the subwindow. 
+Therefore, the following events happen for every subwindow $W^{a=v}$ independently from 
+each other. 
+Since we are implementing the join operator, the trigger event is fired when  
+$r_c$ arrives. It is joined with $\forall i, r_i^C \in List_C$, if $r_c \in List_P$. The same 
+for $r_c \in List_C$. 
+
+The eviction trigger is fired everytime when the current watermark (Section \ref{ssub:Watermarking}) 
+$w \ge |W| + \Delta n$. At each eviction trigger we calculate the 
+the cost for each \emph{list states} $List_P$ and $List_C$, containing the records from $S_P$ and $S_C$
+respectively. The cost for $cost(List_P) = |S_P|/Size(List_P)$, idem for $cost(List_C)$. 
+The total cost $m = cost(List_P) + cost(List_C)$ and it is checked against the 
+two threshold $\epsilon_l$ and $\epsilon_u$. If  $\epsilon_l \le m \le \epsilon_u$, the 
+$\Delta n$ stays the same, otherwise it will be adjusted accordingly.
+The higher the $m$, the higher the stream rate. Thus, the subwindow needs to be frequently 
+evicted, lower $\Delta n$, to lower memory usage. 
+The size of the list states 
+are also updated accordingly with $Size(List_P) = Size(List_P) * cost(List_P) + 0.5$. 
+Through this, the dynamic window is able to maintain an 
+ideal window size by adjusting $\Delta n, Size(List_P) \text{ and } Size(List_C)$ adaptively to 
+stream rate. The pseudo code for the eviction algorithm is presented in Algorithm~\ref{alg:dynamic_eviction}. 
+
+
+\newpage
+\begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \KwData{$\Delta n, \epsilon_u, \epsilon_l, U, L, List_P, List_C, S_P, S_C$}
+
+    \tcp{Note: cost(..) is ratio for how "full" a list-state is} 
+    $cost(List_P) = |S_P| / Size(List_P)$      \tcp*{Calculate the cost (ratio) of list-state P } 
+    $cost(List_C) = |S_C| / Size(List_C)$      \tcp*{Calculate the cost (ratio) of list-state C } 
+
+
+    total cost $ m = cost(List_P) + cost(List_C)$  
+  
+    \If{$m > \epsilon_u$} 
+    {
+        \tcp{the cost is too high, shrink the window size and adjust list-states}
+        $\Delta n = \Delta n / 2 $ 
+        
+        $Size(List_P) = Size(List_P) * (cost(List_P) + 0.5)$  
+
+        $Size(List_C) = Size(List_C) * (cost(List_C) + 0.5)$  
+    }
+    \ElseIf{$m < \epsilon_l$}
+    {
+        \tcp{the cost is too low, increase the window size and adjust list-states}
+        $\Delta n = \Delta n * 2$ 
+
+        $Size(List_P) = Size(List_P) * (cost(List_P) + 0.5)$  
+
+        $Size(List_C) = Size(List_C) * (cost(List_C) + 0.5)$  
+    }
+
+    clean both $List_C \text{ and } List_P$
+    \caption{Dynamic window $onEviction$ routine}
+    \label{alg:dynamic_eviction}
+\end{algorithm}
+
+
+
+
+
+
+
+ 
+
 
 
 
