@@ -24,8 +24,9 @@ The chapter will be outlined as follows.
 First, we analyse the possible sites across the different stages of 
 RMLStreamer to implement our dynamic window. Next, we define which operator
 (join, aggregation, etc \dots) to implement as the reference processing operator inside 
-our dynamic window. Finally, we elaborate our dynamic window algorithm to allow 
+our dynamic window. Subsequently, we elaborate our dynamic window algorithm to allow 
 dynamic adjustment of window sizes depending on the stream rate of the incoming records.  
+Finally, we give a brief overview of our reference implementation.
 
 
 
@@ -166,7 +167,6 @@ ideal window size by adjusting $\Delta n, Size(List_P) \text{ and } Size(List_C)
 stream rate. The pseudo code for the eviction algorithm is presented in Algorithm~\ref{alg:dynamic_eviction}. 
 
 
-\newpage
 \begin{algorithm}[htbp]
     \DontPrintSemicolon
     \KwData{$\Delta n, \epsilon_u, \epsilon_l, U, L, List_P, List_C, S_P, S_C$}
@@ -201,6 +201,25 @@ stream rate. The pseudo code for the eviction algorithm is presented in Algorith
     \caption{Dynamic window $onEviction$ routine}
     \label{alg:dynamic_eviction}
 \end{algorithm}
+
+
+
+\section{Implementation}%
+\label{sec:Implementation}
+
+The dynamic window is implemented for RMLStreamer 
+to extend its capabilities to do simple stream processing by 
+joining multiple streams. RMLStreamer is implemented in Scala 
+on top of the Apache Flink framework and with Flink's easy to access, low-level APIs, 
+we could implement our custom dynamic window without much complexity.  
+
+Furthermore, new \emph{properties} and \emph{classes} are defined to extend RML with 
+support for window configurations. RML's extensibility allows us to 
+define new RML vocabularies without changing the existing ones. The ontology 
+definitions is rudimentary at this moment and it is used only to configure our 
+window (type, size, etc \dots). An example of this RML mapping file can 
+be found in Apendix~
+
 
 
 

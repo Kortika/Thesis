@@ -135,6 +135,11 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 %\setlength{\parskip}{0.5\baselineskip plus 0.5ex minus 0.2ex}
 %\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
 
+
+\addcontentsline{toc}{chapter}{List of Listings}
+\lstlistoflistings
+\listoffigures
+\listoftables
 % chapters
 \mainmatter
 \setcounter{page}{1}
@@ -152,9 +157,8 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 \printbibliography[heading=bibintoc]
 
 % appendix
-\begin{appendices}
-
-\end{appendices}
+\appendix
+\include{chapter/AppendixListing}
 % add appendix
 
 
@@ -163,10 +167,5 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 % optional: list figures/tables
 %\listoffigures
 %\listoftables
-
-\addcontentsline{toc}{chapter}{List of Listings}
-\lstlistoflistings
-\listoffigures
-\listoftables
 
 \end{document}
