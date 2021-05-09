@@ -1,0 +1,200 @@
+\chapter{RML mapping specifications}
+
+\section{Dynamic window join's RML mapping file}
+\begin{lstlisting}[
+    label={lst:dynamic_mapping_file}
+    ]
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ex: <http://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix rmls: <http://semweb.mmlab.be/ns/rmls#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix activity: <http://example.com/activity/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix schema: <https://schema.org/>. 
+@base <http://example.com/base/> .
+
+_:kafka_source_ndwSpeed a rmls:KafkaStream ;
+             rmls:broker "192.168.0.237:9092";
+             rmls:groupId "1";
+             rmls:topic "ndwspeed".
+
+_:kafka_source_ndwFlow a rmls:KafkaStream ; 
+            rmls:broker "192.168.0.237:9092"; 
+            rmls:groupId "1"; 
+            rmls:topic "ndwflow". 
+
+
+
+<JoinConfigMap> a rmls:JoinConfigMap;
+        rmls:joinType rmls:DynamicWindowJoin.
+
+
+<NDWSpeedMap>
+  a rr:TriplesMap;
+
+  rml:logicalSource [
+    rml:source _:kafka_source_ndwSpeed;
+    rml:referenceFormulation ql:JSONPath; 
+    rml:iterator "$"
+  ];
+
+  rr:subjectMap [
+    rr:template "http://example.com/resource/{internalId}?lat={lat}&long={long}&speed={speed}&accuracy={accuracy}&timestamp={timestamp}"
+  ];
+
+  
+  rr:predicateObjectMap [
+    rr:predicate <http://example.com/ontology/laneFlow> ;
+    rr:objectMap [
+      rr:parentTriplesMap <NDWFlowMap>;
+      rmls:joinConfig <JoinConfigMap>;
+      rmls:windowType  rmls:DynamicWindow;
+      rr:joinCondition [
+        rr:child "internalId,lat,long,timestamp" ;
+        rr:parent "internalId,lat,long,timestamp" ;
+      ]
+    ]
+  ] .
+
+<NDWFlowMap>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source _:kafka_source_ndwFlow;
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$"
+  ];
+
+
+
+  rr:subjectMap [
+    rr:template "http://example.com/resource/{internalId}?lat={lat}&long={long}&flow={flow}&period={period}&accuracy={accuracy}&timestamp={timestamp}"
+  ]. 
+\end{lstlisting}
+
+\section{Tumbling window join's RML mapping file}
+\begin{lstlisting}[label={lst:tumbling_mapping_file}]
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ex: <http://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix rmls: <http://semweb.mmlab.be/ns/rmls#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix activity: <http://example.com/activity/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix schema: <https://schema.org/>. 
+@base <http://example.com/base/> .
+
+_:kafka_source_ndwSpeed a rmls:KafkaStream ;
+             rmls:broker "192.168.0.237:9092";
+             rmls:groupId "1";
+             rmls:topic "ndwspeed".
+
+_:kafka_source_ndwFlow a rmls:KafkaStream ; 
+            rmls:broker "192.168.0.237:9092"; 
+            rmls:groupId "1"; 
+            rmls:topic "ndwflow". 
+
+
+
+<JoinConfigMap> a rmls:JoinConfigMap;
+        rmls:joinType rmls:TumblingWindowJoin.
+
+
+<NDWSpeedMap>
+  a rr:TriplesMap;
+
+  rml:logicalSource [
+    rml:source _:kafka_source_ndwSpeed;
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$"
+  ];
+
+  rr:subjectMap [
+    rr:template "http://example.com/resource/{internalId}?lat={lat}&long={long}&speed={speed}&accuracy={accuracy}&timestamp={timestamp}" 
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate <http://example.com/ontology/laneFlow> ;
+    rr:objectMap [
+      rr:parentTriplesMap <NDWFlowMap>;
+      rmls:joinConfig <JoinConfigMap>;
+      rmls:windowType  rmls:Tumbling;
+      rr:joinCondition [
+        rr:child "internalId,lat,long,timestamp" ;
+        rr:parent "internalId,lat,long,timestamp" ;
+      ]
+    ]
+  ] .
+
+<NDWFlowMap>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source _:kafka_source_ndwFlow;
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$"
+  ];
+
+  rr:subjectMap [
+    rr:template "http://example.com/resource/{internalId}?lat={lat}&long={long}&flow={flow}&period={period}&accuracy={accuracy}&timestamp={timestamp}"
+  ].
+\end{lstlisting}
+
+\section{Bounded data join RML mapping file}
+\begin{lstlisting}[label={lst:bounded_mapping_file}]
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ex: <http://example.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+@prefix rmls: <http://semweb.mmlab.be/ns/rmls#> .
+@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+@prefix activity: <http://example.com/activity/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix schema: <https://schema.org/>. 
+@base <http://example.com/base/> .
+
+
+<NDWSpeedMap>
+  a rr:TriplesMap;
+
+  rml:logicalSource [
+    rml:source "ndwspeed.json" ;
+    rml:referenceFormulation ql:JSONPath; 
+    rml:iterator "$.*"
+  ];
+
+  rr:subjectMap [
+    rr:template "http://example.com/resource/{internalId}?lat={lat}&long={long}&speed={speed}&accuracy={accuracy}&timestamp={timestamp}"
+  ];
+
+  
+  rr:predicateObjectMap [
+    rr:predicate <http://example.com/ontology/laneFlow> ;
+    rr:objectMap [
+      rr:parentTriplesMap <NDWFlowMap>;
+      rr:joinCondition [
+        rr:child "internalId,lat,long,timestamp" ;
+        rr:parent "internalId,lat,long,timestamp" ;
+      ]
+    ]
+  ] .
+
+<NDWFlowMap>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "ndwflow.json";
+    rml:referenceFormulation ql:JSONPath;
+    rml:iterator "$.*"
+  ];
+
+
+
+  rr:subjectMap [
+    rr:template "http://example.com/resource/{internalId}?lat={lat}&long={long}&flow={flow}&period={period}&accuracy={accuracy}&timestamp={timestamp}"
+  ]. 
+\end{lstlisting}
+
