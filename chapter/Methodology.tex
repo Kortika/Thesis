@@ -2,8 +2,9 @@
 \label{chap:Methodology}
 
 
-In this chapter, we introduce a dynamic approach to windowing in data stream processing 
-with the following improvements to fixed size window; 
+In this chapter, we introduce a \sout{dynamic approach to windowing}
+\gh{isn't it "an approach to dynamic windowing" ?} in data stream processing 
+with the following improvements to fixed size windows; 
 \begin{enumerate*}[label=(\alph*)]
     \item stream-characteristic-aware processing 
     \item adaptive window sizes, and 
@@ -11,16 +12,18 @@ with the following improvements to fixed size window;
 \end{enumerate*}
 
 Existing fixed size windows are inflexible when the characteristics of a data stream,  
-such as the stream rate, changes over time. Either the window size is 
+such as the stream rate, change over time. Either the window size is 
 too small to produce any output or too large which leads to high memory usage when 
 the stream rate is high. Furthermore, fixed size windows only process the 
-records inside the window at fixed interval (usually equals to the size of the window). 
-This leads to high latency. Solving these disadvantages leads us to our approach 
-of a dynamic window, which could readjusts its size during runtime,
-for low latency and high throughput solution. 
+records inside the window at fixed interval (usually equal to the size of the window). 
+This leads to high latency.
+\gh{This can be nuanced a bit: what is high? The latency is proportional to the window size. With fixed window this can be higher than necessary... Try to put something like that here.}
+Solving these disadvantages leads us to our approach 
+of a dynamic window, which can adjust its size during runtime,
+resulting in a low latency and high throughput solution. 
 
 
-The chapter will be outlined as follows. 
+This chapter will be outlined as follows. 
 First, we analyse the possible sites across the different stages of 
 RMLStreamer to implement our dynamic window. Next, we define which operator
 (join, aggregation, etc \dots) to implement as the reference processing operator inside 
@@ -32,7 +35,7 @@ Finally, we give a brief overview of our reference implementation.
 
 \section{Analysis for the implementation site}
 \label{sec:analysis implementation site}
-There are two possible site to implement our dynamic window; 
+There are two possible sites to implement our dynamic window; 
 \emph{before} or \emph{after} the mapping of non-RDF to RDF data. There are different trade-offs for choosing one 
 over the other. 
 
@@ -46,7 +49,7 @@ will have to be mapped in the mapping stage to their corresponding triple statem
 This could lead to an explosion in the number of triple statements being generated, increasing 
 the network cost of sending the data to the windowing stage. High latency processing in 
 the mapping stage will also occur if the amount of attributes required by 
-the operator are sufficiently large enough. 
+the operator is sufficiently large enough. 
 
 
 \paragraph{Before the mapping process}%
@@ -54,8 +57,8 @@ the operator are sufficiently large enough.
 To mitigate the explosion of triple statements after the mapping process, we could implement 
 the windowing right before the mapping process. A reduction in the amount of 
 data needed to be processed in the mapping stage could be achieved by operators 
-such as \emph{filter} or \emph{joins} in the windowing stage. Furthermore, a direct 
-access to the raw data, allows more arbitrary transformations to be applied such as 
+such as \emph{filter} or \emph{joins} in the windowing stage. Furthermore, direct 
+access to the raw data allows more arbitrary transformations to be applied such as 
 those specified in FnO~\cite{fno_ben}, without the loss of 
 information due to mapping process. 
 
@@ -79,16 +82,17 @@ RMLStreamer. In conclusion, it is ideal to implement the windowing before the ma
 \label{sec:Operator inside window}
 Which type of operation is suitable for our dynamic window? 
 In the context of this work with RMLStreamer, we will have to consider optimizing the 
-\emph{join} operation over \emph{aggregation}. 
+\emph{join} operation over \emph{aggregation}.
+\gh{What exactly do you mean with "join over aggregation"? Maybe rephrase...} 
 
 RDF mapping engines focus 
 on just mapping the input to RDF compliant formats without 
 applying complex stream processing queries like \emph{aggregations} and 
 \emph{reductions}. These stream processing queries, if required, could be 
-delegated to the RDF stream processing frameworks processing RDF data streams.
+delegated to RDF stream processing frameworks processing RDF data streams.
 
 Therefore, we focus on a reference implementation of dynamic windows with 
-stream joins as part of the mapping process of non-heterogeneous data streams 
+stream joins as part of the mapping process of non-heterogeneous \gh{why non-heterogeneous (i.e. homogeneous)? One of the strong points of RML is that it tackles heterogeneity...} data streams 
 to RDF data streams. 
 
 
@@ -104,10 +108,11 @@ that the stream rate is local to the attribute value for which each subwindow is
 
 We shall first extend the notations in Chapter~\ref{sec:window_notations} to aid in the 
 elaboration of our dynamic window. Finally, the full algorithm for dynamic windowing 
-is described in detail with a pseudo code. 
+is described in detail in pseudo code. 
 
 
 \paragraph{Notations}
+\gh{Did you come up with these notations (which are pretty good by the way)? If not, refer to source(s). Same for the notations in Chapter 5.1.}
 $W^{a} = \{ W^{a=v} | v \in \{r.a | r \text{ is a record in } W^a\}\}$ is a dynamic window, 
 where $a$ represents a \emph{key} attribute. $|W^a|$ is the number of subwindows 
 in $W^a$, and $W^{a=v}$ represents a subwindow associated with a \emph{key} attribute value 
@@ -135,7 +140,8 @@ are provided:
 
 \begin{itemize}
     \item $\Delta n$: the \textbf{initial} interval of time before the next eviction trigger (Chapter \ref{chap:windows}). 
-    \item $\epsilon_u$: the upper limit for threshold $\epsilon$. 
+    \item $\epsilon_u$: the upper limit for threshold $\epsilon$.
+    \gh{Is this $\epsilon$ defined (formally) somewhere? I don't find it immediately...} 
     \item $\epsilon_l$: the lower limit for threshold $\epsilon$. 
     \item $U$: the upper limit for the window size. 
     \item $L$: the lower limit for the window size. 
@@ -155,16 +161,17 @@ The eviction trigger is fired everytime when the current watermark (Section \ref
 $w \ge |W| + \Delta n$. At each eviction trigger we calculate the 
 the cost for each \emph{list states} $List_P$ and $List_C$, containing the records from $S_P$ and $S_C$
 respectively. The cost for $cost(List_P) = |S_P|/Size(List_P)$, idem for $cost(List_C)$. 
-The total cost $m = cost(List_P) + cost(List_C)$ and it is checked against the 
-two threshold $\epsilon_l$ and $\epsilon_u$. If  $\epsilon_l \le m \le \epsilon_u$, the 
+The total cost $m = cost(List_P) + cost(List_C)$ and it is checked against thresholds $\epsilon_l$ and $\epsilon_u$. If  $\epsilon_l \le m \le \epsilon_u$, 
 $\Delta n$ stays the same, otherwise it will be adjusted accordingly.
-The higher the $m$, the higher the stream rate. Thus, the subwindow needs to be frequently 
-evicted, lower $\Delta n$, to lower memory usage. 
-The size of the list states 
-are also updated accordingly with $Size(List_P) = Size(List_P) * cost(List_P) + 0.5$. 
-Through this, the dynamic window is able to maintain an 
-ideal window size by adjusting $\Delta n, Size(List_P) \text{ and } Size(List_C)$ adaptively to 
-stream rate. The pseudo code for the eviction algorithm is presented in Algorithm~\ref{alg:dynamic_eviction}. 
+The higher $m$, the higher the stream rate. Thus, the subwindow needs to be frequently 
+evicted and lower $\Delta n$ to reduce memory usage. 
+The sizes of the list states 
+are also updated according to $Size(List_P) = Size(List_P) * cost(List_P) + 0.5$.
+\gh{the same for $Size(List_C)$?} 
+Hence the dynamic window maintains an 
+ideal size by adjusting $\Delta n, Size(List_P)$ and $Size(List_C)$ according to 
+the stream rate. The pseudo code for the eviction algorithm is presented in Algorithm~\ref{alg:dynamic_eviction}.
+\gh{Is this a completely new algorithm, or is it an (adjusted version of) an existing one? In the latter case refer to the original source (and say how it is adjusted if need be)} 
 
 
 \begin{algorithm}[htbp]
@@ -211,7 +218,7 @@ The dynamic window is implemented for RMLStreamer
 to extend its capabilities to do simple stream processing by 
 joining multiple streams. RMLStreamer is implemented in Scala 
 on top of the Apache Flink framework and with Flink's easy to access, low-level APIs, 
-we could implement our custom dynamic window without much complexity.  
+we could easily implement our custom dynamic window.  
 
 Furthermore, new \emph{properties} and \emph{classes} are defined to extend RML with 
 support for window configurations. RML's extensibility allows us to 
@@ -219,7 +226,8 @@ define new RML vocabularies without changing the existing ones. The ontology
 definitions is rudimentary at this moment and it is used only to configure our 
 window (type, size, etc \dots). An example of this RML mapping file for 
 dynamic window can 
-be found in Appendix~\ref{lst:dynamic_mapping_file}. 
+be found in Appendix~\ref{lst:dynamic_mapping_file}.
+\gh{You say it is possible to configure size (and maybe other parameters). If so, can you add an example showing each one in the mapping file(s) in Appendix A? People might be interested in tuning them.} 
 
 
 
