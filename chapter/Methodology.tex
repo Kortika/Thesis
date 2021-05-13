@@ -2,8 +2,8 @@
 \label{chap:Methodology}
 
 
-In this chapter, we introduce a \sout{dynamic approach to windowing}
-\gh{isn't it "an approach to dynamic windowing" ?} in data stream processing 
+In this chapter, we introduce an approach to dynamic windowing 
+in data stream processing 
 with the following improvements to fixed size windows; 
 \begin{enumerate*}[label=(\alph*)]
     \item stream-characteristic-aware processing 
@@ -16,8 +16,10 @@ such as the stream rate, change over time. Either the window size is
 too small to produce any output or too large which leads to high memory usage when 
 the stream rate is high. Furthermore, fixed size windows only process the 
 records inside the window at fixed interval (usually equal to the size of the window). 
-This leads to high latency.
-\gh{This can be nuanced a bit: what is high? The latency is proportional to the window size. With fixed window this can be higher than necessary... Try to put something like that here.}
+This leads to high latency proportional to the window size. As a consequence, 
+it causes unnecessarily high latency in some operations, where records could be processed once it arrives inside 
+the window. One example of such operation is the join operator, where the joined 
+result could be emitted the moment a new record arrives inside the window. 
 Solving these disadvantages leads us to our approach 
 of a dynamic window, which can adjust its size during runtime,
 resulting in a low latency and high throughput solution. 
@@ -82,21 +84,21 @@ RMLStreamer. In conclusion, it is ideal to implement the windowing before the ma
 \label{sec:Operator inside window}
 Which type of operation is suitable for our dynamic window? 
 In the context of this work with RMLStreamer, we will have to consider optimizing the 
-\emph{join} operation over \emph{aggregation}.
-\gh{What exactly do you mean with "join over aggregation"? Maybe rephrase...} 
+\emph{join} operation.
 
 RDF mapping engines focus 
 on just mapping the input to RDF compliant formats without 
 applying complex stream processing queries like \emph{aggregations} and 
 \emph{reductions}. These stream processing queries, if required, could be 
 delegated to RDF stream processing frameworks processing RDF data streams.
-
 Therefore, we focus on a reference implementation of dynamic windows with 
-stream joins as part of the mapping process of non-heterogeneous \gh{why non-heterogeneous (i.e. homogeneous)? One of the strong points of RML is that it tackles heterogeneity...} data streams 
-to RDF data streams. 
+stream joins as part of the mapping process of heterogeneous data streams 
+to RDF data streams.
 
 
-\section{Dynamic Window}%
+
+
+\section{Dynamic Window}%z
 \label{sec:Dynamic Window}
 A dynamic window is a type of partitioned window (Chapter~\ref{sec:Partitioned Window}).
 We define it as a group of subwindows, which update their sizes dynamically according to the characteristics 
@@ -112,7 +114,9 @@ is described in detail in pseudo code.
 
 
 \paragraph{Notations}
-\gh{Did you come up with these notations (which are pretty good by the way)? If not, refer to source(s). Same for the notations in Chapter 5.1.}
+
+Similar to the notations in Chapter~\ref{sec:window_notations}, we extend the 
+notations used in~\cite{generic_window_sem}. 
 $W^{a} = \{ W^{a=v} | v \in \{r.a | r \text{ is a record in } W^a\}\}$ is a dynamic window, 
 where $a$ represents a \emph{key} attribute. $|W^a|$ is the number of subwindows 
 in $W^a$, and $W^{a=v}$ represents a subwindow associated with a \emph{key} attribute value 
@@ -126,11 +130,42 @@ $\tau(r_{i}^{a=v})$.
 The two streams to be joined are denoted as $S_P$ and $S_C$, for 
 streams representing the parent triple map and child triple map respectively~\cite{rml}. 
 The number of records in the subwindow $W^{a=v}$ from $S_P$, and $S_C$ are respectively 
-denoted as $|S_{P}^{a=v}|$, and $|S_{C}^{a=v}|$. We also denote the 
-pseudo maximum size of the list state, a data structure to hold the records 
-from $S_P^{a=v}$ and $S_C^{a=v}$ respectively, as 
-$Size(List_P)$ and $Size(List_C)$. A record from $S_P^{a=v}$ or $S_C^{a=v}$  
+denoted as $|S_{P}^{a=v}|$, and $|S_{C}^{a=v}|$. The list states, 
+a data structure to hold the records from $S_P^{a=v}$ and $S_C^{a=v}$, 
+are respectively denoted as $List_P^{a=v}$ and $List_C^{a=v}$. 
+We also denote the 
+pseudo maximum size of the list states  $List_P^{a=v}$ and $List_C^{a=v}$
+as $Size(List_P^{a=v})$ and $Size(List_C^{a=v})$ respectively. A record from $S_P^{a=v}$ or $S_C^{a=v}$  
 is denoted as $r_i^{a=v,P}$ or $r_i^{a=v, C}$ respectively.
+
+We also define a threshold $\epsilon$ used to check if the window size needs 
+to be adjusted based on the join cost $m$. Generally, if $\epsilon = 1.5$, it represents 
+the threshold where the number of records inside a subwindow, $W^{a=v}$, 
+is $1.5$ times the size of $Size(List_P^{a=v}) + Size(List_C^{a=v})$.  
+
+\subsection{Dynamic window join}
+\label{sub:Dynamic window join}
+
+The join algorithm used, is a variant of Symmetric Hash Join~\cite{symmetric_hash_join}. 
+The subwindow themselves work like a hash table, containing records with a 
+specific \emph{key} --- since they are \emph{partitioned} (Chapter~\ref{sec:Partitioned Window}). 
+The records are joined by probing the relevant stream and generating the 
+joined result. 
+
+We will work through a simple example when a record $r_c$ arrives 
+inside a subwindow $W^{a=v}$. For ease of writing, we omit $a=v$ in our notations. 
+
+
+\begin{exmp}    
+    Provided the incoming record is $r_c^{P}$, we first insert 
+    it into $List_P$. Subsequently, we probe for 
+    $\forall i, r_i^C \in List_C$, and join all $r_i^C$ found, with $r_c^P$
+    as tuples of $(r_c^P, r_i^C) \text{ with } \forall i, r_i \in List_C$.
+    Similar steps are executed for $r_c^C$. 
+\end{exmp}
+
+
+
 
 
 \subsection{Dynamic window sizing}%
@@ -141,7 +176,6 @@ are provided:
 \begin{itemize}
     \item $\Delta n$: the \textbf{initial} interval of time before the next eviction trigger (Chapter \ref{chap:windows}). 
     \item $\epsilon_u$: the upper limit for threshold $\epsilon$.
-    \gh{Is this $\epsilon$ defined (formally) somewhere? I don't find it immediately...} 
     \item $\epsilon_l$: the lower limit for threshold $\epsilon$. 
     \item $U$: the upper limit for the window size. 
     \item $L$: the lower limit for the window size. 
@@ -153,26 +187,31 @@ For ease of writing, we will omit $a=v$ to specify the \emph{key} attribute asso
 with the subwindow. 
 Therefore, the following events happen for every subwindow $W^{a=v}$ independently from 
 each other. 
-Since we are implementing the join operator, the trigger event is fired when  
-$r_c$ arrives. It is joined with $\forall i, r_i^C \in List_C$, if $r_c \in List_P$. The same 
-for $r_c \in List_C$. 
 
-The eviction trigger is fired everytime when the current watermark (Section \ref{ssub:Watermarking}) 
+Since we are implementing the join operator, the trigger event is fired when  
+$r_c$ arrives, and the join operation in Chapter~\ref{sub:Dynamic window join} is 
+executed. 
+
+
+The eviction trigger is fired every time when the current watermark (Section \ref{ssub:Watermarking}) 
 $w \ge |W| + \Delta n$. At each eviction trigger we calculate the 
 the cost for each \emph{list states} $List_P$ and $List_C$, containing the records from $S_P$ and $S_C$
 respectively. The cost for $cost(List_P) = |S_P|/Size(List_P)$, idem for $cost(List_C)$. 
-The total cost $m = cost(List_P) + cost(List_C)$ and it is checked against thresholds $\epsilon_l$ and $\epsilon_u$. If  $\epsilon_l \le m \le \epsilon_u$, 
-$\Delta n$ stays the same, otherwise it will be adjusted accordingly.
+The total cost is $m = cost(List_P) + cost(List_C)$ and it is checked against thresholds $\epsilon_l$ and $\epsilon_u$. If  $\epsilon_l \le m \le \epsilon_u$, 
+$\Delta n$ stays the same, otherwise it will be adjusted accordingly. This provides some stability 
+in window sizing by keeping the same size, if the cost lies within the thresholds. 
 The higher $m$, the higher the stream rate. Thus, the subwindow needs to be frequently 
 evicted and lower $\Delta n$ to reduce memory usage. 
 The sizes of the list states 
 are also updated according to $Size(List_P) = Size(List_P) * cost(List_P) + 0.5$.
-\gh{the same for $Size(List_C)$?} 
+Similarly for $Size(List_C)$. 
 Hence the dynamic window maintains an 
 ideal size by adjusting $\Delta n, Size(List_P)$ and $Size(List_C)$ according to 
 the stream rate. The pseudo code for the eviction algorithm is presented in Algorithm~\ref{alg:dynamic_eviction}.
-\gh{Is this a completely new algorithm, or is it an (adjusted version of) an existing one? In the latter case refer to the original source (and say how it is adjusted if need be)} 
 
+This algorithm for the dynamic window is an adaptation of the VC-TWindow~\cite{vctw_join} with 
+improvements for stability in window sizing, clarity in the metrics used for updates, and localization 
+of window size update to each subwindow.  
 
 \begin{algorithm}[htbp]
     \DontPrintSemicolon
@@ -224,10 +263,12 @@ Furthermore, new \emph{properties} and \emph{classes} are defined to extend RML 
 support for window configurations. RML's extensibility allows us to 
 define new RML vocabularies without changing the existing ones. The ontology 
 definitions is rudimentary at this moment and it is used only to configure our 
-window (type, size, etc \dots). An example of this RML mapping file for 
+window type. However, it could easily be extended to also include windo specific 
+parameter configurations if required. An example of this RML mapping file for 
 dynamic window can 
-be found in Appendix~\ref{lst:dynamic_mapping_file}.
-\gh{You say it is possible to configure size (and maybe other parameters). If so, can you add an example showing each one in the mapping file(s) in Appendix A? People might be interested in tuning them.} 
+be found in Appendix~\ref{lst:dynamic_mapping_file}. For example, one could 
+adjust the window type by changing the literal value for the property 
+\emph{rmls:windowType} with either \emph{rmls:Tumbling} or \emph{rmls:DynamicWindow}. 
 
 
 
