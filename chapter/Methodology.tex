@@ -201,7 +201,9 @@ The total cost is $m = cost(List_P) + cost(List_C)$ and it is checked against th
 $\Delta n$ stays the same, otherwise it will be adjusted accordingly. This provides some stability 
 in window sizing by keeping the same size, if the cost lies within the thresholds. 
 The higher $m$, the higher the stream rate. Thus, the subwindow needs to be frequently 
-evicted and lower $\Delta n$ to reduce memory usage. 
+evicted and lower $\Delta n$ to reduce memory usage. There is also a limit on the 
+minimum and maximum window sizes, $L$ and $U$ respectively to ensure that the window 
+does not keep growing or shrinking in size infinitely in worst case scenario. 
 The sizes of the list states 
 are also updated according to $Size(List_P) = Size(List_P) * cost(List_P) + 0.5$.
 Similarly for $Size(List_C)$. 
