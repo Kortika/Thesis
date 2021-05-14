@@ -176,6 +176,12 @@ The generated output triples of the window and the bounded data processing are
 used to calculate the IOU metric to measure the similarity between the two outputs.    
 
 
+\section{Window Configurations}
+\label{sec:Window Configurations}
+The windows are configured according to Table~\ref{tab:window_configuration}. 
+Dynamic window is configured with the same initial window size as the 
+Tumbling window to ensure that Dynamic window is not processing too little or too much 
+records in the first few minutes. 
 
 
 \begin{figure}[htpb]
@@ -209,6 +215,41 @@ RMLStreamer job inside the Taskmanager.
     \caption{Apache Flink's configuration.}
 \label{tab:computer_specs}
 \end{table}
+
+\begin{table}[htbp]
+    \centering
+    \begin{subtable}{\textwidth}
+        \centering
+        \begin{tabular}{|r|c|}
+        \hline
+        Parameter   & Value           \\ \hline
+        Window size & 2s (Event time) \\ \hline
+        \end{tabular}
+        \caption{Tumbling Window's configuration }
+        \label{tab:tumbling_config}
+    \end{subtable}
+
+
+    \begin{subtable}{\textwidth}
+        \centering
+        \begin{tabular}{|r|c|}
+        \hline
+        \multicolumn{1}{|c|}{Parameter}               & Value             \\ \hline
+        $\epsilon_l$            & 1.2               \\ \hline
+        $\epsilon_u$            & 0.8               \\ \hline
+        Initial window size     & 2s (Event time)   \\ \hline
+        Upper window size limit & 5s (Event time)   \\ \hline
+        Lower window size limit & 50ms (Event time) \\ \hline
+        \end{tabular}
+        \caption{Dynamic Window's configuration}
+        \label{tab:dynamic_config}
+    \end{subtable}
+
+    \caption{Configuration of the windows used for evaluation.}
+    \label{tab:window_configuration}
+
+\end{table}
+\newpage
 
 \section{Evaluation pipeline}
 \begin{figure}[!htbp]
