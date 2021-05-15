@@ -14,32 +14,64 @@ possible outlier situations for which the evaluation result would not agree with
 \section{Workload for latency measurement}%
 \label{sec:Workload for latency measurement}
 
-For
+This workload is run with a constant low stream rate to ensure that 
+the RMLStreamer is not overloaded for a more accurate latency measurement. We also measured 
+CPU, throughput, and relative memory usage to determine the improvement brought by Dynamic window
+in an ideal streaming environment.
+
+For latency, Tumbling window has a median value of 1915ms, with latency ranging from 1081ms to 2624ms. 
+This is as expected since the window is measured using the \emph{average} latency of all records used 
+in the joined result at every \emph{trigger} event, which is fired every 2 seconds (the size of tumbling window).
+In contrast, Dynamic window has sub second latency with median 57ms and ranging from 39ms to 120ms. Clearly, 
+our improvement to fire the \emph{trigger} event whenever a new record arrives inside the subwindow, allows 
+Dynamic window to achieve sub second latency. 
+
+For this workload's throughput measurement, the warm up time of the JVM of around the first 10 minutes of the run, 
+is removed. 
+Just like latency, the throughput difference between the two windows is also significant. Dynamic window has a 
+steady throughput of around 4280 records per second whereas Tumbling window fluctuates around 
+3180 and 3240 records per second before stabilizing at 3205 records per second. This is expected as Dynamic 
+window eventually stabilizes to a window size processing more records than Tumbling window. This is 
+due to adjustment of window sizes at the subwindow level allowing Dynamic window to wait for more records 
+with infrequent \emph{key} attribute in the stream before evicting the subwindow. In contrast, Tumbling window 
+always evicts the content of the window after 2 seconds, even if it means that there might be more 
+eligible records to be joined with the records in the soon to be evicted window. 
+
+ 
+
 
 \begin{figure*}
     \begin{subfigure}[b]{0.5\textwidth}
         \includegraphics[width=\textwidth]{fig/constant-rate/cpu_comparison.png}
-        \caption{}
+        \caption{CPU usage}
         \label{fig:constant_cpu}
     \end{subfigure}
     \hfill 
     \begin{subfigure}[b]{0.5\textwidth}
         \includegraphics[width=\textwidth]{fig/constant-rate/throughput_comparison.png}
-        \caption{}
+        \caption{Throughput of joined records}
         \label{fig:constant_thorughput}
     \end{subfigure}
     %%
     \begin{subfigure}[b]{0.5\textwidth}
         \includegraphics[width=\textwidth]{fig/constant-rate-avg/TumblingWindow_latency_boxplot.png}
-        \caption{}
+        \caption{Tumbling latency}
         \label{fig:constant_tumb_boxplot}
     \end{subfigure}
     \hfill 
     \begin{subfigure}[b]{0.5\textwidth}
         \includegraphics[width=\textwidth]{fig/constant-rate/DynamicWindow_latency_boxplot.png}
-        \caption{}
+        \caption{Dynamic latency}
         \label{fig:constant_dynamic_boxplot}
     \end{subfigure}
+    % 
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.5\textwidth]{fig/constant-rate/mem_difference_bar.png}
+        \caption{Relative difference in memory usage from the perspective of dynamic window}
+        \label{fig:constant_mem_diff}
+    \end{subfigure}
+
     \caption{Metrics measurements for latency workload.}%
     \label{fig:cpucomparison}
 \end{figure*}
