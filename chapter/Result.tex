@@ -86,8 +86,31 @@ to process and map to RDF data.
 \section{Workload for periodic burst}%
 \label{sec:Results Workload for periodic burst}
 
-For the workload on periodic burst, we first ran the evaluation 
-with a default burst of around 38 000 records to gather results in 
+Dynamic window still handles the periodic burst of data with lower latency 
+than Tumbling window. However, due to the initial size of 2s window updated every 2s, 
+the subwindow sizes will grow first until its \textbf{larger} than 2s. This results 
+in a temporary increase in latency when the burst of data arrives at the 10th second as 
+it is evident in Figure~\ref{fig:periodic_dynamic_lineplot} at the beginning. However, 
+Dynamic window manages to shorten the subwindow sizes, with the increase in the stream rate.
+This lowers the latency until it is comparable to the latency achieved in the constant stream rate from the 
+previous workload.   
+
+
+\begin{figure*}
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{fig/periodic/Tumbling_latency_lineplot.png}
+        \caption{Tumbling latency }
+        \label{fig:periodic_tumbling_lineplot}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{fig/periodic/DynamicWindow_latency_lineplot.png}
+        \caption{Dynamic latency }
+        \label{fig:periodic_dynamic_lineplot}
+    \end{subfigure}
+    \caption{Latency measurement of periodic workload over the lifetime of evaluation}
+    \label{fig:periodic_latency_lineplot}
+\end{figure*}
 
 
 \begin{figure*}
@@ -105,13 +128,13 @@ with a default burst of around 38 000 records to gather results in
     %%
     \begin{subfigure}[b]{0.5\textwidth}
         \includegraphics[width=\textwidth]{fig/periodic/TumblingWindow_latency_boxplot.png}
-        \caption{Tumbling latency}
+        \caption{Tumbling latency distribution}
         \label{fig:periodic_tumb_boxplot}
     \end{subfigure}
     \hfill 
     \begin{subfigure}[b]{0.5\textwidth}
         \includegraphics[width=\textwidth]{fig/periodic/DynamicWindow_latency_boxplot.png}
-        \caption{Dynamic latency}
+        \caption{Dynamic latency distribution}
         \label{fig:periodic_dynamic_boxplot}
     \end{subfigure}
     % 
