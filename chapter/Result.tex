@@ -12,7 +12,7 @@ possible outlier situations for which the evaluation result would not agree with
 
 
 \section{Workload for latency measurement}%
-\label{sec:Workload for latency measurement}
+\label{sec:Results Workload for latency measurement}
 
 This workload is run with a constant low stream rate to ensure that 
 the RMLStreamer is not overloaded for a more accurate latency measurement. We also measured 
@@ -26,8 +26,6 @@ In contrast, Dynamic window has sub second latency with median 57ms and ranging 
 our improvement to fire the \emph{trigger} event whenever a new record arrives inside the subwindow, allows 
 Dynamic window to achieve sub second latency. 
 
-For this workload's throughput measurement, the warm up time of the JVM of around the first 10 minutes of the run, 
-is removed. 
 Just like latency, the throughput difference between the two windows is also significant. Dynamic window has a 
 steady throughput of around 4280 records per second whereas Tumbling window fluctuates around 
 3180 and 3240 records per second before stabilizing at 3205 records per second. This is expected as Dynamic 
@@ -35,10 +33,19 @@ window eventually stabilizes to a window size processing more records than Tumbl
 due to adjustment of window sizes at the subwindow level allowing Dynamic window to wait for more records 
 with infrequent \emph{key} attribute in the stream before evicting the subwindow. In contrast, Tumbling window 
 always evicts the content of the window after 2 seconds, even if it means that there might be more 
-eligible records to be joined with the records in the soon to be evicted window. 
+eligible records to be joined with the records in the soon to be evicted window, leading to lower throughput.  
 
- 
+Relative memory usage of Dynamic window compared to Tumbling window is similar over the lifetime of the 
+evaluation run (Figure~\ref{fig:constant_mem_diff}). Dynamic window causes infrequent \emph{spikes} in memory of more 
+than 100 MB memory usage than Tumbling window at certain point in the lifetime of evaluation. This can be attributed 
+to the subwindows of Dynamic window growing larger than Tumbling window due to not enough records of the same 
+\emph{key} attributes arriving inside the subwindows. However, Dynamic window stabilizes to a more optimal 
+window size, where it uses less memory than Tumbling windows, over longer stretches of the evaluation run. At worst case, 
+it uses as much memory as Tumbling window does over the course of the evaluation. 
 
+CPU usage is higher by around 7\% for Dynamic window since it requires extra processing of the calculation of metrics. However, this 
+increase in CPU usage can also be attributed to the increase in throughput, where the RMLStreamer has more joined results 
+to process and map to RDF data.  
 
 \begin{figure*}
     \begin{subfigure}[b]{0.5\textwidth}
@@ -54,7 +61,7 @@ eligible records to be joined with the records in the soon to be evicted window.
     \end{subfigure}
     %%
     \begin{subfigure}[b]{0.5\textwidth}
-        \includegraphics[width=\textwidth]{fig/constant-rate-avg/TumblingWindow_latency_boxplot.png}
+        \includegraphics[width=\textwidth]{fig/constant-rate/TumblingWindow_latency_boxplot.png}
         \caption{Tumbling latency}
         \label{fig:constant_tumb_boxplot}
     \end{subfigure}
@@ -73,8 +80,48 @@ eligible records to be joined with the records in the soon to be evicted window.
     \end{subfigure}
 
     \caption{Metrics measurements for latency workload.}%
-    \label{fig:cpucomparison}
+    \label{fig:constant_measurement}
 \end{figure*}
 
+\section{Workload for periodic burst}%
+\label{sec:Results Workload for periodic burst}
+
+For the workload on periodic burst, we first ran the evaluation 
+with a default burst of around 38 000 records to gather results in 
 
 
+\begin{figure*}
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{fig/periodic/cpu_comparison.png}
+        \caption{CPU usage}
+        \label{fig:periodic_cpu}
+    \end{subfigure}
+    \hfill 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{fig/periodic/throughput_comparison.png}
+        \caption{Throughput of joined records}
+        \label{fig:periodic_throughput}
+    \end{subfigure}
+    %%
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{fig/periodic/TumblingWindow_latency_boxplot.png}
+        \caption{Tumbling latency}
+        \label{fig:periodic_tumb_boxplot}
+    \end{subfigure}
+    \hfill 
+    \begin{subfigure}[b]{0.5\textwidth}
+        \includegraphics[width=\textwidth]{fig/periodic/DynamicWindow_latency_boxplot.png}
+        \caption{Dynamic latency}
+        \label{fig:periodic_dynamic_boxplot}
+    \end{subfigure}
+    % 
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=0.5\textwidth]{fig/periodic/mem_difference_bar.png}
+        \caption{Relative difference in memory usage from the perspective of dynamic window}
+        \label{fig:periodic_mem_diff}
+    \end{subfigure}
+
+    \caption{Metrics measurements for periodic workload.}%
+    \label{fig:periodic_measurement}
+\end{figure*}
