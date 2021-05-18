@@ -52,19 +52,19 @@ For implementing this dynamic window, we
     or the \emph{output} of the engine, 
     \item provide a reference implementation utilizing the dynamic window, and 
     \item evaluate the implementation against widely used windowing schemes for 
-    memory efficiency and throughput. 
+    memory efficiency, throughput, cpu usage, latency, and completeness. 
 \end{enumerate*}
 
 
-This work improves the performance multi-stream operators, 
+This work improves the performance of multi-stream operators, 
 by dynamically adapting the window size, according to the dynamic characteristics
 of the incoming records for the multi-stream operators. Evaluation of 
 our approach is then intended to validate the following hypotheses: 
 
 \begin{hyp}
-    Dynamic windows consume lower memory than 
-    fixed size windows even under a dramatic increase or 
-    decrease in the velocity of incoming records. 
+    Dynamic windows consume lesser memory than 
+    fixed size windows even under fluctuating 
+    stream rate of incoming records. 
 \end{hyp}
 
 \begin{hyp}
@@ -80,8 +80,8 @@ our approach is then intended to validate the following hypotheses:
 \end{hyp}
 \begin{hyp}
     Higher throughput is achieved by multi-stream operators 
-    with dynamic windows even with huge delays in the arrival
-    rate of records between the different streams.
+    with dynamic windows even with fluctuating
+    rate of records from the data streams.
 \end{hyp}
 
 To further build upon this work, a generic dynamic windowing 
