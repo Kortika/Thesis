@@ -14,7 +14,10 @@ to be generated for comparison. Since a data stream is unbounded and cannot be p
 dataset of relatively large volume to measure \emph{completeness}.
 To ensure consistency in the complexity of the multi-stream operator being used, 
 we apply the join operator in the windows --- a common operator used in 
-data enrichment scenarios. 
+data enrichment scenarios. The \emph{key} attributes used to join are used as much as 
+possible to reduce the output size and keep the completeness measurement as concise 
+as possible. Using less \emph{key} attributes would just lead to a significant increase 
+in the number of redundant duplicate triples generated for completeness measure. 
 
 The following sections describe the workloads and the data used to evaluate the
 different metrics. Setups required to reproduce the evaluation are elaborated on
@@ -179,7 +182,7 @@ output since they are valid records produced by the data sources and duplicates 
 expected in streaming data. 
 
 
-The generated output triples of the window and the bounded data processing are 
+The generated output triples from the evaluation of the windows, and the bounded data processing are 
 used to calculate the IOU metric to measure the similarity between the two outputs.    
 
 
@@ -315,7 +318,14 @@ the input velocity, the next incoming record will be processed in the new window
 the old window where it is more relevant. Thus, 
 we will use two stream rates, constant and periodic, to measure the \emph{completeness} of the results generated 
 by the different windows. The stream rates for constant and periodic are the same as their 
-respective workloads mentioned previously. 
+workloads previously mentioned; 400 messages per second for \emph{constant rate} and 
+\emph{periodic burst} of 38 000 messages at every 10th second with 400 messages per second 
+between each burst.
+
+As described in Section~\ref{ssub:Completeness measurement}, 
+the input data for this workload will be derived from the respective workloads with 
+constant and periodic stream rate. We will write out the input data to a file, from the relevant Kafka 
+topics \emph{ndwflow} and \emph{ndwspeed}, after each evaluation run of the two windows implementation. 
 
 
 
