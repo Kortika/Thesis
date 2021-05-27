@@ -43,8 +43,7 @@ over the other.
 
 \paragraph{After the mapping process}%
 Implementing the windowing operations after the mapping process allows the 
-possibility of applying graph processing operators in the window; the input data for 
-the windows will be RDF triples from the mapping process. 
+possibility of applying graph processing operators in the window.  
 
 However, it comes with a major disadvantage. All the attributes required in the operator 
 will have to be mapped in the mapping stage to their corresponding triple statements. 
@@ -194,7 +193,7 @@ executed.
 
 
 The eviction trigger is fired every time when the current watermark (Section \ref{ssub:Watermarking}) 
-$w \ge |W| + \Delta n$. At each eviction trigger we calculate the 
+$w \ge |W| + \Delta n$. At each eviction trigger we calculate
 the cost for each \emph{list states} $List_P$ and $List_C$, containing the records from $S_P$ and $S_C$
 respectively. The cost for $cost(List_P) = |S_P|/Size(List_P)$, idem for $cost(List_C)$. 
 The total cost is $m = cost(List_P) + cost(List_C)$ and it is checked against thresholds $\epsilon_l$ and $\epsilon_u$. If  $\epsilon_l \le m \le \epsilon_u$, 
@@ -259,28 +258,71 @@ The dynamic window is implemented for RMLStreamer
 to extend its capabilities to do simple stream processing by 
 joining multiple streams. RMLStreamer is implemented in Scala 
 on top of the Apache Flink framework and with Flink's easy to access, low-level APIs, 
-we could easily implement our custom dynamic window.  
+we could easily implement our custom dynamic window. Furthermore, we extended RML
+with new ontologies to allow the configuration of the window. 
 
-Furthermore, new \emph{properties} and \emph{classes} are defined to extend RML with 
+\subsection{RML ontology extension}
+New \emph{properties} and \emph{classes} are defined to extend 
+RML with 
 support for window configurations. RML's extensibility allows us to 
-define new RML vocabularies without changing the existing ones. The ontology 
-definitions is rudimentary at this moment and it is used only to configure our 
-window type. However, it could easily be extended to also include windo specific 
-parameter configurations if required. An example of this RML mapping file for 
+define new RML vocabularies without changing the existing ones. Since
+we are implementing a multi-stream operator, the new properties are 
+to be used under the \emph{referencing object map}~\cite{rml_tech},
+where the parent triple maps may be based on 
+different \emph{logical sources}.
+
+Table~\ref{tab:rml_ontology_ext} introduces new properties, and the possible classes 
+associated with each property. 
+
+\begin{table}[htbp]
+    \centering
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{1}{|c|}{Properties} & \multicolumn{1}{c|}{Class}                                                                 \\ \hline
+rmls:windowType                  & rmls:Tumbling, rmls:DynamicWindow                                                          \\ \hline
+rmls:joinType                    & rmls:TumblingJoin, rmls:DynamicWindowJoin                                                  \\ \hline
+rmls:joinConfig                  & \begin{tabular}[c]{@{}l@{}}Term map containing \\ window's join configuration\end{tabular} \\ \hline
+\end{tabular}
+\caption{RML ontology extension to support window joins.}
+\label{tab:rml_ontology_ext}
+\end{table}
+
+The property \textbf{rmls:windowType} defines the window type that will be used 
+for the joining the records from the \emph{referencing object map} with the 
+records from its \emph{parent triples map}. Two types of windows classes 
+are currently available; 
+\emph{rmls:Tumbling}, and \emph{rmls:DynamicWindow} for Tumbling window, and 
+Dynamic window respectively. 
+
+Property \textbf{rmls:joinConfig} is used to define the configuration 
+for the different windows. It is used to denote 
+an IRI node representing the configurations for the window. By utilizing 
+an IRI node, we decouple the configurations of the window 
+from the term maps. This enables the window configurations
+to be supported for processing  
+in other term maps in the future. 
+Furthermore, this also allows us to support different 
+types of operator to apply inside the window and configure the custom
+window parameters as required. 
+
+Currently, it only supports the rudimentary 
+configuration of the type of join to be applied inside the window with the 
+property \textbf{rmls:joinType}. This specifies the type of window join to apply 
+for the \emph{reference object map}. 
+
+An example of this RML mapping file for 
 dynamic window can 
-be found in Appendix~\ref{lst:dynamic_mapping_file}. For example, one could 
-adjust the window type by changing the literal value for the property 
+be found in Appendix~\ref{lst:dynamic_mapping_file}. 
+For example, one could 
+adjust the window type by proivding the IRI value for the property 
 \emph{rmls:windowType} with either \emph{rmls:Tumbling} or \emph{rmls:DynamicWindow}. 
 
 
-
-
-
-
-
-
- 
-
-
-
-
+\subsection{Dynamic window}
+The dynamic window is implemented using Apache Flink's 
+\emph{KeyedCoProcessFunction} API. State management inside the 
+subwindows is achieved using the \emph{ListStates}. These 
+states are automatically managed by Flink for correct storage of 
+records belonging to a \emph{keyed} window. The algorithm provided 
+in Listing~\ref{alg:dynamic_eviction} is implemented inside the 
+\emph{KeyedCoProcessFunction}. 
