@@ -10,15 +10,12 @@ as joins~\cite{grubjoin}, sorts and aggregations.
 
 The behaviour of \emph{windows} are configured by specifying \emph{policies}
 based on different characteristics such as \emph{count}, \emph{attribute-delta}, \emph{time}, and
-\emph{punctuation}~\cite{generic_window_sem}. For this thesis, only a
+\emph{punctuation}~\cite{generic_window_sem}. For this thesis as a 
+proof of concept, only a
 \emph{time}-based policy is of interest to proof and evaluate the 
 concept, specifically with the notion of \emph{event time},
 since we are dealing with streaming data with 
 timeliness.
-\gh{Here we need a good motivation why we limit the scope to the time characteristic.
-       I can imagine a use case where we generate triples only if there are 5 particular
-records encountered (so count based, e.g. a thermometer signals a high temperature which might trigger an alert). A reason can be to proof the concept, and then later in the discussions / future work section say that 
-the concept could also be investigated for other characteristics as well.}
 
 Moreover, the configurations of the policies will be based on the 
 implementations in Apache Flink and will differ from those defined by 
@@ -254,7 +251,7 @@ update of the metric.
 The aforementioned window types are fixed and are not robust to changes of the data stream characteristics. Once initialized, the windows sizes 
 are fixed throughout the runtime of the application. This results in inefficient 
 window sizes if the data stream rate diverges greatly over time; a window size might become too small to process the incoming 
-data. Thus, a dynamic window that adjust its size throughout the runtime of the application 
+data. Thus, a dynamic window which adjusts its size throughout the runtime of the application 
 will adapt better to the changing characteristics of the data stream. 
 
 
