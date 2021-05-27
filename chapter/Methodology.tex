@@ -17,9 +17,9 @@ too small to produce any output or too large which leads to high memory usage wh
 the stream rate is high. Furthermore, fixed size windows only process the 
 records inside the window at fixed interval (usually equal to the size of the window). 
 This leads to high latency proportional to the window size. As a consequence, 
-it causes unnecessarily high latency in some operations, where records could be processed once it arrives inside 
+it causes unnecessarily high latency in some operations, where records could be processed once they arrive inside 
 the window. One example of such operation is the join operator, where the joined 
-result could be emitted the moment a new record arrives inside the window. 
+result can be emitted the moment a new record arrives inside the window. 
 Solving these disadvantages leads us to our approach 
 of a dynamic window, which can adjust its size during runtime,
 resulting in a low latency and high throughput solution. 

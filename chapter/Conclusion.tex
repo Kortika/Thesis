@@ -4,9 +4,9 @@
 
 In this paper, we have presented an approach for Dynamic window 
 which adapts its window size according to the stream rate of the 
-input data sources. Our approach aims to fix the shortcomings of 
+input data sources. Our approach addresses the shortcomings of 
 the existing state-of-the-art dynamic windowing approaches for 
-join operator. We introduced a simple heuristic to adapt our 
+join operator. We introduced a simple heuristic to adapt 
 window sizes dynamically without huge memory or computation overhead. 
 
 We implemented our Dynamic window on top of the existing RMLStreamer, 
@@ -16,11 +16,11 @@ accurately evaluate the performance of our implementation against the
 standard fixed size Tumbling window under different stream characteristics. 
 
 The results gathered from our evaluation concludes that our implementation 
-of Dynamic window fares better than Tumbling window in terms of 
+of Dynamic window performs better than Tumbling window in terms of 
 latency, throughput, and completeness with only a slight 
-increase in CPU usage. Even though, we could not confidently conclude that 
-the memory usage is lower in Dynamic window, our preliminary results indicate 
-that it performs at worst case as bad as Tumbling window.   
+increase in CPU usage. Even though we could not confidently conclude that
+memory usage is lower in Dynamic window, our preliminary results indicate 
+that it performs the same as Tumbling window in the worst-case scenario.
 
 Therefore, there are still areas of improvement to be made in terms of the
 evaluation setups
@@ -30,11 +30,11 @@ residing in the windows at any moment instead of the whole JVM heap of the RMLSt
 Furthermore, the evaluation could be done in the same benchmark pipelines as in~\cite{evalution_of_spe} 
 to further evaluate the Dynamic window performance in a general stream processing use case instead 
 of in the context of RDF mapping engines.  
-Improvements on our dynamic approach could be achieved by allowing user to 
-define other statistical approach 
+Improvements on our dynamic approach could be achieved by allowing users to 
+define other statistical approaches
 to better calculate the threshold for adapting the window sizes. For example, one could provide 
 RMLStreamer with an external function to calculate the metrics in Dynamic window similar to the approach 
-in FnO~\cite{fno_ben}. Furthermore, utilizing mapping file to configure our window might also allow further
-optimization in the mapping file for a more efficient mapping job as proposed in FunMap~\cite{funmap}. 
+in FnO~\cite{fno_ben}. Furthermore, utilizing mapping rules to configure our window might also allow further
+optimize the mapping job as proposed in FunMap~\cite{funmap}. 
 
 
