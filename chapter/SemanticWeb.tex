@@ -29,7 +29,7 @@ in detail.
 
 
 \section{Resource Definition Framework}
-Resource Definition Framework (RDF) \cite{rdf_concepts} is a framework for representing data on the Web.
+The Resource Definition Framework (RDF) \cite{rdf_concepts} is a framework for representing data on the Web.
 It portrays the data as a directed graph with the resources as nodes in the graph and the
 edges as the relationship between the different resources.
 Figure~\ref{fig:rdf_triple_ex} shows an example of an RDF triple statement describing
@@ -104,7 +104,7 @@ Lastly, we have the term type \textit{blank node}. Blank nodes identify resource
 in the local scope (i.e. to a local file or an RDF store).
 Blank nodes are only applicable as the \textit{subject}
 and the \textit{object} components of an RDF triple, since they are used to
-identify resources in nodes,
+identify resources in nodes.
 
 
 \section{RDF serialization formats}
@@ -129,7 +129,7 @@ Moreover, XML is not suited to represent unbounded RDF data generation.
 
 
 \subsection{N-Triples and N-Quads}
-N-Triples\cite{N-Triples} is a subset of Turtle, which we will focus on in this thesis, could be used 
+N-Triples\cite{N-Triples} is a subset of Turtle which could also be used 
 to represent RDF data. In comparison to the aforementioned two formats, N-Triples is trivial to parse. 
 It represents the RDF statements consisting of \emph{subject, predicate} and \emph{object} line by line. 
 Each line consists of a \emph{subject, predicate, object} and a full stop indicating the termination of 

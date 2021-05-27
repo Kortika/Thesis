@@ -36,7 +36,7 @@ input streams. This leads to a decline in the quality of the generated RDF tripl
 infinite, continuous and real-time changing data of the streaming environment, and 
 the limited computing resources by the systems processing the streams, 
 these operators have to be applied in the context of windows over a subset of the incoming data.
-These operators are usually applied in fixed size windows,
+These operators are usually applied in fixed size windows.
 Clearly, with these restrictions and characteristics of the streaming sources, there is a need 
 for an adaptive approach to apply these operators in windows for the data transformation engines. 
 
@@ -48,7 +48,7 @@ aware of the velocity of the input streams to react and adapt its size according
 For implementing this dynamic window, we 
 \renewcommand{\labelenumi}{(\roman{enumi})}
 \begin{enumerate*}
-    \item investigate the possible implementation sites which are near the \emph{input}
+    \item investigate the possible implementation sites at \emph{input}
     or the \emph{output} of the engine, 
     \item provide a reference implementation utilizing the dynamic window, and 
     \item evaluate the implementation against widely used windowing schemes for 

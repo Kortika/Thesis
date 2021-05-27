@@ -177,12 +177,96 @@ records by delegating it to the underlying SPARQL engine.
 Therefore, there is a lack of  
 dynamic windowing schemes to efficiently exploit the characteristics of the streaming data sources.  
 
+
+\section{Mapping based implementations}
+\label{sec:mapping_based_implementation}
+Other than approaching the transformation of non-RDF to RDF from the viewpoint of 
+queries, one could also employ mapping languages such as RML. Mapping languages 
+are declarative and have minimal cognitive burden composing it compared to the
+query based implementations; one does not need to deal with nested queries,
+due to defining the mapping relationship for each attribute in 
+the input source. Despite being more 
+verbose than query languages, composing complex mapping documents results in much more human-readable 
+format due to the direct mapping of the attributes. 
+The following subsections will elaborate more on the related state-of-the-art engines 
+which utilizes mapping languages in a streaming environment.
+
+\subsection{TripleWave}
+Albeit the abundance of solutions to combine semantic technologies with stream and event processing 
+techniques, there was a lack of engines to disseminate and exchange RDF streams on the Web~\cite{triple_wave}. 
+TripleWave~\cite{triple_wave} was conceived to fill this role; to provide the mechanism to publish and spread RDF streams on the Web. 
+It extends R2RML, which only allows ingestion of inputs from relational databases, 
+to also consume other formats such as JSON or CSV (just like RML, a superset of R2RML). 
+
+TripleWave generates an RDF stream of JSON-LD format, which could be consumed by existing
+RDF Stream Processing (RSP) engines as input, for the publication of RDF data.
+It also supports joining of multiple streams which could be inferred from its implementation of R2RML's \emph{rr:parentTriplesMap} predicate~\cite{triple_wave}. Since the goal of TripleWave 
+is to publish RDF streams from RDF and non-RDF data sources, it does not support the 
+application of arbitrary functions at its core unlike RDF-Gen and SPARQL-Generate. 
+However, as is the case with the aforementioned frameworks and engines, 
+it does not support dynamic windowing to handle streams 
+with dynamic characteristics. 
+
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig/triple-wave-arch.png}
+  \caption{Architecture of TripleWave generating RDF streams from non-RDF and RDF data sources~\cite{triple_wave}. }
+  \label{fig:triple-wave-arch}
+\end{figure}
+
+\paragraph{The shortcomings}%
+The implementations elaborated thus far, scale insufficiently in terms of velocity and 
+volume of data streams. Multiple instances of the engines will need to 
+be started in order to scale with the higher volume and velocity of 
+the input data streams. Since they are not built upon a distributed framework, 
+there is also a need for a separate implementation to coordinate the different 
+instances in a distributed environment. 
+
+\subsection{RMLStreamer}
+\label{sec:rml_streamer}
+RMLStreamer~\cite{rml_streamer}
+was developed to parallelize the ingestion and mapping process of RDF data generation pipeline. 
+It is based on the work of RMLMapper~\cite{rml}, an RDF mapping engine consuming bounded data and 
+mapping them to RDF data with the use of RML. Hence, RMLStreamer can also 
+process heterogeneous data and generate RDF data. 
+
+Due to the parallelization of the subtasks, the ingestion and the mapping process, these processes
+could be spread over different machines for distributed execution (Figure \ref{fig:rml-parallel-arch}). 
+However, a mechanism to coordinate the different machines is required in the environment of 
+distributed computing.  
+To fulfill this requirement, RMLStreamer is 
+implemented on top of Apache Flink~\cite{flink} framework (Section \ref{sub:Apache Flink}). Not only does it allow the mapping 
+of non-RDF to RDF data, it also guarantees fault-tolerance through the usage of 
+\emph{Asynchronous Barrier Snapshots}~\cite{flink_fault_tolerance} and \emph{exactly-once} semantic,
+although these are disabled by default. 
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{fig/rml_streamer_arch.png}
+  \caption{Parallelization architecture of RMLStreamer for RDF data generation~\cite{rml_streamer}. RMLStreamer parallelizes 
+  the ingestion of the data sources and the mapping process of non-RDF to RDF data. }
+  \label{fig:rml-parallel-arch}
+\end{figure}
+
+
+
+\section{Custom syntax implementation}
+Unlike the aforementioned two categories of implementations based on one of the
+standardized syntaxes, 
+there exists implementations which combines pieces of both. RDF-Gen is one such 
+implementation with its own custom syntax. 
+
 \subsection{RDF-Gen}
-RDF-Gen~\cite{rdf_gen} is also based on SPARQL-like syntax. However, instead of extending SPARQL engines, 
+RDF-Gen~\cite{rdf_gen} is based on its own custom syntax 
+similar to a combination SPARQL and Turtle syntax. 
+Unlike SPARQL-Generate, instead of extending SPARQL engines, 
 it provides its own architecture to meet the demands
-of real-time processing (Figure~\ref{fig:rdf-gen-arch}). Instead of adopting most of the syntax from SPARQL, RDF-Gen only 
-keeps the basic graph pattern section of SPARQL query to reduce the size of the transformation specification. 
-Thus, it has the most compact mapping template compared to the other methods mentioned in this paper. 
+of real-time processing (Figure~\ref{fig:rdf-gen-arch}). 
+Through combination of SPARQL and Turtle syntax, RDF-Gen 
+keeps the basic graph pattern section of SPARQL query with 
+the specifications of term nodes from Turtle to reduce
+the size of the transformation specification.  
 
 RDF-Gen consists of three main components: 
 \begin{enumerate*}[label=(\alph*)]
@@ -191,16 +275,20 @@ RDF-Gen consists of three main components:
   \item Link Discovery.
 \end{enumerate*}
 
-Data Connectors allows close-to-source processing, 
-which is not the case for SPARQL-Generate. This is due to the data consumption 
-module being tightly coupled with the mapping process for SPARQL-Generate, unlike 
-RDF-Gen as shown in Figure ~\ref{fig:rdf-gen-arch}. 
+Data Connectors allows close-to-source processing. This is due to the
+data consumption 
+module being decoupled from the mapping process as shown in Figure ~\ref{fig:rdf-gen-arch}. 
 Triple Generator handles the rapid generation of RDF triples by making use of 
 template graphs and variable vectors. The Link Discovery component solves the 
-problem of link discovery problem which is defined as follows:
-Given two data sources $S$ and $T$, the problem is to find the pairs of elements in 
+problem of link discovery which is defined as follows:
+
+\begin{defn}[Link Discovery problem]    
+Given two data sources $S$ and $T$, the link discovery problem is to
+find the pairs of elements in 
 $S \times T$ that are related to each other (e.g. following the predicate of 
 \emph{owl:sameAs} property). 
+\end{defn}
+
 Link discovery remains out of scope of this thesis as we mainly focus on 
 multi stream operators during RDF generation.
 
@@ -303,79 +391,6 @@ mention in detail about its implementation of windows to handle
 multi-stream operators since it was out of scope. Therefore, we still have no 
 notion of how to handle data streams with dynamic characteristics where fixed windows 
 size have negative consequences on the quality of the generated RDF data. 
-
-
-\section{Mapping based implementations}
-\label{sec:mapping_based_implementation}
-Other than approaching the transformation of non-RDF to RDF from the viewpoint of 
-queries, one could also employ mapping languages such as RML. Mapping languages 
-are declarative and have minimal cognitive burden composing it compared to the
-query based implementations; one does not need to deal with nested queries,
-due to defining the mapping relationship for each attribute in 
-the input source. Despite being more 
-verbose than query languages, composing complex mapping documents results in much more human-readable 
-format due to the direct mapping of the attributes. 
-The following subsections will elaborate more on the related state-of-the-art engines 
-which utilizes mapping languages in a streaming environment.
-
-\subsection{TripleWave}
-Albeit the abundance of solutions to combine semantic technologies with stream and event processing 
-techniques, there was a lack of engines to disseminate and exchange RDF streams on the Web~\cite{triple_wave}. 
-TripleWave~\cite{triple_wave} was conceived to fill this role; to provide the mechanism to publish and spread RDF streams on the Web. 
-It extends R2RML, which only allows ingestion of inputs from relational databases, 
-to also consume other formats such as JSON or CSV (just like RML, a superset of R2RML). 
-
-TripleWave generates an RDF stream of JSON-LD format, which could be consumed by existing
-RDF Stream Processing (RSP) engines as input, for the publication of RDF data.
-It also supports joining of multiple streams which could be inferred from its implementation of R2RML's \emph{rr:parentTriplesMap} predicate~\cite{triple_wave}. Since the goal of TripleWave 
-is to publish RDF streams from RDF and non-RDF data sources, it does not support the 
-application of arbitrary functions at its core unlike RDF-Gen and SPARQL-Generate. 
-However, as is the case with the aforementioned frameworks and engines, 
-it does not support dynamic windowing to handle streams 
-with dynamic characteristics. 
-
-
-\begin{figure}[!htbp]
-  \centering
-  \includegraphics[width=\textwidth]{fig/triple-wave-arch.png}
-  \caption{Architecture of TripleWave generating RDF streams from non-RDF and RDF data sources~\cite{triple_wave}. }
-  \label{fig:triple-wave-arch}
-\end{figure}
-
-\paragraph{The shortcomings}%
-The implementations elaborated thus far, scale insufficiently in terms of velocity and 
-volume of data streams. Multiple instances of the engines will need to 
-be started in order to scale with the higher volume and velocity of 
-the input data streams. Since they are not built upon a distributed framework, 
-there is also a need for a separate implementation to coordinate the different 
-instances in a distributed environment. 
-
-\subsection{RMLStreamer}
-\label{sec:rml_streamer}
-RMLStreamer~\cite{rml_streamer}
-was developed to parallelize the ingestion and mapping process of RDF data generation pipeline. 
-It is based on the work of RMLMapper~\cite{rml}, an RDF mapping engine consuming bounded data and 
-mapping them to RDF data with the use of RML. Hence, RMLStreamer can also 
-process heterogeneous data and generate RDF data. 
-
-Due to the parallelization of the subtasks, the ingestion and the mapping process, these processes
-could be spread over different machines for distributed execution (Figure \ref{fig:rml-parallel-arch}). 
-However, a mechanism to coordinate the different machines is required in the environment of 
-distributed computing.  
-To fulfill this requirement, RMLStreamer is 
-implemented on top of Apache Flink~\cite{flink} framework (Section \ref{sub:Apache Flink}). Not only does it allow the mapping 
-of non-RDF to RDF data, it also guarantees fault-tolerance through the usage of 
-\emph{Asynchronous Barrier Snapshots}~\cite{flink_fault_tolerance} and \emph{exactly-once} semantic,
-although these are disabled by default. 
-
-\begin{figure}[!htbp]
-  \centering
-  \includegraphics[width=\textwidth]{fig/rml_streamer_arch.png}
-  \caption{Parallelization architecture of RMLStreamer for RDF data generation~\cite{rml_streamer}. RMLStreamer parallelizes 
-  the ingestion of the data sources and the mapping process of non-RDF to RDF data. }
-  \label{fig:rml-parallel-arch}
-\end{figure}
-
 
 \section{Summary}
 While SPARQL-Generate~\cite{sparql_generate}, RDF-Gen~\cite{rdf_gen}, and TripleWave~\cite{triple_wave} 
