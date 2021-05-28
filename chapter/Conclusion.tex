@@ -34,7 +34,10 @@ Improvements on our dynamic approach could be achieved by allowing users to
 define other statistical approaches
 to better calculate the threshold for adapting the window sizes. For example, one could provide 
 RMLStreamer with an external function to calculate the metrics in Dynamic window similar to the approach 
-in FnO~\cite{fno_ben}. Furthermore, utilizing mapping rules to configure our window might also allow further
-optimize the mapping job as proposed in FunMap~\cite{funmap}. 
+in FnO~\cite{fno_ben}.
+As an extension, a dynamic window based on \emph{count} could be of interest in use 
+cases where \emph{timeliness} is not required but the number of elements is of importance.
+Furthermore, utilizing mapping file to configure our window might also allow further
+optimization in the mapping file for a more efficient mapping job as proposed in FunMap~\cite{funmap}. 
 
 
