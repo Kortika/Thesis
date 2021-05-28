@@ -179,7 +179,8 @@ global state of a distributed system which could be used to maintain the checkpo
 \begin{figure}[!htbp]
     \centering
     \includegraphics{fig/checkpoint_inconsistency.png}
-    \caption{Inconsistent checkpoint scenario where operator A and B have different
+    \caption[Inconsistent checkpoint scenario]
+    {Inconsistent checkpoint scenario where operator A and B have different
     checkpointed states. The rectangle blocks indicate the moment when the operators 
     commit a checkpoint of their internal state. }
     \label{fig:checkpoint_inconsistency}
@@ -257,7 +258,8 @@ the data stream is also split into two different paths:
 \begin{figure}[!htpb]
     \centering
     \includegraphics[width=\linewidth]{fig/lambda_arch.png}
-    \caption{A general overview of the Lambda architecture. User queries are served from 
+    \caption[A general overview of the Lambda architecture]
+    {A general overview of the Lambda architecture. User queries are served from 
     the real-time views until the batch views are ready. Incremental updates could also be applied 
 to the batch views in the \textbf{serving} layer by using the results from the \textbf{speed} layer.
 ~\cite{lambda_arch_book}}%
@@ -326,7 +328,8 @@ a stream of events in real-time, or as a replay of historical data for batch ana
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=0.4\linewidth]{fig/kappa_arch.png}
-    \caption{An overview of the Kappa architecture. Here, job \emph{n+1} is re-processing using the replay 
+    \caption[An overview of the Kappa architecture]
+    {An overview of the Kappa architecture. Here, job \emph{n+1} is re-processing using the replay 
     data from the unified data logs in parallel. Once it has caught up to the output of job \emph{n}, 
     job \emph{n} can be phased out and allow the latest job \emph{n+1} to take over.}
     \label{fig:kappa_arch}
@@ -416,7 +419,8 @@ general.
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=0.8\linewidth]{fig/stream_watermark_out_of_order.png}
-    \caption{Out of order events in a stream with watermarks~\cite{watermark_flink}. In this figure, 
+    \caption[Out of order events in a stream with watermarks~\cite{watermark_flink}]
+    {Out of order events in a stream with watermarks~\cite{watermark_flink}. In this figure, 
     all events on the right side of W(11) have a timestamp $\le 11$. If an event with 
     a timestamp $> 11$ arrives in the future, it is considered \emph{late}.}
     \label{fig:watermark}
