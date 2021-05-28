@@ -12,17 +12,17 @@ The existing approaches in mapping engines for supporting simple multi-stream pr
 are very limited.
 They require either a \emph{window} with fixed size, which performs badly with 
 changing stream rate, or consume the data from 
-one of the input fully before applying multi-stream processing operators.
+one of the input streams fully before applying multi-stream processing operators.
 Furthermore, related works for improving the dynamicity of windows, 
-requires a memory overhead of keeping complex stream statistics to adapt 
+require a memory overhead of keeping complex stream statistics to adapt 
 to the varying stream characteristics.
 
-Therefore, we implemented a dynamic window support in RMLStreamer, which 
+Therefore, we implemented a dynamic window mechanism in RMLStreamer, which 
 adapts its size according to the changing stream characteristics with
 negligible memory overhead, low latency, and high throughput. We evaluated the dynamic window
 under different workload with varying stream velocity. The results 
-show that it achieves latency in the milliseconds, with higher 
-throughput than the fixed size windows in all workload situations. 
+show that it achieves latency in the millisecond range, with higher 
+throughput than fixed size windows in all workload situations. 
 
 \paragraph{Keywords:}
 
@@ -38,19 +38,20 @@ Huidige state-of-the-art benaderingen om niet-RDF naar RDF data om te zetten
 in een streaming omgeving focussen zich meer op de efficiëntie van het 
 mapping proces met minimale ondersteuning voor multi-stream verwerkingsoperatoren.
 De join operator is zo'n veelgebruikte operator in een multi-stream omgeving.
-De bestaande aanpakken in mapping engines voor de ondersteuning van 
+De bestaande benaderingen in mapping engines voor de ondersteuning van 
 eenvoudige multi-stream processing operatoren zijn zeer beperkt.
 Ze vereisen ofwel een window met een vaste grootte, dat slecht presteert bij 
-veranderende stream snelheid, of houden de data van een van de inputs 
+veranderende streamsnelheid, of houden de data van één van de inputs 
 volledig in geheugen alvorens multi-stream verwerkingsoperatoren toe te passen.
 
 Daarom hebben wij in RMLStreamer een dynamisch window geïmplementeerd, 
-dat de grootte zich aanpast aan de veranderende stream-karakteristieken met 
+waarvan de grootte zich aanpast aan de veranderende streamkarakteristieken met 
 verwaarloosbare geheugenoverhead, lage latency en hoge doorvoer.
 We hebben het dynamische window geëvalueerd onder verschillende werklast situaties 
 met variërende stream snelheid.
-De resultaten laten zien dat het dynamische window een latency in milliseconden bereikt, 
-met een hogere doorvoer dan de windows met vaste grootte in alle werklast situaties.
+De resultaten laten zien dat het dynamische window een latency 
+in de orde van milliseconden bereikt, 
+met een hogere doorvoer dan de windows met vaste grootte voor verschillende werklast.
 
 \paragraph{Keywords:}
 

@@ -59,7 +59,7 @@ the properties of data may change over time unlike Big Data.
 Out of the three aforementioned characteristics, \emph{velocity} is the most important 
 factor to consider when it comes to data stream processing. Data in a streaming 
 environment are rapidly changing, constantly arriving into the stream processing
-pipeline, and needs to be processed within a limited time frame.
+pipeline, and need to be processed within a limited time frame.
 As a result, only single pass algorithms can
 be applied since it is infeasible to have random memory access capability
 over the entire stream. Moreover, unlike traditional Big Data processing, 
@@ -172,7 +172,7 @@ checkpoint has to be taken.
 
 
 Combined approaches utilizing different operators, such as asynchronous, and non-blocking
-operators, exists for checkpointing with the consistency of global states. 
+operators, exist for checkpointing with the consistency of global states. 
 The Chandy-Lamport algorithm~\cite{chandy_lamport} determines the 
 global state of a distributed system which could be used to maintain the checkpoints. 
 
@@ -203,14 +203,14 @@ stay in the buffer until they are completely processed by the downstream operato
 The buffer will then be cleared when the upstream operator receives 
 an acknowledgement from its direct downstream operators, as illustrated in the Figure~\ref{fig:upstream}. 
 
-The drawback for this approach is that, the buffer might not be large enough to 
+The drawback of this approach is that the buffer might not be large enough to 
 hold the records stored between the failure and the recovery event. Moreover, 
-the whole system needs to be halted until the new operator catches back up to 
+the whole system needs to be halted until the new operator catches up to 
 the state of the failed operator from the replayed records. 
 
 \section{Data Stream processing}
 
-Processing data streams requires a different approach from that of a batch data processing engine, due 
+Processing data streams requires a different approach than processing batch data due 
 to the characteristics described in Section~\ref{sec:characteristics_data_stream}. 
 Batch processing is defined as processing a small subset of the data simultaneously~\cite{batch_processing}. 
 Originally, it is meant to tackle a particular characteristic of Big Data; the \textbf{volume}. The job 
@@ -220,7 +220,7 @@ Consequently, batch processing engines do not need to take the continuous and
 timely nature of the data into account~\cite{flink}.
 On the other hand, stream processing requires the notion of time and continuity of the data 
 (Section~\ref{sec:characteristics_data_stream}). This brings several challenges 
-that stream processing frameworks need to solve, resulting in a specialised architectures employed by the 
+that stream processing frameworks need to solve, resulting in a specialised architecture employed by the 
 frameworks. In this section, we will summarise the general architecture and strategies to deal with the 
 uncertainty of the order of items and the continuously processing of items in data streams. Different 
 state-of-the-art frameworks will also be briefly mentioned, to get the reader familiar with the 
@@ -278,8 +278,8 @@ are commonly used in stream processing.
 
 \subsubsection{Batch layer}%
 \label{sssec:Batch layer}
-The batch layer stores the incoming stream data in a \emph{master dataset}. This \emph{master dataset} is an immutable,
-and append only dataset, to ensure that there is some notion of time or history of the data. Changes made to 
+The batch layer stores the incoming stream data in a \emph{master dataset}. This \emph{master dataset} is an immutable
+and append-only dataset, to ensure that there is some notion of time or history of the data. Changes made to 
 the previously stored data are re-appended to the dataset as a record with a new timestamp.  
 This enables re-computation of the master dataset resulting in a new batch view as the dataset evolves over time. 
 Batch processing engines, such as MapReduce~\cite{mapreduce}-based framework like Apache Hadoop~\cite{hadoop}, 
@@ -344,17 +344,17 @@ predictions, while the speed layer could deploy these models to provide real-tim
 
 
 In this thesis, we investigate the usage of dynamic windows in the context of stream processing 
-non-heterogenoeus data to RDF data. 
+heterogeneous data to RDF data. 
 Therefore, the Kappa architecture is the best candidate to deploy and test our 
 hypotheses since we have no need for batch analysis in this thesis.  
 
-\subsection{Out of order processing}%
+\subsection{Out-of-order processing}%
 \label{sub:Out of order processing}
-Stream events can arrive out of order due to a myriad of reasons; network latencies, 
+Stream events can arrive out-of-order due to a myriad of reasons; network latencies, 
 bad connections or a delay at one of the multiple sensors generating the events for 
 the stream processing engine. Stream 
 processing engines should be aware of the \emph{timeliness} of the data stream --- it needs 
-to be able to deal with out of order events. 
+to be able to deal with out-of-order events. 
 
 To understand the strategy involved in the handling out of order events, 
 two notions of \emph{time}~ need to be introduced~\cite{watermark_flink}:  
@@ -394,10 +394,10 @@ waits for \emph{late events}. For example, if a watermark with timestamp
 20 arrives in the dataflow, the system could assume that all events 
 with timestamp earlier than 20 already have arrived in the system. 
 
-Notions of time and watermarks are insufficient to handle out of order 
+Notions of time and watermarks are insufficient to handle out-of-order 
 events. The stream processing engine needs to be able to compare them to a subset of the 
 incoming data. Windowing provides a grouped view of the infinite unbounded stream, 
-enabling the engine to compare the subset of records for \emph{timeliness} and out of order 
+enabling the engine to compare the subset of records for \emph{timeliness} and out-of-order 
 processing. A window can be \emph{time driven}, every $N$ seconds, or \emph{data driven}, 
 every $N$ records. 
 In Figure~\ref{fig:watermark}, a time window is applied on the stream that
@@ -432,7 +432,7 @@ differently with their own advantages and disadvantages.
 
 In this section, we elaborate 
 on a few of these stream processing frameworks to identify the best characteristics of a 
-stream processing engine and the different implementation to tackle the challenges by these 
+stream processing engine and the different implementations to tackle the challenges by these 
 frameworks.
 
 
@@ -457,10 +457,10 @@ and dependency of the data across time. Since the stream is modelled as \emph{mi
 batches, the powerful recovery mechanisms and exactly-once delivery semantics of the traditional batch processing engines could
 be applied. 
 Furthermore, transparent integration of RDDs for both batch and stream processing in Spark,  
-meant that Spark Streaming could utilize the Kappa architecture to maintain low latency stream processing. 
+means that Spark Streaming utilizes the Kappa architecture to maintain low latency stream processing. 
 
 However, Apache Spark Streaming still has a 
-higher latency when compared to systems processing individual records in the stream, 
+higher latency compared to systems processing individual records in the stream, 
 such as Apache Flink and Apache Storm, due to the discretization of 
 data stream in \emph{micro} batches. 
 
@@ -534,7 +534,7 @@ due to the usage of in-stream barriers.
 Finally, Flink provides high-level APIs that make development easier for developers in 
 the style of functional programming; an intuitive style for the use cases in the data analysis community. 
 Windows are supported in Flink as an integral part of the engine with easy to use high-level APIs for 
-commonly used windows (elaborated more in Chapter~\ref{chap:windows}).  
+commonly used windows (elaborated more on in Chapter~\ref{chap:windows}).  
 It also provides access to low-level APIs to implement highly customised windowing logic, without burdening 
 the developers with the complexity of the internals of Flink. 
 With the ease of development, the aforementioned low latency, and exactly-once delivery semantics, 

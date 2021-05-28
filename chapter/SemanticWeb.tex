@@ -20,7 +20,7 @@ a more complex level. This results in \emph{knowledge graphs}.
 The Semantic Web stack enables the development of a \emph{web of data} using 
 the core technologies shown in Figure~\ref{fig:sem_web_stack}. 
 However, this is provided that the data is represented in the 
-Resource Description Framework (RDF) format~\cite{rdf_concepts}. 
+Resource Description Framework (RDF) model~\cite{rdf_concepts}. 
 Existing data on the web in non-RDF format must, therefore, be transformed 
 into RDF to enable transition to a \emph{web of data}. This work 
 focuses on transforming non-RDF to RDF data, thus the RDF data model will be elaborated on
@@ -95,7 +95,7 @@ An IRI can represent a relationship, a concept or an object. Therefore, it could
 used in the \textit{subject}, the \textit{predicate} and the \textit{object} components of
 an RDF triple.
 
-The \textit{literal} term type is used to represent a value such as strings, numbers, boolean, and dates.
+The \textit{literal} term type is used to represent values such as strings, numbers, boolean, and dates.
 Each literal can have a datatype IRI to specify the type of the data it represents. Moreover, the
 language in which the data is written, could also be explicitly stated with
 a language tag. However, a literal can only have either a datatype or a language tag. 
@@ -114,7 +114,7 @@ require a concrete serialization to store and process RDF data.
 Several serialization formats have been developed alongside RDF specifications to represent RDF
 knowledge graphs.
 These formats usually have trade-offs for simplicity of parsing against 
-human readability. The following sections will describe some widely used formats in detail; 
+human readability. The following sections will describe some widely used formats in detail: 
 RDF/XML, JSON-LD, N-Triples and N-Quads, and Turtle. 
 
 
@@ -122,9 +122,9 @@ RDF/XML, JSON-LD, N-Triples and N-Quads, and Turtle.
 The earliest of the serialization formats is RDF/XML\footnote{RDF/XML: \url{https://www.w3.org/TR/rdf-syntax-grammar/}}. 
 It was developed during the early days of RDF when parsers, serializers and storage systems 
 for XML were widely used. 
-RDF/XML can be quite verbose and difficult for human to read and understand, 
-due to the mixture of tree-structure document with a triple-based graph. 
-Moreover, XML is not suited to represent unbounded RDF data generation.
+RDF/XML can be quite verbose and difficult for humans to read and understand, 
+due to the mixture of a tree-structure document with a triple-based graph. 
+Moreover, XML is not suited to serialize unbounded RDF data.
 
 
 
@@ -133,7 +133,7 @@ N-Triples\cite{N-Triples} is a subset of Turtle which could also be used
 to represent RDF data. In comparison to the aforementioned two formats, N-Triples is trivial to parse. 
 It represents the RDF statements consisting of \emph{subject, predicate} and \emph{object} line by line. 
 Each line consists of a \emph{subject, predicate, object} and a full stop indicating the termination of 
-an RDF statement. N-Quads is a superset  of N-Triples by extending with the fourth column to denote the \emph{graph IRI}.
+an RDF statement. N-Quads is a superset of N-Triples by adding a fourth column to denote the \emph{graph IRI}.
 \emph{Graph IRIs} are used to group RDF statements into multiple graphs and associate them with an IRI.  
 
 N-Triples and N-Quards are great for streaming RDF as they 
@@ -147,14 +147,14 @@ the modern Linked Data format to represent RDF data in general.
 It provides a way to continue using existing 
 infrastructures using JSON and upgrade from JSON to JSON-LD to utilize the power of semantic knowledge graphs. 
 Although the flexibility of extending existing infrastructures to support Linked Data usage 
-is favourable, it has one major drawback; a high performance cost for parsing due to 
+is favourable, it has one major drawback: a high performance cost for parsing due to 
 the verbosity of the format\footnote{Performance of parsing JSON-LD: \url{http://manu.sporny.org/2016/json-ld-context-caching/}}.
 
 
 \subsection{Turtle syntax}
 \label{sec:turtle_syntax}
 Turtle (Terse RDF Triple Language)~\cite{turtle_syntax}
-syntax is the focus of representing RDF data in this work.
+is the most important serialization of RDF data in this work.
  A simple triple statement is a sequence of
 \textit{subject, predicate, object} terms, ending in a '.'.
 To reduce the repetition of writing the same subject and predicate combination with

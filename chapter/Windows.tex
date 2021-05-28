@@ -105,7 +105,7 @@ In addition to the window size as a parameter, one could also specify the
 a sliding window is created. 
 Therefore, if the \emph{window slide} is smaller 
 than the \emph{size} of the window, an overlap will be formed and multiple 
-windows could exists at that point of time. The records in the overlapped region 
+windows could exists at that point in time. The records in the overlapped region 
 will have to be copied across multiple overlapping windows. 
 Taking the \emph{slide} and the \emph{size} into account, we could conclude that 
 a tumbling window is a special case of a sliding window where the \emph{slide} is 
@@ -189,7 +189,7 @@ For example, aggregation operations are expensive when there is
 an overlap of windows (sliding windows), since aggregations over the overlapping 
 records will need to be recomputed for each overlapping windows. Given a sliding 
 window of 1 minute \emph{size} and 1 seconds \emph{slide}, 60 windows will exist 
-at any point of time and the 59 seconds worth of records aggregation will need 
+at any point in time and the 59 seconds worth of records aggregation will need 
 to be recomputed whenever a window receives a \emph{trigger} event for processing. 
 This results in redundant computation. 
 
@@ -214,7 +214,7 @@ Join operations are different from aggregations. We do not need
 to wait for the window to be full, before processing the records inside the 
 window. A \emph{trigger} event could be fired at the very moment a new 
 record arrives in the window. Furthermore, multiple statistical approaches 
-could be applied for windows optimization without disturbing the results 
+could be applied for window optimization without disturbing the results 
 of the join operations significantly. Several studies have been conducted to 
 improve the join algorithms in windows~\cite{vctw_join, join_tracking, grubjoin, approximate_window_sem, approx_window}. 
 The approaches in ~\cite{grubjoin, approximate_window_sem, approx_window} are based 
@@ -225,7 +225,7 @@ by a metric specific to the implementations. Approaches in ~\cite{grubjoin, appr
 assume that the stream is not out-of-order with centralized execution for 
 windows processing. Additionally, histograms of the attributes of the records are used, 
 either per window or per stream, 
-to calculate the threshold for dropping records, inflicting an overhead to memory. 
+to calculate the threshold for dropping records, inflicting an overhead on memory. 
 This leads to higher latency and computation overhead 
 when joining records from multiple streams. Furthermore, 
 these approaches only deal with \emph{join} operators and could not be applied to other 
@@ -234,21 +234,21 @@ types of stream processing operators such as \emph{aggregations} and \emph{reduc
 VC-TWJoin~\cite{vctw_join} approaches the problem differently by only considering 
 the behaviour of the data stream. The approach adjusts the size of the window 
 after every \emph{eviction} trigger based on the stream rate. This simple approach 
-of dynamically adjusting window sizes, enables load-shedding without the overhead of 
+of dynamically adjusting window sizes, enables load shedding without the overhead of 
 keeping statistical data. Since the metric used by the approach does not use 
-record attributes, it has no impact on the calculation 
+record attributes, it has no impact on calculations 
 done by other operators such as \emph{aggregation} and \emph{reduction}.
 However, the approach is unstable when the data stream has periodic bursts of data.
 It either increases or decreases the size of the window when the metric triggers 
-the threshold of the algorithm. At worst case, it can lead to cyclic increase and 
-decrease of window sizes, if the metric borders around the threshold with every 
+the threshold of the algorithm. In the worst-case scenario it can lead to cyclic increase and 
+decrease of window sizes if the metric borders around the threshold with every 
 update of the metric.
 
 
 \section{Summary}%
 \label{sec:Summary}
 
-The aforementioned window types are fixed and are not robust to changes of the data stream characteristics. Once initialized, the windows sizes 
+The aforementioned window types are fixed and not resilient to changing data stream characteristics over time. Once initialized, the window sizes 
 are fixed throughout the runtime of the application. This results in inefficient 
 window sizes if the data stream rate diverges greatly over time; a window size might become too small to process the incoming 
 data. Thus, a dynamic window which adjusts its size throughout the runtime of the application 

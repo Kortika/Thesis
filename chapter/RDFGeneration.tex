@@ -1,7 +1,7 @@
 \chapter{RDF data generation from non-RDF data}
 \label{chap:rdf_data_generation}
 
-How do we generate RDF data from non-RDF data? A variety of specifications and languages exists
+How do we generate RDF data from non-RDF data? A variety of specifications and languages exist
 which define the generation of RDF data from non-RDF data. These specifications and languages can be grouped 
 into two major groups; query languages and mapping languages. Several state-of-the art implementations, 
 utilizing these two groups of languages, exist to generate RDF data from non-RDF data.
@@ -25,7 +25,7 @@ from relational databases using concise statements. Due to its widespread
 use in the industry for querying databases, it is important that a similar 
 query language is used for RDF datasets to ease the transition for the users. 
 
-SPARQL~\cite{sparql} achieves this goal by having SQL-like syntax to allow 
+SPARQL~\cite{sparql} achieves this goal by having an SQL-like syntax to allow 
 a seamless transition to RDF for existing data engineers. 
 In terms of relational databases, RDF 
 datasets can be viewed as a table consisting of three columns --- the \textit{subject} column, 
@@ -42,9 +42,9 @@ matching the given \emph{triple pattern}, from the RDF dataset.
 The result of a SPARQL query is returned as an RDF sub-graph of the queried RDF dataset. 
 
 How does this query language relate to transforming an 
-unbounded dataset to RDF format in a streaming environment? There exists state-of-the-art 
+unbounded dataset to RDF format in a streaming environment? There exist state-of-the-art 
 engines utilizing SPARQL syntax for generating RDF data from heterogeneous streaming data sources, which will be 
-elaborated in Section~\ref{sec:query_based_implementations}. 
+elaborated on in Section~\ref{sec:query_based_implementations}. 
 
 \begin{lstlisting}[language=SPARQL,
     caption={Example of a SPARQL query of a medication on the given input.}, 
@@ -75,7 +75,7 @@ elaborated in Section~\ref{sec:query_based_implementations}.
 
 
 \section{RDF Mapping Language}
-RDF Mapping Language~\cite{rml} is a superset of the W3C's R2RML~\cite{r2rml} which maps relational databases to
+RDF Mapping Language~\cite{rml} is a superset of W3C's R2RML~\cite{r2rml} which maps relational databases to
 RDF datasets. RML improves upon R2RML by expressing mapping rules from heterogeneous
 data sources and transforming them to RDF datasets whereas R2RML could only consume
 data from relational databases. An RML mapping document is composed of one or more \emph{triples maps}, 
@@ -86,7 +86,7 @@ specifications in R2RML~\cite{rml_tech}.
 
 Logical sources could be defined by specifying the \emph{source, logical iterator} 
 and zero or one \emph{reference formulation} property.
-Although the reference implementation RMLMapper could only process logical sources 
+Although the reference implementation RMLMapper can only process logical sources 
 consisting of bounded data, the expressiveness and the flexibility of RML allows one 
 to extend it to support unbounded data sources. For example, RMLStreamer~\cite{rml_streamer} implementation in 
 Section~\ref{sec:rml_streamer} extended the base RML vocabulary to support logical sources with unbounded data. 
@@ -140,13 +140,13 @@ data processing.
 Intuitively, querying the data source with a 
 query language is the common method to interact 
 with a database. Allowing users to query the sources without explicitly 
-defining the mapping semantics, hides the mapping or data transformation details from the user. 
+defining the mapping semantics hides the mapping or data transformation details from the user. 
 Moreover, it eases the transition to developing applications using RDF data since the syntax is 
 similar to the existing query languages leading to lower learning curve for the developers.
 To the best of our knowledge, there exist two state-of-the-art 
 template based implementations, using SPARQL query-like languages, for transforming 
 unbounded non-RDF data to RDF data: SPARQL-Generate and RDF-Gen.
-These implementations and approaches will be elaborated more in the following sections.
+These implementations and approaches will be elaborated more on in the following sections.
 
 
 \subsection{SPARQL-Generate}
@@ -164,7 +164,7 @@ the reference implementation supports the consumption of data sources which are 
 streaming environment or bounded datasets. 
 For example, WebSocket and MQTT are currently supported in the latest version of SPARQL-Generate. 
 
-Although there is a support for data stream processing, the paper did not go into details 
+Although there is support for data stream processing, the paper did not go into details 
 about the application of multi-stream operators like joins when involving multiple streaming 
 data sources. M. Lefran\c{c}ois~\cite{sparql_generate} clarified that when joining
 records from two different streams, SPARQL-Generate will fully consume the records 
@@ -265,8 +265,7 @@ it provides its own architecture to meet the demands
 of real-time processing (Figure~\ref{fig:rdf-gen-arch}). 
 Through combination of SPARQL and Turtle syntax, RDF-Gen 
 keeps the basic graph pattern section of SPARQL query with 
-the specifications of term nodes from Turtle to reduce
-the size of the transformation specification.  
+the specifications of term nodes from Turtle.
 
 RDF-Gen consists of three main components: 
 \begin{enumerate*}[label=(\alph*)]

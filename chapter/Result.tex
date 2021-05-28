@@ -5,8 +5,8 @@ In this chapter, the results gathered from our evaluation of the dynamic window 
 the tumbling window will be discussed by the order of the workloads. The workload 
 evaluations are run multiple times for consistency of results. We will first 
 discuss the workload for latency measurement, followed by periodic workload and 
-finally the completeness measurement. For each workload results, we elaborate 
-and discuss in details the shortcomings of the evaluation methods and the 
+finally the completeness measurement. For each workload we elaborate on the results
+and discuss in detail the shortcomings of the evaluation methods and the 
 possible outlier situations for which the evaluation result would not agree with.
 
 
@@ -14,8 +14,10 @@ possible outlier situations for which the evaluation result would not agree with
 \section{Workload for latency measurement}%
 \label{sec:Results Workload for latency measurement}
 
-This workload is run with a constant low stream rate to ensure that 
-the RMLStreamer is not overloaded for more accurate latency measurement. We also measured 
+This workload is run with a constant low stream rate
+of 400 records per second
+to ensure that 
+the RMLStreamer is not overloaded for a more accurate latency measurement. We also measured 
 CPU, throughput, and relative memory usage to determine the improvement brought by Dynamic window
 in an ideal streaming environment.
 
@@ -36,18 +38,16 @@ always evicts the content of the window after 2 seconds, even if it means that t
 eligible records to be joined with the records in the soon to be evicted window, leading to lower throughput.  
 
 Relative memory usage of Dynamic window compared to Tumbling window is similar over the lifetime of the 
-evaluation run (Figure~\ref{fig:constant_mem_diff}). Dynamic window causes infrequent \emph{spikes} in memory of more 
-than 100 MB memory usage than Tumbling window at certain point in the lifetime of evaluation. This can be attributed 
+evaluation run (Figure~\ref{fig:constant_mem_diff}). Dynamic window causes infrequent \emph{spikes} in memory usage of over
+ 100 MB more than Tumbling window at a certain point in the lifetime of evaluation. This can be attributed 
 to the subwindows of Dynamic window growing larger than Tumbling window due to not enough records of the same 
 \emph{key} attributes arriving inside the subwindows. However, Dynamic window stabilizes to a more optimal 
 window size, where it uses less memory than Tumbling windows, over longer stretches of the evaluation run. At worst case, 
 it uses as much memory as Tumbling window does over the course of the evaluation. 
 
-CPU usage is higher by around 7\% for Dynamic window since it requires extra processing of the calculation of metrics 
+CPU usage is higher by around 7\% for Dynamic window since it requires extra processing of the calculation of metrics and 
+it increases the throughput causing RMLStreamer to process more joined records.
 (Figure~\ref{fig:constant_cpu}). 
-However, this 
-increase in CPU usage can also be attributed to the increase in throughput, where the RMLStreamer has more joined results 
-to process and map to RDF data.  
 
 \begin{figure*}
     \begin{subfigure}[b]{0.5\columnwidth}
@@ -130,12 +130,13 @@ in the usage to account for the processing of periodic burst of data
 (Figure~\ref{fig:periodic_cpu}). Dynamic window uses more CPU resources for 
 calculation of metrics and dynamic adjustment of subwindow sizes. 
 
-Surprisingly, compared with the memory usage from the workload for latency measurement, Dynamic window uses 
-lesser memory of around 10 MB on average than Tumbling window, across the lifetime of the evaluation (Figure~\ref{fig:periodic_mem_diff}). 
-The initial usage of the memory was higher by about 100 MB by Dynamic window due to the initial long window growth 
+Surprisingly, compared with the memory usage under the workload for latency measurement, Dynamic window uses 
+about 10 MB less memory on average than Tumbling window during the lifetime of the evaluation (Figure~\ref{fig:periodic_mem_diff}). 
+The initial memory usage for Dynamic window about 100 MB higer than for Tumbling window due to the initial long window growth 
 caused by the low stream rate. However, once 
 the dynamic adjustment of subwindow kicks in, it reduces the memory usage even when there is a burst of data. The subwindow size
-is adjusted to be small to frequently evict the records inside the window. 
+is adjusted to be small so that records are frequently evicted. 
+
 
 \begin{figure*}
     \begin{subfigure}[b]{\columnwidth}
@@ -199,7 +200,7 @@ periodic workload. }%
 \label{sec:Workload for completeness measure}
 
 From the results in Table~\ref{tab:dynamic_completeness}, and 
-Table~\ref{tab:tumbling_completeness}, we could conclude that Dynamic window 
+Table~\ref{tab:tumbling_completeness}, we conclude that Dynamic window 
 outperforms Tumbling window in terms of generating a more \emph{complete} output. 
 Dynamic window has an IOU score of \textbf{1} for constant low stream rate
 due to the subwindow sizes growing large 
@@ -208,11 +209,11 @@ of output. In contrast, Tumbling window scores only \textbf{0.749}, leading to
 a conclusion that a window size of 2s is not enough to process the low stream rate 
 of the evaluation data. 
 
-Similary for periodic burst input, Dynamic window outperforms Tumbling window with a
+Similarly for periodic burst input, Dynamic window outperforms Tumbling window with a
 score of \textbf{0.982} whereas Tumbling window only scores \textbf{0.780}. The high IOU 
 score of Dynamic window could be explained by its ability to adapt the window sizes according 
-to the changing stream rate to hold enough records for maximal joined output generation; moreso 
-than Tumbling window. 
+to the changing stream rate to hold enough records for maximal joined output generation; more
+so than Tumbling window. 
 
 
 \begin{table}[htbp]
@@ -258,7 +259,7 @@ This validates three of our hypotheses that Dynamic window would outperform
 windows of fixed sizes in those three areas. 
 
 Although memory usage dropped in the workload with periodic burst rate, we 
-could not confidently conclude that the Dynamic window effectively used lesser memory
+could not confidently conclude that the Dynamic window effectively used less memory
 on average than Tumbling window. The measurement was based on the heap memory of the 
 whole evaluation job, not just the window operator. Therefore, there is a need for a 
 more precise measurement of memory usage. For example, by counting the number of 
@@ -267,7 +268,7 @@ limited since Flink does not expose API to count the number elements residing
 in its default implementation of Tumbling window.  
 
 The results for throughput also deviate from those reported by Van Dongen and Van den Poel(2020)~\cite{evalution_of_spe}. 
-This could be explained by the fact that we ran the evaluation using the whole pipeline of RMLStreamer, including 
+This is due to the fact that we ran the evaluation using the whole pipeline of RMLStreamer, including 
 the stage where the joined results are mapped to RDF data. This incurs some back pressure from the mapping stage, 
 causing the throughput of the join stage to stay constant and flat.    
 
