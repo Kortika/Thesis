@@ -15,8 +15,8 @@ possible outlier situations for which the evaluation result would not agree with
 \label{sec:Results Workload for latency measurement}
 
 This workload is run with a constant low stream rate
-\gh{Perhaps repeat *how* low (400 msg/s?) because that's specified in the previous chapter...}
- to ensure that 
+of 400 records per second
+to ensure that 
 the RMLStreamer is not overloaded for a more accurate latency measurement. We also measured 
 CPU, throughput, and relative memory usage to determine the improvement brought by Dynamic window
 in an ideal streaming environment.
@@ -45,10 +45,10 @@ to the subwindows of Dynamic window growing larger than Tumbling window due to n
 window size, where it uses less memory than Tumbling windows, over longer stretches of the evaluation run. At worst case, 
 it uses as much memory as Tumbling window does over the course of the evaluation. 
 
-CPU usage is higher by around 7\% for Dynamic window since it requires extra processing of the calculation of metrics. However, this 
-increase in CPU usage can also be attributed to the increase in throughput, where the RMLStreamer has more joined results 
-to process and map to RDF data.
-\gh{It's most probably both. I would dare to put it like this: "CPU usage for Dynamic window is approximately 7\% higher than for Tumbling window since it requires extra calculations on the metrics and it increases the throughput causing the RMLStreamer to process more joined records."}  
+CPU usage is higher by around 7\% for Dynamic window since it requires extra processing 
+for the calculation on the metrics.
+Furthermore, it increases the throughput causing the RMLStreamer to process 
+more joined records. 
 
 \begin{figure*}
     \begin{subfigure}[b]{0.5\textwidth}
@@ -86,7 +86,6 @@ to process and map to RDF data.
     \label{fig:constant_measurement}
 \end{figure*}
 
-\gh{Figure 8.1: can you add units to the time axes? Then people looking at the charts have an idea how long the evaluation ran.  Figure (e): somewhere make clear in the legenda or at least the caption that the "difference" means "Dynamic - Tumbling". Now it is stated for the red bars only, but it also counts for everything else on that chart.}
 
 \newpage
 \section{Workload for periodic burst}%
@@ -129,7 +128,6 @@ caused by the low stream rate. However, once
 the dynamic adjustment of subwindow kicks in, it reduces the memory usage even when there is a burst of data. The subwindow size
 is adjusted to be small so that records are frequently evicted. 
 
-\gh{Same comments for figures 8.2 and 8.3 as for 8.1}
 
 \begin{figure*}
     \begin{subfigure}[b]{0.5\textwidth}
@@ -197,13 +195,12 @@ of output. In contrast, Tumbling window scores only \textbf{0.749}, leading to
 a conclusion that a window size of 2s is not enough to process the low stream rate 
 of the evaluation data. 
 
-Similary for periodic burst input, Dynamic window outperforms Tumbling window with a
+Similarly for periodic burst input, Dynamic window outperforms Tumbling window with a
 score of \textbf{0.982} whereas Tumbling window only scores \textbf{0.780}. The high IOU 
 score of Dynamic window could be explained by its ability to adapt the window sizes according 
-to the changing stream rate to hold enough records for maximal joined output generation; moreso 
-than Tumbling window. 
+to the changing stream rate to hold enough records for maximal joined output generation; more
+so than Tumbling window. 
 
-\gh{Table 8.1 and 8.2: maybe it would make sense to replace "Common triples" with "Missing triples"? It highlights the difference...}
 
 \begin{table}[htbp]
     \centering
