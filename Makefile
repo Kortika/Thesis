@@ -1,4 +1,5 @@
 filename=thesis
+abstract=abstract
 outdir=build
 referenceFile=reference.bib
 all:
