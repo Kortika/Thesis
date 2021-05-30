@@ -1,14 +1,28 @@
 filename=thesis
-abstract=abstract
 outdir=build
 referenceFile=reference.bib
-all:
-	mkdir build &>/dev/null || true				# create main build folder for .aux files etc
-	mkdir build/chapter &>/dev/null || true 	# create chapter subfolder for .aux files etc
+abstract=abstract
+abstract-build=build/abstract
+
+
+
+
+all: abstract
+	mkdir -p ${outdir}/chapter &>/dev/null || true 	# create chapter subfolder for .aux files etc
 	pdflatex -output-directory ${outdir} ${filename}.tex
 	biber --output-directory ${outdir} ${filename}||true
 	pdflatex -output-directory ${outdir} ${filename}.tex
 	pdflatex -output-directory ${outdir} ${filename}.tex
+
+abstract: 
+	mkdir -p ${abstract-build}/abstract-chapters &>/dev/null || true 	# create chapter subfolder for .aux files etc
+	pdflatex -output-directory ${abstract-build} ${abstract}.tex
+	biber --output-directory ${abstract-build} ${abstract}||true
+	pdflatex -output-directory ${abstract-build} ${abstract}.tex
+	pdflatex -output-directory ${abstract-build} ${abstract}.tex
+	cp ${abstract-build}/${abstract}.pdf . 
+
+
 	
 clean:
 	rm -r build/

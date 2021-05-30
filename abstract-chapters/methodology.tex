@@ -1,0 +1,99 @@
+\section{DYNAMIC WINDOW}%
+\label{sec:Dynamic Window}
+A dynamic window is a type of partitioned window~\cite{generic_window_sem}.
+We define it as a group of subwindows, which update their sizes dynamically according to the characteristics 
+of the data stream. It groups the incoming streams into different partitions first, according to 
+the \emph{key} attribute value of the records. Subsequently, these grouped records are assigned 
+to individual subwindows. These subwindows adjust their own size independently from each other 
+at each update cycle. Furthermore, the subwindows will be independent from each other such 
+that the stream rate is local to the attribute value for which each subwindow is responsible. 
+
+\subsection{Dynamic window join}
+\label{sub:Dynamic window join}
+
+The join algorithm used, is a variant of Symmetric Hash Join~\cite{symmetric_hash_join}. 
+The subwindow themselves work like a hash table, containing records with a 
+specific \emph{key} --- since they are \emph{partitioned}. 
+The records are joined by probing the relevant stream and generating the 
+joined result. 
+
+
+\subsection{Dynamic window algorithm}%
+\label{sub:Dynamic window algorithm}
+For each subwindow, the following configuration parameters 
+are provided: 
+
+\begin{itemize}
+    \item $\Delta n$: the \textbf{initial} interval of time before the next eviction trigger. 
+    \item $\epsilon_u$: the upper limit for threshold $\epsilon$.
+    \item $\epsilon_l$: the lower limit for threshold $\epsilon$. 
+    \item $U$: the upper limit for the window size. 
+    \item $L$: the lower limit for the window size. 
+\end{itemize}
+
+Since we are implementing the join operator, the trigger event is fired when current record 
+$r_c$ arrives, and the symmetrich hash join is executed. We denote the current window as 
+$W$ with the size as $|W|$. The streams are denoted as $S_P$ and $S_C$ with 
+the corresponding states $List_P$ and $List_C$, for the parent and 
+the child stream respectively. The states contain the records from their 
+respective streams inside the subwindows.
+
+The eviction trigger is fired every time when the current watermark 
+$w \ge |W| + \Delta n$. At each eviction trigger we calculate
+the cost for each \emph{list states} $List_P$ and $List_C$, containing the records from $S_P$ and $S_C$
+respectively. The cost for $cost(List_P) = |S_P|/Size(List_P)$, idem for $cost(List_C)$. 
+The total cost is $m = cost(List_P) + cost(List_C)$ and it is checked against thresholds $\epsilon_l$ and $\epsilon_u$. If  $\epsilon_l \le m \le \epsilon_u$, 
+$\Delta n$ stays the same, otherwise it will be adjusted accordingly. This provides some stability 
+in window sizing by keeping the same size, if the cost lies within the thresholds. 
+The higher $m$, the higher the stream rate. Thus, the subwindow needs to be frequently 
+evicted and lower $\Delta n$ to reduce memory usage. There is also a limit on the 
+minimum and maximum window sizes, $L$ and $U$ respectively, to ensure that the window 
+size $\Delta n$ does not keep growing or shrinking in size infinitely, in worst case scenario. 
+The sizes of the list states 
+are also updated according to $Size(List_P) = Size(List_P) * cost(List_P) + 0.5$.
+Similarly for $Size(List_C)$. 
+Hence the dynamic window maintains an 
+ideal size by adjusting $\Delta n, Size(List_P)$ and $Size(List_C)$ according to 
+the stream rate. The pseudo code for the eviction algorithm is presented in Algorithm~\ref{alg:dynamic_eviction}.
+
+This algorithm for the dynamic window is an adaptation of the VC-TWindow~\cite{vctw_join} with 
+improvements for stability in window sizing, clarity in the metrics used for updates, and localization 
+of window size update to each subwindow.  
+
+\begin{algorithm}[htbp]
+    \DontPrintSemicolon
+    \KwData{$\Delta n, \epsilon_u, \epsilon_l, U, L, List_P, List_C, S_P, S_C$}
+
+    $cost(List_P) = |S_P| / Size(List_P)$      
+    
+    $cost(List_C) = |S_C| / Size(List_C)$     
+
+
+    total cost $ m = cost(List_P) + cost(List_C)$  
+  
+    \If{$m > \epsilon_u$} 
+    {
+    
+        $\Delta n = \Delta n / 2 $ 
+        
+        $Size(List_P) = Size(List_P) * (cost(List_P) + 0.5)$  
+
+        $Size(List_C) = Size(List_C) * (cost(List_C) + 0.5)$  
+    }
+    \ElseIf{$m < \epsilon_l$}
+    {
+   
+        $\Delta n = \Delta n * 2$ 
+
+        $Size(List_P) = Size(List_P) * (cost(List_P) + 0.5)$  
+
+        $Size(List_C) = Size(List_C) * (cost(List_C) + 0.5)$  
+    }
+
+    clean both $List_C \text{ and } List_P$
+    \caption{Dynamic window $onEviction$ routine}
+    \label{alg:dynamic_eviction}
+\end{algorithm}
+
+
+

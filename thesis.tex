@@ -10,6 +10,7 @@
 \usepackage{amssymb}
 \usepackage{ulem}
 \usepackage{subcaption} 
+\usepackage{pdfpages}
 \usepackage{svg}
 \usepackage{xcolor}
 % color coding comment with blue 
@@ -157,6 +158,10 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 % abstract
 \phantomsection
 \addcontentsline{toc}{chapter}{Abstract}
+\setboolean{@twoside}{false}
+\includepdf[pages=-,offset=75 -75]{abstract.pdf}
+
+\setboolean{@twoside}{true}
 \let\cleardoublepage\clearpage
 \pagestyle{fancy}
 

@@ -1,0 +1,18 @@
+\section{IMPLEMENTATION}%
+\label{sec:Implementation}
+
+The dynamic window is implemented for RMLStreamer 
+to extend its capabilities to do simple stream processing by 
+joining multiple streams.  Furthermore, we extended RML
+with new ontologies to allow the configuration of the window. 
+
+\subsection{RML ontology extension}
+We extended RML to support configuration of window when
+joining the \emph{reference object map} with its \emph{parent triples map}. 
+Currently, it only supports the rudimentary 
+configuration of the type of join to be applied.
+
+\subsection{Dynamic window}
+The dynamic window is implemented using Apache Flink's 
+\emph{KeyedCoProcessFunction} API with the state management 
+done using Flink's \emph{ListStates}.
