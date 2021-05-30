@@ -264,7 +264,7 @@ on average than Tumbling window. The measurement was based on the heap memory of
 whole evaluation job, not just the window operator. Therefore, there is a need for a 
 more precise measurement of memory usage. For example, by counting the number of 
 records that effectively reside in the windows at any moment. This approach is currently 
-limited since Flink does not expose API to count the number elements residing 
+limited since Flink does not expose API to count the number of elements residing 
 in its default implementation of Tumbling window.  
 
 The results for throughput also deviate from those reported by Van Dongen and Van den Poel(2020)~\cite{evalution_of_spe}. 

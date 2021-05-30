@@ -31,7 +31,6 @@
 \setlength{\headheight}{0.5cm}
 \setlength{\headsep}{1cm}
 \setlength{\oddsidemargin}{3.5cm}
-\setlength{\evensidemargin}{3.5cm}
 \setlength{\textwidth}{16cm}
 \setlength{\textheight}{23.3cm}
 \setlength{\footskip}{1.5cm}
@@ -158,8 +157,7 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 % abstract
 \phantomsection
 \addcontentsline{toc}{chapter}{Abstract}
-\include{abstract}
-
+\let\cleardoublepage\clearpage
 \pagestyle{fancy}
 
 
