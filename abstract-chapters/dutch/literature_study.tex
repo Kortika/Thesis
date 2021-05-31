@@ -1,65 +1,65 @@
-\section{RELATED WORKS} 
+\section{VERWANTE WERKEN} 
 \label{sec:RELATED WORKS} 
-There exists state-of-the-arts approaches to map non-RDF data 
-to RDF data in a streaming environment. These approaches 
-implement diferent strategies when it comes to applying 
-multi-stream processing. Furthermore, we will also outline
-the existing works on windowing to handle changing characteristics 
-of the input data stream. 
+Er bestaan state-of-the-arts benaderingen om niet-RDF data te mappen 
+naar RDF data in een streaming omgeving. Deze benaderingen 
+implementeren verschillende strategieën als het gaat om het toepassen van 
+multi-stream verwerking. Verder schetsen we ook
+de bestaande werken over windowing om veranderende karakteristieken 
+van de input datastroom in de tijd. 
 
-\subsection{Mapping implementations}
+\subsection{Mapping implementaties}
 \subsubsection{SPARQL-Generate} 
 SPARQL-Generate~\cite{sparql_generate} 
-is based on an extension of SPARQL 1.1 query language, to leverage 
-its expressiveness and extensibility. 
-It can be implemented on top 
-of any existing SPARQL query engine. 
-M. Lefran\c{c}ois~\cite{sparql_generate} clarified that when joining
-records from two different streams, SPARQL-Generate will fully consume the records 
-from the "parent" stream and index it internally in memory first, before 
-iteratively consuming the "child" stream for joining. 
+is gebaseerd op een uitbreiding van de SPARQL 1.1 query taal, om gebruik te maken 
+expressiviteit en uitbreidbaarheid te benutten. 
+Het kan worden geïmplementeerd bovenop 
+van elke bestaande SPARQL query-engine. 
+M. Lefran\c{c}ois~\cite{sparql_generate} verduidelijkte dat bij het samenvoegen van
+records van twee verschillende streams samenvoegt, SPARQL-Generate de records 
+van de "ouder" stroom en deze eerst intern in het geheugen indexeren, voordat 
+iteratief de "kind" stroom te consumeren voor het samenvoegen. 
 
 \subsubsection{TripleWave} 
-TriplWave~\cite{triple_wave}  is based on an extension of 
-R2RML to consume heterogeneous data for publication of RDF data. 
-Therefore, it only focuses on the mapping of non-RDF data stream to RDF data stream. 
-Although it supports simple \emph{join} operator, it does not have a 
-dynamic window to handle changing characterisitcs of a data stream.
+TripleWave~\cite{triple_wave} is gebaseerd op een uitbreiding van 
+R2RML om heterogene gegevens te consumeren en als RDF-gegevens op het web te publiceren. 
+Daarom richt het zich alleen op de mapping van een niet-RDF datastroom naar een RDF datastroom. 
+Hoewel het een eenvoudige \emph{join} operator ondersteunt, heeft het geen 
+dynamisch venster om veranderende karakteristieken van een datastroom te behandelen.
 
 \subsubsection{RDFGen}
-RDF-Gen~\cite{rdf_gen} is based on its own custom syntax 
-similar to a combination SPARQL and Turtle syntax. It processes the input 
-individually therefore it employs windowing to perform multi stream operator. 
-However, since the implementation is closed source, we could not confirm if 
-the window is fixed size or dynamic. 
+RDF-Gen~\cite{rdf_gen} is gebaseerd op zijn eigen aangepaste syntaxis 
+die een combinatie is van SPARQL en Turtle syntax. Het verwerkt de invoerstromen 
+individueel en maakt daarom gebruik van windowing om multistream operatoren uit te voeren. 
+Echter, omdat de implementatie gesloten broncode is, konden we niet bevestigen of 
+het venster een vaste grootte heeft of dynamisch is. 
 
 \subsubsection{RMLStreamer}
 RMLStreamer~\cite{rml_streamer}
-was developed to parallelize the ingestion and mapping process of RDF data generation pipeline. 
-It is based on the work of RMLMapper~\cite{rml}, an RDF mapping engine consuming bounded data and mapping them to RDF data with the use of RML. Hence, RMLStreamer can also 
-process heterogeneous data and generate RDF data. It does not support 
-multi stream operator at this moment, however, the ease of scalability by RMLStreamer
-is desirable as a stream mapping engine. 
+werd ontwikkeld om het invoer- en mapping proces van RDF data generatie pijplijn te parallelliseren. 
+Het is gebaseerd op het werk van RMLMapper~\cite{rml}, een RDF mapping engine die begrensde data consumeert en mapt naar RDF data met gebruik van RML. Daarom kan RMLStreamer ook 
+heterogene gegevens verwerken en RDF-gegevens genereren. Het ondersteunt echter geen 
+multi stream operators op dit moment, maar het gemak van schaalbaarheid dat RMLStreamer biedt
+is wenselijk als een stream mapping engine. 
 
 
 \subsection{Windows}
-Several studies have been conducted to 
-improve the join algorithms in windows~\cite{vctw_join, join_tracking, grubjoin, approximate_window_sem, approx_window}. 
-The approaches in ~\cite{grubjoin, approximate_window_sem, approx_window} are based 
-on dropping some of the records to be joined through \emph{load shedding} if the 
-records failed to meet a threshold. These threshold calculation requries 
-memory overhead for storing statistical model per window or 
-assumption of the stream being in-order for them to work
+Er zijn verschillende studies uitgevoerd om 
+join-algoritmen in windows ~\cite{vctw_join, join_tracking, grubjoin, approximate_window_sem, approx_window} te verbeteren. 
+De benaderingen in ~\cite{grubjoin, approximate_window_sem, approx_window} zijn gebaseerd op 
+op het laten vallen van sommige van de te verbinden records door middel van \emph{load shedding} indien de 
+records niet aan een drempel voldoen. Deze drempelberekeningen vergen enige 
+geheugenoverhead voor het opslaan van een statistisch model per venster of 
+veronderstellen dat de stroom in orde is om te kunnen werken
 ~\cite{grubjoin, approximate_window_sem, approx_window}.
 
-On the other hand, VC-TWJoin~\cite{vctw_join} considers only the velocity of the 
-stream to adjust the window sizes. 
-However, the approach is unstable when the data stream has periodic bursts of data.
-It either increases or decreases the size of the window when themetric triggers 
-the threshold of the algorithm. In the worst-case scenario it 
-can lead to cyclic increase and 
-decrease of window sizes if the metric borders around the threshold with every 
-update of the metric.
+Anderzijds houdt VC-TWJoin~\cite{vctw_join} alleen rekening met de snelheid van de 
+stroom om de venstergrootte aan te passen. 
+Deze aanpak is echter onstabiel wanneer de gegevensstroom periodieke gegevensuitbarstingen vertoont.
+De grootte van het venster wordt vergroot of verkleind wanneer de metriek de drempels 
+de drempelwaarden van het algoritme. In het slechtste geval kan dit 
+kan het leiden tot cyclische toename en 
+verkleinen van de venstergrootte als de metriek bij elke 
+update van de metriek.
 
 
 

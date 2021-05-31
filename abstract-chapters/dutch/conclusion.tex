@@ -1,32 +1,32 @@
-\section{Conclusion and Future Works}%
+\section{Conclusie en toekomstig werk}%
 \label{chap:Conclusion and Future Works}
 
-In this paper, we have presented an approach for Dynamic window 
-which adapts its window size according to the stream rate of the 
-input data sources. We introduced a simple heuristic to adapt 
-window sizes dynamically without huge memory or computation overhead. 
+In deze paper hebben we een aanpak gepresenteerd voor Dynamisch venster 
+die de venstergrootte aanpast aan de stroomsnelheid van de 
+invoergegevensbronnen. We introduceerden een eenvoudige heuristiek om 
+window-grootte dynamisch aan te passen zonder enorme geheugen- of rekenoverhead. 
 
-We implemented our Dynamic window on top of the existing RMLStreamer, 
-to evaluate its performance under a realistic processing environment. 
-We adapted the benchmark framework as stated in~\cite{evalution_of_spe} to 
-accurately evaluate the performance of our implementation against the 
-standard fixed size Tumbling window. 
+We hebben ons dynamische venster geïmplementeerd bovenop de bestaande RMLStreamer, 
+om de prestaties ervan in een realistische verwerkingsomgeving te evalueren. 
+We hebben het benchmarkkader zoals beschreven in~\cite{evalution_of_spe} aangepast om 
+nauwkeurig de prestaties van onze implementatie te evalueren ten opzichte van het 
+standaard Tumbling-venster van vaste grootte. 
 
-The results show that our implementation 
-of Dynamic window performs better than Tumbling window in terms of 
-latency, throughput, and completeness with only a slight 
-increase in CPU usage. Even though we could not confidently conclude that
-memory usage is lower in Dynamic window, our preliminary results indicate 
-that it performs the same as Tumbling window in the worst-case scenario.
+De resultaten tonen aan dat onze implementatie 
+van Dynamisch venster beter presteert dan Tuimelend venster in termen van 
+latentie, doorvoer, en volledigheid met slechts een kleine 
+toename in CPU gebruik. Hoewel we niet met zekerheid kunnen concluderen dat
+geheugengebruik lager is in Dynamisch venster, geven onze voorlopige resultaten aan 
+dat het hetzelfde presteert als Tumbling window in het slechtste scenario.
 
-Therefore, there are still areas of improvement to be made.
-On the evaluation side, we could further increase 
-the precision of our memory measurement by only counting the number of records
-residing in the windows at any moment instead of the whole JVM heap of the RMLStreamer job. 
-Furthermore, the evaluation could be done in the same benchmark pipelines as in~\cite{evalution_of_spe} 
-to further evaluate the Dynamic window performance in a general stream processing case.
-Improvements on our dynamic approach could be achieved by allowing users to 
-define other statistical approaches
-to better calculate the threshold for adapting the window sizes. 
+Er zijn dus nog gebieden die voor verbetering vatbaar zijn.
+Aan de evaluatiekant kunnen we de 
+nauwkeurigheid van onze geheugenmeting kunnen verhogen door alleen het aantal records te tellen
+in de vensters te tellen in plaats van de hele JVM-heap van de RMLStreamer-taak. 
+Bovendien kan de evaluatie worden uitgevoerd in dezelfde benchmarkpijplijnen als in~\cite{evalution_of_spe} 
+om de prestaties van het dynamische venster verder te evalueren in een algemeen stroomverwerkingsgeval.
+Verbeteringen van onze dynamische aanpak kunnen worden bereikt door gebruikers in staat te stellen 
+andere statistische benaderingen te definiëren
+om de drempel voor het aanpassen van de venstergrootte beter te berekenen. 
 
 

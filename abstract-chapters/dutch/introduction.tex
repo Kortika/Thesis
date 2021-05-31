@@ -1,30 +1,31 @@
-\section{INTRODUCTION}
+\section{INTRODUCTIE}
 \label{chap:intro}
 
 Heterogene gegevensformaten, zoals CSV of HTML, zijn niet
-ontworpen om de gegevens die zij representeren semantisch te verrijken en 
-machines hebben moeite om deze gegevens automatisch te interpreteren. 
-Om ervoor te zorgen dat deze heterogene gegevensformaten gemakkelijk 
-door machines verwerkt en ge\"interpreteerd kunnen worden, 
-worden gegevensformaten gebaseerd op W3C-normen, zoals Resource Description 
-Framework (RDF) triples, ontwikkeld. 
-Er bestaan state-of-the-art methodes om heterogene data te consolideren
+ontworpen om de gegevens die ze weergeven semantisch te verrijken en 
+machines hebben moeite om deze gegevens automatisch te interpreteren.
+Diverse gegevensformaten, zoals CSV of HTML, zijn niet ontworpen om de semantiek van hun gegevens te bevatten
+waardoor machines deze gegevens niet automatisch kunnen interpreteren. 
+Om ervoor te zorgen dat deze heterogene gegevensformaten interpreteerbaar en 
+verwerkbaar zijn door machines, zijn gegevensformaten gebaseerd op W3C-normen, zoals Resource Description 
+Framework (RDF) triples~\cite{intro_rdf}, worden ontwikkeld. 
+Er bestaan state-of-the-art benaderingen om heterogene data te consolideren
 en deze te transformeren naar een RDF serialisatie in een streaming omgeving. 
 
 Deze benaderingen ondersteunen traditionele stream operatoren zoals joins en aggregaties. 
-Echter, houden ze geen rekening met
+Echter, ze houden geen rekening met
 de karakteristieken van streaming data bronnen zoals snelheid en 
 tijd-correlaties tussen de verschillende
 invoerstromen, hetzij als gevolg van de 
 vaste grootte van windows of aangepaste oplossingen die zij toepassen. 
 
-Daarom stellen wij een dynamisch window voor als oplossing voor de 
-veranderende kenmerken van streaming data. Wij evalueerden onze 
-methode met de join operator die toegepast werd binnen het venster. 
-Het dynamische window verbetert de prestaties van de 
+Daarom stellen wij een dynamisch venster voor als oplossing voor de variërende kenmerken van streaming data. Wij evalueerden onze 
+benadering met de join operator toegepast binnen het venster. 
+Het dynamische venster verbetert de prestaties van de 
 join operator met hogere doorvoer, lagere latency en 
-vergelijkbaar geheugengebruik in vergelijking met een window met vaste grootte.
+vergelijkbaar geheugengebruik vergeleken met een venster met vaste grootte.
 
-De broncode en de setup code van de evaluatie kunnen gevonden worden op
+De broncode en de code voor de evaluatieopstelling zijn te vinden op
 \url{https://github.com/RMLio/RMLStreamer/tree/feature/window_joins}, en 
-\href{https://github.com/Kortika/Thesis-test-scripts.git}{https://github.com/Kortika/Thesis-test-scripts.git} respectievelijk.
+
+respectievelijk \href{https://github.com/Kortika/Thesis-test-scripts.git}{https://github.com/Kortika/Thesis-test-scripts.git}.

@@ -1,64 +1,64 @@
-\section{DYNAMIC WINDOW}%
+\section{DYNAMISCH VENSTER}%
 \label{sec:Dynamic Window}
-A dynamic window is a type of partitioned window~\cite{generic_window_sem}.
-We define it as a group of subwindows, which update their sizes dynamically according to the characteristics 
-of the data stream. It groups the incoming streams into different partitions first, according to 
-the \emph{key} attribute value of the records. Subsequently, these grouped records are assigned 
-to individual subwindows. These subwindows adjust their own size independently from each other 
-at each update cycle. Furthermore, the subwindows will be independent from each other such 
-that the stream rate is local to the attribute value for which each subwindow is responsible. 
+Een dynamisch venster is een type gepartitioneerd venster~\cite{generic_window_sem}.
+Wij definiëren het als een groep subvensters, die hun grootte dynamisch aanpassen volgens de kenmerken 
+van de gegevensstroom. Het groepeert de binnenkomende stromen eerst in verschillende partities, volgens 
+de \emph{key} attribuutwaarde van de records. Vervolgens worden deze gegroepeerde records toegewezen 
+aan individuele subvensters. Deze subvensters passen hun eigen grootte onafhankelijk van elkaar aan 
+bij elke update-cyclus. Bovendien zullen de subvensters onafhankelijk van elkaar zijn, zodat 
+dat de stroomsnelheid lokaal is voor de attribuutwaarde waarvoor elk subvenster verantwoordelijk is. 
 
-\subsection{Dynamic window join}
+\subsection{Dynamische vensterverbinding}
 \label{sub:Dynamic window join}
 
-The join algorithm used, is a variant of Symmetric Hash Join~\cite{symmetric_hash_join}. 
-The subwindow themselves work like a hash table, containing records with a 
-specific \emph{key} --- since they are \emph{partitioned}. 
-The records are joined by probing the relevant stream and generating the 
-joined result. 
+Het gebruikte join-algoritme is een variant van Symmetric Hash Join~\cite{symmetric_hash_join}. 
+De subvensters zelf werken als een hashtabel, die records bevat met een 
+specifieke \emph{sleutel} --- aangezien ze \emph{gepartitioneerd} zijn. 
+De records worden samengevoegd door de relevante stroom af te tasten en het 
+resultaat te genereren. 
 
 
-\subsection{Dynamic window algorithm}%
+\subsection{Dynamisch venster-algoritme}%
 \label{sub:Dynamic window algorithm}
-For each subwindow, the following configuration parameters 
-are provided: 
+Voor elk subvenster worden de volgende configuratieparameters 
+voorzien: 
 
 \begin{itemize}
-    \item $\Delta n$: the \textbf{initial} interval of time before the next eviction trigger. 
-    \item $\epsilon_u$: the upper limit for threshold $\epsilon$.
-    \item $\epsilon_l$: the lower limit for threshold $\epsilon$. 
-    \item $U$: the upper limit for the window size. 
-    \item $L$: the lower limit for the window size. 
+    \item $\Delta n$: het \textbf{initiële} tijdsinterval voor de volgende ontruimingstrigger. 
+    \item $\epsilon_u$: de bovengrensdrempel voor de totale kosten metriek.
+    \item $\epsilon_l$: de ondergrens voor de totale-kostenmethode. 
+    \item $U$: de bovengrens voor de venstergrootte. 
+    \item $L$: de ondergrens voor de venstergrootte. 
 \end{itemize}
 
-Since we are implementing the join operator, the trigger event is fired when current record 
-$r_c$ arrives, and the symmetrich hash join is executed. We denote the current window as 
-$W$ with the size as $|W|$. The streams are denoted as $S_P$ and $S_C$ with 
-the corresponding states $List_P$ and $List_C$, for the parent and 
-the child stream respectively. The states contain the records from their 
-respective streams inside the subwindows.
+Aangezien wij de join operator implementeren, wordt de trigger-event afgevuurd wanneer de huidige record 
+$r_c$ binnenkomt, en de symmetrische hash join wordt uitgevoerd. We duiden het huidige venster aan als 
+$W$ met de grootte als $|W|$. De stromen worden aangeduid als $S_P$ en $S_C$ met 
+de overeenkomstige toestanden $List_P$ en $List_C$, voor respectievelijk de ouder- en 
+de kindstroom. De toestanden bevatten de records van hun 
+respectievelijke streams in de subvensters.
 
-The eviction trigger is fired every time when the current watermark 
-$w \ge |W| + \Delta n$. At each eviction trigger we calculate
-the cost for each \emph{list states} $List_P$ and $List_C$, containing the records from $S_P$ and $S_C$
-respectively. The cost for $cost(List_P) = |S_P|/Size(List_P)$, idem for $cost(List_C)$. 
-The total cost is $m = cost(List_P) + cost(List_C)$ and it is checked against thresholds $\epsilon_l$ and $\epsilon_u$. If  $\epsilon_l \le m \le \epsilon_u$, 
-$\Delta n$ stays the same, otherwise it will be adjusted accordingly. This provides some stability 
-in window sizing by keeping the same size, if the cost lies within the thresholds. 
-The higher $m$, the higher the stream rate. Thus, the subwindow needs to be frequently 
-evicted and lower $\Delta n$ to reduce memory usage. There is also a limit on the 
-minimum and maximum window sizes, $L$ and $U$ respectively, to ensure that the window 
-size $\Delta n$ does not keep growing or shrinking in size infinitely, in worst case scenario. 
-The sizes of the list states 
-are also updated according to $Size(List_P) = Size(List_P) * cost(List_P) + 0.5$.
-Similarly for $Size(List_C)$. 
-Hence the dynamic window maintains an 
-ideal size by adjusting $\Delta n, Size(List_P)$ and $Size(List_C)$ according to 
-the stream rate. The pseudo code for the eviction algorithm is presented in Algorithm~\ref{alg:dynamic_eviction}.
+De ontruimingstrigger wordt afgevuurd telkens wanneer het huidige watermerk 
+$w \ge |W| + \Delta n$. Bij elke ontruimingstrigger berekenen we
+de kosten voor elke staat van €71$List_P$ en $List_C$, die de records van $S_P$ en $S_C$ bevatten
+respectievelijk. De kosten voor €17 €, idem voor €18 €. 
+De totale kosten bedragen $m = cost(List_P) + cost(List_C)$ en worden getoetst aan de drempels $\epsilon_l$ en $\epsilon_u$. Indien $\epsilon_l \le m \le \epsilon_u$, 
+$\Delta n$ blijft het gelijk, anders wordt het dienovereenkomstig aangepast. Dit zorgt voor enige stabiliteit 
+in de venstergrootte door dezelfde grootte te behouden als de kosten binnen de drempels liggen. 
+Hoe hoger $m$, hoe hoger de stroomsnelheid. Het subvenster moet dus vaak worden 
+worden uitgezet en $\Delta n$ worden verlaagd om het geheugengebruik te verminderen. Er is ook een limiet op de 
+minimum en maximum venstergrootte, respectievelijk $L$ en $U$, om ervoor te zorgen dat de venstergrootte 
+grootte $\Delta n$ niet oneindig in grootte blijft groeien of krimpen in een worst-casescenario. 
+De grootte van de lijsttoestanden 
+worden ook geactualiseerd overeenkomstig $Size(List_P) = Size(List_P) * cost(List_P) + 0.5$.
+Hetzelfde geldt voor €30. 
+Het dynamische venster handhaaft dus een 
+ideale grootte door $\Delta n, Size(List_P)$ en $Size(List_C)$ aan te passen aan 
+de stroomsnelheid. De pseudocode voor het uitzettingsalgoritme wordt gepresenteerd in Algoritme~\ref{alg:dynamic_eviction}.
 
-This algorithm for the dynamic window is an adaptation of the VC-TWindow~\cite{vctw_join} with 
-improvements for stability in window sizing, clarity in the metrics used for updates, and localization 
-of window size update to each subwindow.  
+Dit algoritme voor het dynamische venster is een aanpassing van VC-TWindow~\cite{vctw_join} met 
+verbeteringen voor stabiliteit in de venstergrootte, duidelijkheid in de voor updates gebruikte metriek, en lokalisatie 
+van de bijwerking van de venstergrootte voor elk subvenster.  
 
 \begin{algorithm}[htbp]
     \DontPrintSemicolon
@@ -69,7 +69,7 @@ of window size update to each subwindow.
     $cost(List_C) = |S_C| / Size(List_C)$     
 
 
-    total cost $ m = cost(List_P) + cost(List_C)$  
+    totale kosten $ m = cost(List_P) + cost(List_C)$  
   
     \If{$m > \epsilon_u$} 
     {
@@ -90,8 +90,8 @@ of window size update to each subwindow.
         $Size(List_C) = Size(List_C) * (cost(List_C) + 0.5)$  
     }
 
-    clean both $List_C \text{ and } List_P$
-    \caption{Dynamic window $onEviction$ routine}
+    beide schoonmaken $List_C \text{ and } List_P$
+    \caption{Dynamisch raam $onEviction$ routine}
     \label{alg:dynamic_eviction}
 \end{algorithm}
 
