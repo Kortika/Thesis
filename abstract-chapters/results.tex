@@ -31,7 +31,7 @@ evaluation run (Figure~\ref{fig:constant_mem_diff}).
 Dynamic window causes infrequent \emph{spikes} in memory usage of over
 100 MB more than Tumbling window at a certain point in the lifetime of evaluation. 
 This can be attributed 
-to the subwindows of Dynamic window growing larger due to low stream 
+to the subwindows of Dynamic window growing larger due to the low stream 
 rate. However,
 Dynamic window stabilizes to a more optimal 
 window size, where it uses less memory than Tumbling windows. 
@@ -192,9 +192,8 @@ Table~\ref{tab:tumbling_completeness}, we conclude that Dynamic window
 outperforms Tumbling window in terms of generating a more \emph{complete} output. 
 Dynamic window has an IOU score of \textbf{1} for constant low stream rate
 due to the subwindow sizes growing large 
-enough to accommodate all the required records, to generate the \emph{complete} set 
-of output. In contrast, Tumbling window scores only \textbf{0.749}, leading to 
-a conclusion that a window size of 2s is not enough to process the low stream rate 
+enough to accommodate all the required records, to generate the \emph{complete} output set. In contrast, Tumbling window scores only \textbf{0.749}, leading to 
+the conclusion that a window size of 2s is not enough to process the low stream rate 
 of the evaluation data. 
 
 Similarly for periodic burst input, Dynamic window outperforms Tumbling window with a

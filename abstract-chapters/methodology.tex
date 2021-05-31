@@ -12,7 +12,7 @@ that the stream rate is local to the attribute value for which each subwindow is
 \label{sub:Dynamic window join}
 
 The join algorithm used, is a variant of Symmetric Hash Join~\cite{symmetric_hash_join}. 
-The subwindow themselves work like a hash table, containing records with a 
+The subwindows themselves work like a hash table, containing records with a 
 specific \emph{key} --- since they are \emph{partitioned}. 
 The records are joined by probing the relevant stream and generating the 
 joined result. 
@@ -25,14 +25,14 @@ are provided:
 
 \begin{itemize}
     \item $\Delta n$: the \textbf{initial} interval of time before the next eviction trigger. 
-    \item $\epsilon_u$: the upper limit for threshold $\epsilon$.
-    \item $\epsilon_l$: the lower limit for threshold $\epsilon$. 
+    \item $\epsilon_u$: the upper limit threshold for the total cost metric.
+    \item $\epsilon_l$: the lower limit threshold for the total cost metric. 
     \item $U$: the upper limit for the window size. 
     \item $L$: the lower limit for the window size. 
 \end{itemize}
 
 Since we are implementing the join operator, the trigger event is fired when current record 
-$r_c$ arrives, and the symmetrich hash join is executed. We denote the current window as 
+$r_c$ arrives, and the symmetric hash join is executed. We denote the current window as 
 $W$ with the size as $|W|$. The streams are denoted as $S_P$ and $S_C$ with 
 the corresponding states $List_P$ and $List_C$, for the parent and 
 the child stream respectively. The states contain the records from their 
@@ -44,11 +44,11 @@ the cost for each \emph{list states} $List_P$ and $List_C$, containing the recor
 respectively. The cost for $cost(List_P) = |S_P|/Size(List_P)$, idem for $cost(List_C)$. 
 The total cost is $m = cost(List_P) + cost(List_C)$ and it is checked against thresholds $\epsilon_l$ and $\epsilon_u$. If  $\epsilon_l \le m \le \epsilon_u$, 
 $\Delta n$ stays the same, otherwise it will be adjusted accordingly. This provides some stability 
-in window sizing by keeping the same size, if the cost lies within the thresholds. 
+in window size by keeping the same size if the cost lies within the thresholds. 
 The higher $m$, the higher the stream rate. Thus, the subwindow needs to be frequently 
 evicted and lower $\Delta n$ to reduce memory usage. There is also a limit on the 
 minimum and maximum window sizes, $L$ and $U$ respectively, to ensure that the window 
-size $\Delta n$ does not keep growing or shrinking in size infinitely, in worst case scenario. 
+size $\Delta n$ does not keep growing or shrinking in size infinitely in a worst-case scenario. 
 The sizes of the list states 
 are also updated according to $Size(List_P) = Size(List_P) * cost(List_P) + 0.5$.
 Similarly for $Size(List_C)$. 
