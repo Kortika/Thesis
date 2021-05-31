@@ -140,10 +140,10 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 
 \begin{document}
 \frontmatter
+\setboolean{@twoside}{false}
+\includepdf[pages=-,offset=75 -75]{cover.pdf}
 
-% frontpage
-\include{frontpage}
-
+\setboolean{@twoside}{true}
 
 % no page numbering till toc
 \pagestyle{empty}
@@ -160,6 +160,14 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 \addcontentsline{toc}{chapter}{Abstract}
 \setboolean{@twoside}{false}
 \includepdf[pages=-,offset=75 -75]{abstract.pdf}
+
+\setboolean{@twoside}{true}
+\let\cleardoublepage\clearpage
+
+\phantomsection
+\addcontentsline{toc}{chapter}{Abstract in Dutch}
+\setboolean{@twoside}{false}
+\includepdf[pages=-,offset=75 -75]{abstract_dutch.pdf}
 
 \setboolean{@twoside}{true}
 \let\cleardoublepage\clearpage
@@ -205,10 +213,6 @@ citecolor=blue,   %set to all if you want both sections and subsections linked
 
 \backmatter
 
-\setboolean{@twoside}{false}
-\includepdf[pages=-,offset=75 -75]{abstract.pdf}
-
-\setboolean{@twoside}{true}
 % optional: list figures/tables
 %\listoffigures
 %\listoftables
