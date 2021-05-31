@@ -8,7 +8,7 @@ aan individuele subvensters. Deze subvensters passen hun eigen grootte onafhanke
 bij elke update-cyclus. Bovendien zullen de subvensters onafhankelijk van elkaar zijn, zodat 
 dat de stroomsnelheid lokaal is voor de attribuutwaarde waarvoor elk subvenster verantwoordelijk is. 
 
-\subsection{Dynamische vensterverbinding}
+\subsection{Dynamische venster join}
 \label{sub:Dynamic window join}
 
 Het gebruikte join-algoritme is een variant van Symmetric Hash Join~\cite{symmetric_hash_join}. 
@@ -26,7 +26,7 @@ voorzien:
 \begin{itemize}
     \item $\Delta n$: het \textbf{initiële} tijdsinterval voor de volgende ontruimingstrigger. 
     \item $\epsilon_u$: de bovengrensdrempel voor de totale kosten metriek.
-    \item $\epsilon_l$: de ondergrens voor de totale-kostenmethode. 
+    \item $\epsilon_l$: de ondergrensdrempel voor de totale kosten metriek. 
     \item $U$: de bovengrens voor de venstergrootte. 
     \item $L$: de ondergrens voor de venstergrootte. 
 \end{itemize}
@@ -40,8 +40,8 @@ respectievelijke streams in de subvensters.
 
 De ontruimingstrigger wordt afgevuurd telkens wanneer het huidige watermerk 
 $w \ge |W| + \Delta n$. Bij elke ontruimingstrigger berekenen we
-de kosten voor elke staat van €71$List_P$ en $List_C$, die de records van $S_P$ en $S_C$ bevatten
-respectievelijk. De kosten voor €17 €, idem voor €18 €. 
+de kosten voor elke staat van $List_P$ en $List_C$, die de records van $S_P$ en $S_C$ bevatten
+respectievelijk. De kosten voor $cost(List_P) = |S_P|/Size(List_P)$, idem voor $cost(List_C)$. 
 De totale kosten bedragen $m = cost(List_P) + cost(List_C)$ en worden getoetst aan de drempels $\epsilon_l$ en $\epsilon_u$. Indien $\epsilon_l \le m \le \epsilon_u$, 
 $\Delta n$ blijft het gelijk, anders wordt het dienovereenkomstig aangepast. Dit zorgt voor enige stabiliteit 
 in de venstergrootte door dezelfde grootte te behouden als de kosten binnen de drempels liggen. 
@@ -51,7 +51,7 @@ minimum en maximum venstergrootte, respectievelijk $L$ en $U$, om ervoor te zorg
 grootte $\Delta n$ niet oneindig in grootte blijft groeien of krimpen in een worst-casescenario. 
 De grootte van de lijsttoestanden 
 worden ook geactualiseerd overeenkomstig $Size(List_P) = Size(List_P) * cost(List_P) + 0.5$.
-Hetzelfde geldt voor €30. 
+Hetzelfde geldt voor $Size(List_C)$. 
 Het dynamische venster handhaaft dus een 
 ideale grootte door $\Delta n, Size(List_P)$ en $Size(List_C)$ aan te passen aan 
 de stroomsnelheid. De pseudocode voor het uitzettingsalgoritme wordt gepresenteerd in Algoritme~\ref{alg:dynamic_eviction}.
@@ -90,8 +90,8 @@ van de bijwerking van de venstergrootte voor elk subvenster.
         $Size(List_C) = Size(List_C) * (cost(List_C) + 0.5)$  
     }
 
-    beide schoonmaken $List_C \text{ and } List_P$
-    \caption{Dynamisch raam $onEviction$ routine}
+    beide schoonmaken $List_C \text{ en } List_P$
+    \caption{Dynamisch venster $onEviction$ routine}
     \label{alg:dynamic_eviction}
 \end{algorithm}
 

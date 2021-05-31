@@ -5,11 +5,12 @@ De huidige state-of-the-art benaderingen voor het mappen van niet-RDF naar RDF d
 een streaming omgeving richten zich meer op de efficiëntie van het 
 mapping proces met minimale ondersteuning voor multi-stream verwerking. 
 De bestaande benaderingen voor de ondersteuning van eenvoudige multi-stream 
-processing operatoren in mapping engines zijn zeer beperkt of passen een vaste window grootte toe.
+processing operatoren in mapping engines zijn zeer beperkt of passen een vaste venster grootte toe.
 
 Daarom hebben we in RMLStreamer een dynamisch venstermechanisme geïmplementeerd, dat 
 de grootte aanpast aan de veranderende kenmerken van de stroom met
-verwaarloosbare geheugenoverhead, lage latentie en hoge doorvoer. We evalueerden het dynamische venster
+verwaarloosbare geheugenoverhead, lage latentie en hoge doorvoer. We evalueerden 
+het dynamische venster
 onder verschillende werkbelastingen met variërende streamsnelheid. De resultaten 
 tonen aan dat het een latentie bereikt in het milliseconden bereik, met een hogere 
 doorvoer dan vensters met een vaste grootte in alle werklast situaties. \\ 

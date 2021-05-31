@@ -44,7 +44,7 @@ is wenselijk als een stream mapping engine.
 
 \subsection{Windows}
 Er zijn verschillende studies uitgevoerd om 
-join-algoritmen in windows ~\cite{vctw_join, join_tracking, grubjoin, approximate_window_sem, approx_window} te verbeteren. 
+join-algoritmen in vensters ~\cite{vctw_join, join_tracking, grubjoin, approximate_window_sem, approx_window} te verbeteren. 
 De benaderingen in ~\cite{grubjoin, approximate_window_sem, approx_window} zijn gebaseerd op 
 op het laten vallen van sommige van de te verbinden records door middel van \emph{load shedding} indien de 
 records niet aan een drempel voldoen. Deze drempelberekeningen vergen enige 
@@ -55,8 +55,8 @@ veronderstellen dat de stroom in orde is om te kunnen werken
 Anderzijds houdt VC-TWJoin~\cite{vctw_join} alleen rekening met de snelheid van de 
 stroom om de venstergrootte aan te passen. 
 Deze aanpak is echter onstabiel wanneer de gegevensstroom periodieke gegevensuitbarstingen vertoont.
-De grootte van het venster wordt vergroot of verkleind wanneer de metriek de drempels 
-de drempelwaarden van het algoritme. In het slechtste geval kan dit 
+De grootte van het venster wordt vergroot of verkleind wanneer de metriek 
+de drempelwaarden van het algoritme overschreden. In het slechtste geval kan dit 
 kan het leiden tot cyclische toename en 
 verkleinen van de venstergrootte als de metriek bij elke 
 update van de metriek.

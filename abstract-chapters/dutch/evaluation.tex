@@ -13,14 +13,14 @@ De gegevens zijn afkomstig van de NDW (Nationale Databank Wegverkeersgegevens) u
 Nederland~\footnote{NDW-datasite: \href{http://opendata.ndw.nu/}{http://opendata.ndw.nu/} }.
 Het bestaat uit metingen van het aantal auto's en hun gemiddelde snelheid over de verschillende 
 rijstroken op een snelweg. 
-De sensorgegevens werden door een Kafka-publisher naar twee topics doorgespeeld 
+De sensorgegevens werden door een Kafka-publisher naar twee topics doorgespeeld, namelijk 
 \emph{ndwflow} en \emph{ndwspeed}, voor respectievelijk het aantal auto's en de gemiddelde snelheid.
 
 \subsection{Evaluatie setup}
 
 Docker\footnote{Docker: \url{https://www.docker.com}} is 
 opgezet met de containers 
-zoals geïllustreerd in figuur~\ref{fig:docker_setup}. De docker-containers 
+zoals ge\"illustreerd in figuur~\ref{fig:docker_setup}. De docker-containers 
 draaien op een standalone machine om de invloed van 
 netwerkcommunicatie zo veel mogelijk te beperken. Apache Kafka wordt gebruikt 
 als de berichtenmakelaar voor onze gegevens. De setup voor de Kafka broker is 
@@ -47,7 +47,7 @@ Python script scraper.
 CPU gebruik, doorvoer 
 en geheugengebruik worden intern gemeten door Flink,
 terwijl latency meting 
-handmatig wordt geïmplementeerd met behulp van Flink's Metrics API om nauwkeuriger de hoeveelheid tijd te meten 
+handmatig wordt ge\"implementeerd met behulp van Flink's Metrics API om nauwkeuriger de hoeveelheid tijd te meten 
 tijd die een record in het venster doorbrengt voordat het verwerkt wordt. 
 
 De bovengenoemde metrieken worden gemiddeld over de geparallelliseerde window operators.
@@ -97,10 +97,10 @@ gebruikt om de IOU-metriek te berekenen om de gelijkenis tussen de twee outputs 
 
 \subsection{Werklastscenario's}
 \label{sec:workload}
-We evalueren onze dynamische vensterimplementatie onder verschillende werkbelastingsscenario's. 
-Deze werkbelastingen zijn vergelijkbaar met die welke in~\cite{evalution_of_spe} zijn gebruikt, voor zover relevant.
+We evalueren onze dynamische vensterimplementatie onder verschillende werklastscenario's. 
+Deze werklasten zijn vergelijkbaar met die welke in~\cite{evalution_of_spe} zijn gebruikt, voor zover relevant.
 
-\subsubsection{Werkbelasting voor latentiemeting}
+\subsubsection{Werklast voor latentiemeting}
 Meting van de \emph{latency} die alleen wordt veroorzaakt 
 door de vensterimplementaties, vereist dat het stroomverwerkingsraamwerk niet wordt 
 door aanzienlijke \emph{doorvoer} wordt belast. Dus, de Kafka makelaar 
@@ -111,13 +111,13 @@ We noemen dit in de paper \emph{constant} stream rate.
 \subsubsection{Werklast met periodieke burst}
 We evalueren onze implementatie op zijn vermogen om te gaan met onstabiele 
 streaming gegevensbronnen met variërende snelheid.
-De werkbelasting heeft een constante lage streamsnelheid met af en toe een 
+De werklast heeft een constante lage streamsnelheid met af en toe een 
 uitbarsting van gegevens. Daarom worden elke 10 seconden 38 000 records gepubliceerd, wat 
 ongeveer 170 tot 180 ms duurt, aangezien de tijd die nodig is om te publiceren kan afwijken op basis van de 
-belasting van de Kafka-brokers.
+last van de Kafka-brokers.
 We duiden dit in de paper aan als \emph{periodic} stream rate. 
 
-\subsubsection{Werkbelasting voor de volledigheid}
+\subsubsection{Werklast voor de volledigheid}
 We zullen twee stream rates gebruiken, constant en periodiek, 
 om de \emph{compleetheid} te meten van de resultaten gegenereerd 
 door de verschillende vensters.
