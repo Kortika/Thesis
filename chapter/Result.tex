@@ -30,7 +30,8 @@ Dynamic window to achieve sub second latency.
 
 Just like latency, the throughput difference between the two windows is also significant. Dynamic window has a 
 steady throughput of around 17200 records per second whereas Tumbling window fluctuates between 
-12500 and 12800 records per second before stabilizing at 12750 records per second (Figure~\ref{fig:constant_thorughput}). This is expected as Dynamic 
+12500 and 12800 records per second before stabilizing at 12750 records per second (Figure~\ref{fig:constant_thorughput}) with a difference of around 5000 records per second. 
+This is expected as Dynamic 
 window eventually stabilizes to a window size with the capability of processing more records than Tumbling window. This is 
 due to the adjustment of window sizes at the subwindow level, allowing Dynamic window to wait for more records 
 with infrequent \emph{key} attribute in the stream, before evicting the subwindow. In contrast, Tumbling window 
@@ -51,32 +52,32 @@ it increases the throughput causing RMLStreamer to process more joined records.
 
 \begin{figure*}
     \begin{subfigure}[b]{0.5\columnwidth}
-        \includegraphics[width=\columnwidth]{fig/constant-rate/cpu_comparison.png}
+        \includegraphics[width=\columnwidth]{fig/constant-rate/cpu_comparison.pdf}
         \caption{CPU usage}
         \label{fig:constant_cpu}
     \end{subfigure}
     \hfill 
     \begin{subfigure}[b]{0.5\columnwidth}
-        \includegraphics[width=\columnwidth]{fig/constant-rate/throughput_comparison.png}
+        \includegraphics[width=\columnwidth]{fig/constant-rate/throughput_comparison.pdf}
         \caption{Throughput of joined records}
         \label{fig:constant_thorughput}
     \end{subfigure}
     %%
     \begin{subfigure}[b]{0.5\columnwidth}
-        \includegraphics[width=\columnwidth]{fig/constant-rate/TumblingWindow_latency_boxplot.png}
+        \includegraphics[width=\columnwidth]{fig/constant-rate/TumblingWindow_latency_boxplot.pdf}
         \caption{Tumbling latency}
         \label{fig:constant_tumb_boxplot}
     \end{subfigure}
     \hfill 
     \begin{subfigure}[b]{0.5\columnwidth}
-        \includegraphics[width=\columnwidth]{fig/constant-rate/DynamicWindow_latency_boxplot.png}
+        \includegraphics[width=\columnwidth]{fig/constant-rate/DynamicWindow_latency_boxplot.pdf}
         \caption{Dynamic latency}
         \label{fig:constant_dynamic_boxplot}
     \end{subfigure}
     % 
     \begin{subfigure}[b]{\columnwidth}
         \centering
-        \includegraphics[width=0.7\columnwidth]{fig/constant-rate/mem_difference_bar.png}
+        \includegraphics[width=0.7\columnwidth]{fig/constant-rate/mem_difference_bar.pdf}
         \caption{Relative difference in memory usage from the perspective of dynamic window}
         \label{fig:constant_mem_diff}
     \end{subfigure}
@@ -113,7 +114,7 @@ previous workload.
 
 The throughput of both windows increased, as expected, compared to the workload for latency measurement 
 with constant stream rate. Moreover, we observe an even bigger difference in the throughput between the 
-two windows of about 7000 records per second 
+two windows of about 6000 records per second 
 (Figure~\ref{fig:periodic_throughput}). However, the
 constant and flat throughput measurement does not agree 
 with the results of ~\cite{evalution_of_spe} where there are clear "spikes" in 
@@ -132,7 +133,7 @@ calculation of metrics and dynamic adjustment of subwindow sizes.
 
 Surprisingly, compared with the memory usage under the workload for latency measurement, Dynamic window uses 
 about 10 MB less memory on average than Tumbling window during the lifetime of the evaluation (Figure~\ref{fig:periodic_mem_diff}). 
-The initial memory usage for Dynamic window about 100 MB higer than for Tumbling window due to the initial long window growth 
+The initial memory usage for Dynamic window about 100 MB higher than for Tumbling window due to the initial long window growth 
 caused by the low stream rate. However, once 
 the dynamic adjustment of subwindow kicks in, it reduces the memory usage even when there is a burst of data. The subwindow size
 is adjusted to be small so that records are frequently evicted. 
@@ -141,14 +142,14 @@ is adjusted to be small so that records are frequently evicted.
 \begin{figure*}
     \begin{subfigure}[b]{\columnwidth}
         \centering
-        \includegraphics[width=0.7\columnwidth]{fig/periodic/Tumbling_latency_lineplot.png}
+        \includegraphics[width=0.7\columnwidth]{fig/periodic/Tumbling_latency_lineplot.pdf}
         \caption{Tumbling latency }
         \label{fig:periodic_tumbling_lineplot}
     \end{subfigure}
 
     \begin{subfigure}[b]{\columnwidth}
         \centering
-        \includegraphics[width=0.7\columnwidth]{fig/periodic/DynamicWindow_latency_lineplot.png}
+        \includegraphics[width=0.7\columnwidth]{fig/periodic/DynamicWindow_latency_lineplot.pdf}
         \caption{Dynamic latency }
         \label{fig:periodic_dynamic_lineplot}
     \end{subfigure}
@@ -158,32 +159,32 @@ is adjusted to be small so that records are frequently evicted.
 
 \begin{figure*}
     \begin{subfigure}[b]{0.5\columnwidth}
-        \includegraphics[width=\columnwidth]{fig/periodic/cpu_comparison.png}
+        \includegraphics[width=\columnwidth]{fig/periodic/cpu_comparison.pdf}
         \caption{CPU usage}
         \label{fig:periodic_cpu}
     \end{subfigure}
     \hfill 
     \begin{subfigure}[b]{0.5\columnwidth}
-        \includegraphics[width=\columnwidth]{fig/periodic/throughput_comparison.png}
+        \includegraphics[width=\columnwidth]{fig/periodic/throughput_comparison.pdf}
         \caption{Throughput of joined records}
         \label{fig:periodic_throughput}
     \end{subfigure}
     %%
     \begin{subfigure}[b]{0.5\columnwidth}
-        \includegraphics[width=\columnwidth]{fig/periodic/TumblingWindow_latency_boxplot.png}
+        \includegraphics[width=\columnwidth]{fig/periodic/TumblingWindow_latency_boxplot.pdf}
         \caption{Tumbling latency distribution}
         \label{fig:periodic_tumb_boxplot}
     \end{subfigure}
     \hfill 
     \begin{subfigure}[b]{0.5\columnwidth}
-        \includegraphics[width=\columnwidth]{fig/periodic/DynamicWindow_latency_boxplot.png}
+        \includegraphics[width=\columnwidth]{fig/periodic/DynamicWindow_latency_boxplot.pdf}
         \caption{Dynamic latency distribution}
         \label{fig:periodic_dynamic_boxplot}
     \end{subfigure}
     % 
     \begin{subfigure}[b]{\columnwidth}
         \centering
-        \includegraphics[width=0.7\columnwidth]{fig/periodic/mem_difference_bar.png}
+        \includegraphics[width=0.7\columnwidth]{fig/periodic/mem_difference_bar.pdf}
         \caption{Relative difference in memory usage from the perspective of dynamic window}
         \label{fig:periodic_mem_diff}
     \end{subfigure}
