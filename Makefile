@@ -13,6 +13,7 @@ all: abstract
 	biber --output-directory ${outdir} ${filename}||true
 	pdflatex -output-directory ${outdir} ${filename}.tex
 	pdflatex -output-directory ${outdir} ${filename}.tex
+	cp ${outdir}/${filename}.pdf . 
 
 abstract: 
 	mkdir -p ${abstract-build}/abstract-chapters &>/dev/null || true 	# create chapter subfolder for .aux files etc

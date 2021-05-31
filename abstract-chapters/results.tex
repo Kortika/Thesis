@@ -103,7 +103,7 @@ adaptation to the periodic burst of data until it achieves sub second latency ag
 
 The throughput of both windows increased as expected.
 Moreover, we observe a bigger difference in the throughput between the 
-two windows of about 7000 records per second 
+two windows of about 6000 records per second 
 (Figure~\ref{fig:periodic_throughput}). However, the
 constant and flat throughput measurement does not agree 
 with the results of ~\cite{evalution_of_spe} where there are clear "spikes" in 
@@ -128,12 +128,15 @@ the dynamic adjustment of subwindow kicks in, reducing the memory usage.
 
 
 \begin{figure}
-    \begin{subfigure}[b]{0.5\columnwidth}
-        \includegraphics[width=\columnwidth]{fig/periodic/Tumbling_latency_lineplot.pdf}
+    \begin{subfigure}[b]{\columnwidth}
+        \centering
+        \includegraphics[width=\columnwidth, scale=4]{fig/periodic/Tumbling_latency_lineplot.pdf}
         \caption{Tumbling latency }
         \label{fig:periodic_tumbling_lineplot}
     \end{subfigure}
-    \begin{subfigure}[b]{0.5\columnwidth}
+
+    \begin{subfigure}[b]{\columnwidth}
+        \centering
         \includegraphics[width=\columnwidth]{fig/periodic/DynamicWindow_latency_lineplot.pdf}
         \caption{Dynamic latency }
         \label{fig:periodic_dynamic_lineplot}
