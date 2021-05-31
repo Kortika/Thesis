@@ -1,22 +1,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
+De huidige state-of-the-art benaderingen om niet-RDF naar RDF data te converteren in 
+een streaming omgeving richten zich meer op de efficiëntie van het 
+mapping proces met minimale ondersteuning voor multi-stream verwerking. 
+De bestaande benaderingen in mapping engines voor de ondersteuning van eenvoudige multi-stream 
+verwerkingsoperatoren zijn zeer beperkt of passen een vaste window grootte toe.
 
-Current state-of-the-art approaches to convert non-RDF to RDF data in 
-a streaming environment focus more on the efficiency of the 
-mapping process with minimal support for multi-stream processing. 
-The existing approaches in mapping engines for supporting simple multi-stream 
-processing operators are very limited or apply fixed window size.
+Daarom hebben we in RMLStreamer een dynamisch venstermechanisme geïmplementeerd, dat 
+de grootte aanpast aan de veranderende kenmerken van de stroom met
+verwaarloosbare geheugenoverhead, lage latentie en hoge doorvoer. We evalueerden het dynamische venster
+onder verschillende werkbelastingen met variërende streamsnelheid. De resultaten 
+tonen aan dat het een latentie bereikt in het milliseconden bereik, met een hogere 
+doorvoer dan vensters met een vaste grootte in alle werklast situaties. \\
 
-Therefore, we implemented a dynamic window mechanism in RMLStreamer, which 
-adapts its size according to the changing stream characteristics with
-negligible memory overhead, low latency, and high throughput. We evaluated the dynamic window
-under different workload with varying stream velocity. The results 
-show that it achieves latency in the millisecond range, with higher 
-throughput than fixed size windows in all workload situations. \\ 
+
 \end{abstract}
 
 \begin{keywords}
-RDF, RMLStreamer, RML, Adaptive windows, Dynamic windows,
+RDF, RMLStreamer, RML, Adaptieve windows, Dynamische windows,
 Stream joins, Multi-stream processing.
 
 \end{keywords}
