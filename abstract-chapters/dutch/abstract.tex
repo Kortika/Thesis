@@ -1,0 +1,24 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+
+Current state-of-the-art approaches to convert non-RDF to RDF data in 
+a streaming environment focus more on the efficiency of the 
+mapping process with minimal support for multi-stream processing. 
+The existing approaches in mapping engines for supporting simple multi-stream 
+processing operators are very limited or apply fixed window size.
+
+Therefore, we implemented a dynamic window mechanism in RMLStreamer, which 
+adapts its size according to the changing stream characteristics with
+negligible memory overhead, low latency, and high throughput. We evaluated the dynamic window
+under different workload with varying stream velocity. The results 
+show that it achieves latency in the millisecond range, with higher 
+throughput than fixed size windows in all workload situations. \\ 
+\end{abstract}
+
+\begin{keywords}
+RDF, RMLStreamer, RML, Adaptive windows, Dynamic windows,
+Stream joins, Multi-stream processing.
+
+\end{keywords}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
